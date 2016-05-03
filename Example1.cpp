@@ -86,7 +86,11 @@ private:
     void initProgram();
     void initFont();
     void initUniforms();
-    void initMesh();
+    void initRotatingLabel();
+    void initAtlasQuad();
+
+    void renderRotatingLabel(float dt);
+    void renderAtlasQuad(float dt);
 
     virtual void init() override final;
     virtual void shutdown() override final;
@@ -107,18 +111,26 @@ private:
     } program;
 
     std::unique_ptr<Font> font;
-    
+    GLuint fontTexture = 0;
+    Matrix viewProjMatrix;
+
     struct
     {
         GLuint vertexBuffer = 0;
         GLuint uvBuffer = 0;
         GLuint indexBuffer = 0;
         GLuint vao = 0;
-        GLuint fontTexture = 0;
         uint16_t indexElementCount = 0;
-        Matrix viewProjMatrix;
         float angle = 0;
     } rotatingLabel;
+
+    struct
+    {
+        GLuint vao = 0;
+        GLuint vertexBuffer = 0;
+        GLuint uvBuffer = 0;
+        float time = 0;
+    } atlasQuad;
 };
 
 
@@ -187,8 +199,8 @@ void Example::initFont()
     auto fontData = readFile("C:/windows/fonts/arial.ttf");
     font = std::make_unique<Font>(fontData.data(), 40, fontAtlasWidth, fontAtlasHeight, ' ', '~' - ' ', 2, 2);
 
-    glGenTextures(1, &rotatingLabel.fontTexture);
-    glBindTexture(GL_TEXTURE_2D, rotatingLabel.fontTexture);
+    glGenTextures(1, &fontTexture);
+    glBindTexture(GL_TEXTURE_2D, fontTexture);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, fontAtlasWidth, fontAtlasHeight, 0, GL_RED, GL_UNSIGNED_BYTE, font->getAtlasData());
     glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
@@ -200,7 +212,7 @@ void Example::initUniforms()
 {
     auto viewMatrix = Matrix::identity();
     auto projectionMatrix = Matrix::createPerspective(60, canvasWidth / canvasHeight, 0.05f, 100.0f);
-    rotatingLabel.viewProjMatrix = projectionMatrix * viewMatrix;
+    viewProjMatrix = projectionMatrix * viewMatrix;
 
     program.uniforms.viewProjMatrix = glGetUniformLocation(program.handle, "viewProjMatrix");
     program.uniforms.worldMatrix = glGetUniformLocation(program.handle, "worldMatrix");
@@ -208,7 +220,7 @@ void Example::initUniforms()
 }
 
 
-void Example::initMesh()
+void Example::initRotatingLabel()
 {
     const std::string text = "Rotating in world space";
 
@@ -264,10 +276,83 @@ void Example::initMesh()
 }
 
 
+void Example::initAtlasQuad()
+{
+    const float vertices[] =
+    {
+        -1, -1, 0,
+        -1,  1, 0,
+         1,  1, 0,
+        -1, -1, 0,
+         1,  1, 0,
+         1, -1, 0,
+    };
+
+    const float uvs[] =
+    {
+        0, 1,
+        0, 0,
+        1, 0,
+        0, 1,
+        1, 0,
+        1, 1,
+    };
+
+    glGenVertexArrays(1, &atlasQuad.vao);
+    glBindVertexArray(atlasQuad.vao);
+
+    glGenBuffers(1, &atlasQuad.vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, atlasQuad.vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * 18, vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(0);
+
+    glGenBuffers(1, &atlasQuad.uvBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, atlasQuad.uvBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * 12, uvs, GL_STATIC_DRAW);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(1);
+}
+
+
+void Example::renderRotatingLabel(float dt)
+{
+    rotatingLabel.angle += dt;
+
+    // Bind world matrix
+    auto worldMatrix = Matrix::createTranslation(Vector3(0, 5, -30));
+    worldMatrix.rotateY(rotatingLabel.angle);
+    worldMatrix.scaleByVector(Vector3(0.05f, 0.05f, 1));
+    glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, worldMatrix.m);
+
+    // Draw vertex array object using indexes
+    glBindVertexArray(rotatingLabel.vao);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rotatingLabel.indexBuffer);
+    glDrawElements(GL_TRIANGLES, rotatingLabel.indexElementCount, GL_UNSIGNED_SHORT, nullptr);
+}
+
+
+void Example::renderAtlasQuad(float dt)
+{
+    atlasQuad.time += dt;
+    auto distance = -10 - 5 * sinf(atlasQuad.time);
+
+    // Bind world matrix
+    auto worldMatrix = Matrix::createTranslation(Vector3(0, -6, distance));
+    worldMatrix.scaleByVector(Vector3(6, 6, 1));
+    glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, worldMatrix.m);
+
+    // Draw vertex array object without index
+    glBindVertexArray(atlasQuad.vao);
+    glDrawArrays(GL_TRIANGLES, 0, 6); // 6 vertices
+}
+
+
 void Example::init()
 {
     initFont();
-    initMesh();
+    initRotatingLabel();
+    initAtlasQuad();
     initProgram();
     initUniforms();
 }
@@ -279,7 +364,7 @@ void Example::shutdown()
     glDeleteBuffers(1, &rotatingLabel.vertexBuffer);
     glDeleteBuffers(1, &rotatingLabel.uvBuffer);
     glDeleteBuffers(1, &rotatingLabel.indexBuffer);
-    glDeleteTextures(1, &rotatingLabel.fontTexture);
+    glDeleteTextures(1, &fontTexture);
     glDeleteProgram(program.handle);
 }
 
@@ -298,17 +383,15 @@ void Example::render(float dt)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    // Bind shader program and some object-agnostic uniforms
+
     glUseProgram(program.handle);
 
-    // Bind uniforms
-    rotatingLabel.angle += dt;
-    auto worldMatrix = Matrix::createTranslation(Vector3(0, 0, -20));
-    worldMatrix.rotateY(rotatingLabel.angle);
-    worldMatrix.scaleByVector(Vector3(0.05f, 0.05f, 1));
-    glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, worldMatrix.m);
-    glUniformMatrix4fv(program.uniforms.viewProjMatrix, 1, GL_FALSE, rotatingLabel.viewProjMatrix.m);
+    // Camera matrix
+    glUniformMatrix4fv(program.uniforms.viewProjMatrix, 1, GL_FALSE, viewProjMatrix.m);
 
-    glBindTexture(GL_TEXTURE_2D, rotatingLabel.fontTexture);
+    // Font texture
+    glBindTexture(GL_TEXTURE_2D, fontTexture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -317,16 +400,14 @@ void Example::render(float dt)
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(program.uniforms.texture, 0);
 
-    // Draw vertex array object using indexes
-    glBindVertexArray(rotatingLabel.vao);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rotatingLabel.indexBuffer);
-    glDrawElements(GL_TRIANGLES, rotatingLabel.indexElementCount, GL_UNSIGNED_SHORT, nullptr);
+    renderRotatingLabel(dt);
+    renderAtlasQuad(dt);
 }
 
 
 int main()
 {
-    Example example{ 1366, 768, false };
+    Example example{ 800, 600, false };
     example.run();
     return 0;
 }
