@@ -188,7 +188,7 @@ void Example::initFont()
 void Example::initUniforms()
 {
     auto viewMatrix = Matrix::identity();
-    auto projectionMatrix = Matrix::createPerspective(60, canvasWidth / canvasHeight, 0.05f, 100.0f);
+    auto projectionMatrix = Matrix::createPerspective(60, 1.0f * canvasWidth / canvasHeight, 0.05f, 100.0f);
     viewProjMatrix = projectionMatrix * viewMatrix;
 
     program.uniforms.viewProjMatrix = glGetUniformLocation(program.handle, "viewProjMatrix");
