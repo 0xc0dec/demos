@@ -1,0 +1,424 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="common">
+      <UniqueIdentifier>{96400170-70f9-48b6-85d8-b1754afd40bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor">
+      <UniqueIdentifier>{1916edd2-dd82-464e-8278-1ac27bda79e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glew">
+      <UniqueIdentifier>{7956587f-5d67-4d2c-8993-731554a1ee66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\sdl">
+      <UniqueIdentifier>{420f426c-d308-40bd-9749-72c2c93339d4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\common\Vector3.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\Math.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\Matrix.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\ExampleBase.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\Vector2.h">
+      <Filter>common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\vendor\glew\src\glew.c">
+      <Filter>vendor\glew</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\libm\e_atan2.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\libm\e_log.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\libm\e_pow.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\libm\e_rem_pio2.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\libm\e_sqrt.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\libm\k_cos.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\libm\k_rem_pio2.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\libm\k_sin.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\libm\k_tan.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\libm\s_atan.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\libm\s_copysign.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\libm\s_cos.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\libm\s_fabs.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\libm\s_floor.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\libm\s_scalbn.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\libm\s_sin.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\libm\s_tan.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\SDL.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\SDL_assert.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\atomic\SDL_atomic.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\audio\SDL_audio.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\audio\SDL_audiocvt.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\audio\SDL_audiodev.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\audio\SDL_audiotypecvt.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\render\software\SDL_blendfillrect.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\render\software\SDL_blendline.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\render\software\SDL_blendpoint.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\SDL_blit.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\SDL_blit_0.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\SDL_blit_1.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\SDL_blit_A.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\SDL_blit_auto.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\SDL_blit_copy.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\SDL_blit_N.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\SDL_blit_slow.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\SDL_bmp.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\SDL_clipboard.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\events\SDL_clipboardevents.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\cpuinfo\SDL_cpuinfo.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\render\SDL_d3dmath.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\haptic\windows\SDL_dinputhaptic.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\joystick\windows\SDL_dinputjoystick.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\audio\directsound\SDL_directsound.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\audio\disk\SDL_diskaudio.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\render\software\SDL_drawline.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\render\software\SDL_drawpoint.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\events\SDL_dropevents.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\audio\dummy\SDL_dummyaudio.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\dynapi\SDL_dynapi.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\SDL_egl.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\SDL_error.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\events\SDL_events.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\SDL_fillrect.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\joystick\SDL_gamecontroller.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\events\SDL_gesture.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\stdlib\SDL_getenv.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\haptic\SDL_haptic.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\SDL_hints.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\stdlib\SDL_iconv.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\joystick\SDL_joystick.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\events\SDL_keyboard.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\SDL_log.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\stdlib\SDL_malloc.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\audio\SDL_mixer.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\joystick\windows\SDL_mmjoystick.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\events\SDL_mouse.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\dummy\SDL_nullevents.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\dummy\SDL_nullframebuffer.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\dummy\SDL_nullvideo.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\SDL_pixels.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\power\SDL_power.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\stdlib\SDL_qsort.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\events\SDL_quit.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\SDL_rect.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\render\SDL_render.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\render\direct3d\SDL_render_d3d.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\render\direct3d11\SDL_render_d3d11.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\render\opengl\SDL_render_gl.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\render\opengles2\SDL_render_gles2.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\render\software\SDL_render_sw.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\SDL_RLEaccel.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\render\software\SDL_rotate.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\file\SDL_rwops.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\render\opengl\SDL_shaders_gl.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\render\opengles2\SDL_shaders_gles2.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\SDL_shape.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\atomic\SDL_spinlock.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\stdlib\SDL_stdlib.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\SDL_stretch.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\stdlib\SDL_string.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\SDL_surface.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\thread\generic\SDL_syscond.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\filesystem\windows\SDL_sysfilesystem.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\haptic\dummy\SDL_syshaptic.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\joystick\dummy\SDL_sysjoystick.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\loadso\windows\SDL_sysloadso.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\thread\windows\SDL_sysmutex.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\power\windows\SDL_syspower.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\thread\windows\SDL_syssem.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\thread\windows\SDL_systhread.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\timer\windows\SDL_systimer.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\thread\windows\SDL_systls.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\thread\SDL_thread.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\timer\SDL_timer.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\events\SDL_touch.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\SDL_video.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\audio\SDL_wave.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\events\SDL_windowevents.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\core\windows\SDL_windows.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\windows\SDL_windowsclipboard.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\windows\SDL_windowsevents.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\windows\SDL_windowsframebuffer.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\windows\SDL_windowskeyboard.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\windows\SDL_windowsmessagebox.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\windows\SDL_windowsmodes.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\windows\SDL_windowsmouse.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\windows\SDL_windowsopengl.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\windows\SDL_windowsopengles.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\windows\SDL_windowsshape.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\windows\SDL_windowsvideo.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\video\windows\SDL_windowswindow.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\audio\winmm\SDL_winmm.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\audio\xaudio2\SDL_xaudio2.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\core\windows\SDL_xinput.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\render\SDL_yuv_mmx.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\SDL\2.0.4\src\render\SDL_yuv_sw.c">
+      <Filter>vendor\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\Matrix.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\ExampleBase.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Example2.cpp" />
+  </ItemGroup>
+</Project>
