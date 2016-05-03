@@ -86,19 +86,23 @@ private:
     const uint32_t fontAtlasWidth = 1024;
     const uint32_t fontAtlasHeight = 1024;
 
-    GLuint fontProgram = 0;
+    GLuint program = 0;
     GLuint viewProjMatrixUniform = 0;
     GLuint worldMatrixUniform = 0;
-    GLuint textureUniform = 0;
-    GLuint vertexBuffer = 0;
-    GLuint uvBuffer = 0;
-    GLuint indexBuffer = 0;
-    GLuint vao = 0;
-    GLuint fontTexture = 0;
-    uint16_t indexElementCount = 0;
     std::unique_ptr<Font> font;
-    Matrix viewProjMatrix;
-    float angle = 0;
+    
+    struct
+    {
+        GLuint textureUniform = 0;
+        GLuint vertexBuffer = 0;
+        GLuint uvBuffer = 0;
+        GLuint indexBuffer = 0;
+        GLuint vao = 0;
+        GLuint fontTexture = 0;
+        uint16_t indexElementCount = 0;
+        Matrix viewProjMatrix;
+        float angle = 0;
+    } rotatingLabel;
 
     void initProgram();
     void initFont();
@@ -166,8 +170,8 @@ auto Font::getGlyphInfo(uint32_t character, float offsetX, float offsetY) -> Gly
 
 void Example::initProgram()
 {
-    fontProgram = createProgram(shaders.vertex.font, shaders.fragment.font);
-    glUseProgram(fontProgram);
+    program = createProgram(shaders.vertex.font, shaders.fragment.font);
+    glUseProgram(program);
 }
 
 
@@ -176,8 +180,8 @@ void Example::initFont()
     auto fontData = readFile("C:/windows/fonts/arial.ttf");
     font = std::make_unique<Font>(fontData.data(), 40, fontAtlasWidth, fontAtlasHeight, ' ', '~' - ' ', 2, 2);
 
-    glGenTextures(1, &fontTexture);
-    glBindTexture(GL_TEXTURE_2D, fontTexture);
+    glGenTextures(1, &rotatingLabel.fontTexture);
+    glBindTexture(GL_TEXTURE_2D, rotatingLabel.fontTexture);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, fontAtlasWidth, fontAtlasHeight, 0, GL_RED, GL_UNSIGNED_BYTE, font->getAtlasData());
     glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
@@ -189,21 +193,22 @@ void Example::initUniforms()
 {
     auto viewMatrix = Matrix::identity();
     auto projectionMatrix = Matrix::createPerspective(60, canvasWidth / canvasHeight, 0.05f, 100.0f);
-    viewProjMatrix = projectionMatrix * viewMatrix;
+    rotatingLabel.viewProjMatrix = projectionMatrix * viewMatrix;
 
-    viewProjMatrixUniform = glGetUniformLocation(fontProgram, "viewProjMatrix");
-    worldMatrixUniform = glGetUniformLocation(fontProgram, "worldMatrix");
-    textureUniform = glGetUniformLocation(fontProgram, "mainTex");
+    viewProjMatrixUniform = glGetUniformLocation(program, "viewProjMatrix");
+    worldMatrixUniform = glGetUniformLocation(program, "worldMatrix");
+    rotatingLabel.textureUniform = glGetUniformLocation(program, "mainTex");
 }
 
 
 void Example::initMesh()
 {
+    const std::string text = "Rotating in world space";
+
     std::vector<Vector3> vertices;
     std::vector<Vector2> uvs;
     std::vector<uint16_t> indexes;
-    std::string text = "Hello, world!";
-
+    
     uint16_t lastIndex = 0;
     float offsetX = 0, offsetY = 0;
     for (auto c : text)
@@ -230,25 +235,25 @@ void Example::initMesh()
         lastIndex += 4;
     }
 
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    glGenVertexArrays(1, &rotatingLabel.vao);
+    glBindVertexArray(rotatingLabel.vao);
 
-    glGenBuffers(1, &vertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glGenBuffers(1, &rotatingLabel.vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, rotatingLabel.vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * vertices.size(), vertices.data(), GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
     glEnableVertexAttribArray(0);
 
-    glGenBuffers(1, &uvBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
+    glGenBuffers(1, &rotatingLabel.uvBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, rotatingLabel.uvBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * uvs.size(), uvs.data(), GL_STATIC_DRAW);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
     glEnableVertexAttribArray(1);
 
-    indexElementCount = indexes.size();
-    glGenBuffers(1, &indexBuffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * indexElementCount, indexes.data(), GL_STATIC_DRAW);
+    rotatingLabel.indexElementCount = indexes.size();
+    glGenBuffers(1, &rotatingLabel.indexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rotatingLabel.indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * rotatingLabel.indexElementCount, indexes.data(), GL_STATIC_DRAW);
 }
 
 
@@ -263,12 +268,12 @@ void Example::init()
 
 void Example::shutdown()
 {
-    glDeleteVertexArrays(1, &vao);
-    glDeleteBuffers(1, &vertexBuffer);
-    glDeleteBuffers(1, &uvBuffer);
-    glDeleteBuffers(1, &indexBuffer);
-    glDeleteTextures(1, &fontTexture);
-    glDeleteProgram(fontProgram);
+    glDeleteVertexArrays(1, &rotatingLabel.vao);
+    glDeleteBuffers(1, &rotatingLabel.vertexBuffer);
+    glDeleteBuffers(1, &rotatingLabel.uvBuffer);
+    glDeleteBuffers(1, &rotatingLabel.indexBuffer);
+    glDeleteTextures(1, &rotatingLabel.fontTexture);
+    glDeleteProgram(program);
 }
 
 
@@ -286,29 +291,29 @@ void Example::render(float dt)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glUseProgram(fontProgram);
+    glUseProgram(program);
 
     // Bind uniforms
-    angle += dt;
+    rotatingLabel.angle += dt;
     auto worldMatrix = Matrix::createTranslation(Vector3(0, 0, -20));
-    worldMatrix.rotateY(angle);
+    worldMatrix.rotateY(rotatingLabel.angle);
     worldMatrix.scaleByVector(Vector3(0.05f, 0.05f, 1));
     glUniformMatrix4fv(worldMatrixUniform, 1, GL_FALSE, worldMatrix.m);
-    glUniformMatrix4fv(viewProjMatrixUniform, 1, GL_FALSE, viewProjMatrix.m);
+    glUniformMatrix4fv(viewProjMatrixUniform, 1, GL_FALSE, rotatingLabel.viewProjMatrix.m);
 
-    glBindTexture(GL_TEXTURE_2D, fontTexture);
+    glBindTexture(GL_TEXTURE_2D, rotatingLabel.fontTexture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 8);
     glActiveTexture(GL_TEXTURE0);
-    glUniform1i(textureUniform, 0);
+    glUniform1i(rotatingLabel.textureUniform, 0);
 
     // Draw vertex array object using indexes
-    glBindVertexArray(vao);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-    glDrawElements(GL_TRIANGLES, indexElementCount, GL_UNSIGNED_SHORT, nullptr);
+    glBindVertexArray(rotatingLabel.vao);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rotatingLabel.indexBuffer);
+    glDrawElements(GL_TRIANGLES, rotatingLabel.indexElementCount, GL_UNSIGNED_SHORT, nullptr);
 }
 
 
