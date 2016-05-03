@@ -18,9 +18,6 @@ public:
     void run();
 
 protected:
-    uint32_t canvasWidth = 0;
-    uint32_t canvasHeight = 0;
-
     GLuint createProgram(const char* vs, const char* fs);
     std::vector<uint8_t> readFile(const char* path);
 
@@ -28,10 +25,13 @@ protected:
     virtual void shutdown() = 0;
     virtual void render(float dt) = 0;
 
-private:
-    SDL_Window* window = nullptr;
-    SDL_GLContext context = nullptr;
+    uint32_t canvasWidth = 0;
+    uint32_t canvasHeight = 0;
 
+private:
     auto compileShader(GLenum type, const char* src)->GLuint;
     auto linkProgram(GLuint vs, GLuint fs)->GLint;
+
+    SDL_Window* window = nullptr;
+    SDL_GLContext context = nullptr;
 };

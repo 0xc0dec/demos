@@ -83,17 +83,33 @@ public:
     }
 
 private:
+    void initProgram();
+    void initFont();
+    void initUniforms();
+    void initMesh();
+
+    virtual void init() override final;
+    virtual void shutdown() override final;
+    virtual void render(float dt) override final;
+
     const uint32_t fontAtlasWidth = 1024;
     const uint32_t fontAtlasHeight = 1024;
 
-    GLuint program = 0;
-    GLuint viewProjMatrixUniform = 0;
-    GLuint worldMatrixUniform = 0;
+    struct
+    {
+        GLuint handle = 0;
+        struct
+        {
+            GLuint viewProjMatrix = 0;
+            GLuint worldMatrix = 0;
+            GLuint texture = 0;
+        } uniforms;
+    } program;
+
     std::unique_ptr<Font> font;
     
     struct
     {
-        GLuint textureUniform = 0;
         GLuint vertexBuffer = 0;
         GLuint uvBuffer = 0;
         GLuint indexBuffer = 0;
@@ -103,15 +119,6 @@ private:
         Matrix viewProjMatrix;
         float angle = 0;
     } rotatingLabel;
-
-    void initProgram();
-    void initFont();
-    void initUniforms();
-    void initMesh();
-
-    virtual void init() override final;
-    virtual void shutdown() override final;
-    virtual void render(float dt) override final;
 };
 
 
@@ -170,8 +177,8 @@ auto Font::getGlyphInfo(uint32_t character, float offsetX, float offsetY) -> Gly
 
 void Example::initProgram()
 {
-    program = createProgram(shaders.vertex.font, shaders.fragment.font);
-    glUseProgram(program);
+    program.handle = createProgram(shaders.vertex.font, shaders.fragment.font);
+    glUseProgram(program.handle);
 }
 
 
@@ -195,9 +202,9 @@ void Example::initUniforms()
     auto projectionMatrix = Matrix::createPerspective(60, canvasWidth / canvasHeight, 0.05f, 100.0f);
     rotatingLabel.viewProjMatrix = projectionMatrix * viewMatrix;
 
-    viewProjMatrixUniform = glGetUniformLocation(program, "viewProjMatrix");
-    worldMatrixUniform = glGetUniformLocation(program, "worldMatrix");
-    rotatingLabel.textureUniform = glGetUniformLocation(program, "mainTex");
+    program.uniforms.viewProjMatrix = glGetUniformLocation(program.handle, "viewProjMatrix");
+    program.uniforms.worldMatrix = glGetUniformLocation(program.handle, "worldMatrix");
+    program.uniforms.texture = glGetUniformLocation(program.handle, "mainTex");
 }
 
 
@@ -273,7 +280,7 @@ void Example::shutdown()
     glDeleteBuffers(1, &rotatingLabel.uvBuffer);
     glDeleteBuffers(1, &rotatingLabel.indexBuffer);
     glDeleteTextures(1, &rotatingLabel.fontTexture);
-    glDeleteProgram(program);
+    glDeleteProgram(program.handle);
 }
 
 
@@ -291,15 +298,15 @@ void Example::render(float dt)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glUseProgram(program);
+    glUseProgram(program.handle);
 
     // Bind uniforms
     rotatingLabel.angle += dt;
     auto worldMatrix = Matrix::createTranslation(Vector3(0, 0, -20));
     worldMatrix.rotateY(rotatingLabel.angle);
     worldMatrix.scaleByVector(Vector3(0.05f, 0.05f, 1));
-    glUniformMatrix4fv(worldMatrixUniform, 1, GL_FALSE, worldMatrix.m);
-    glUniformMatrix4fv(viewProjMatrixUniform, 1, GL_FALSE, rotatingLabel.viewProjMatrix.m);
+    glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, worldMatrix.m);
+    glUniformMatrix4fv(program.uniforms.viewProjMatrix, 1, GL_FALSE, rotatingLabel.viewProjMatrix.m);
 
     glBindTexture(GL_TEXTURE_2D, rotatingLabel.fontTexture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
@@ -308,7 +315,7 @@ void Example::render(float dt)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 8);
     glActiveTexture(GL_TEXTURE0);
-    glUniform1i(rotatingLabel.textureUniform, 0);
+    glUniform1i(program.uniforms.texture, 0);
 
     // Draw vertex array object using indexes
     glBindVertexArray(rotatingLabel.vao);
