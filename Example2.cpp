@@ -48,14 +48,6 @@ static struct
 } shaders;
 
 
-struct GlyphInfo
-{
-    Vector3 positions[4];
-    Vector2 uvs[4];
-    float offsetX, offsetY;
-};
-
-
 class Example final: public ExampleBase
 {
 public:
@@ -70,8 +62,6 @@ private:
     void initUniforms();
     void initTextQuad();
     void renderTextQuad();
-
-    auto getGlyphInfo(uint32_t character, float offsetX, float offsetY) -> GlyphInfo;
 
     virtual void init() override final;
     virtual void shutdown() override final;
