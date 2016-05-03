@@ -14,36 +14,36 @@ static struct
             #version 330 core
 
             in vec4 position;
-	    in vec2 texCoord0;
+	        in vec2 texCoord0;
 
             uniform mat4 worldMatrix;
             uniform mat4 viewProjMatrix;
-	    out vec2 uv0;
+	        out vec2 uv0;
 
             void main()
-	    {
-	        gl_Position = viewProjMatrix * worldMatrix * position;
-		uv0 = texCoord0;
-	    }
+	        {
+	            gl_Position = viewProjMatrix * worldMatrix * position;
+		        uv0 = texCoord0;
+	        }
         )";
     } vertex;
 
     struct
     {
         const char* font = R"(
-	    #version 330 core
+	        #version 330 core
 
             uniform sampler2D mainTex;
 
             in vec2 uv0;
-	    out vec4 fragColor;
+	        out vec4 fragColor;
 
             void main()
-	    {
+	        {
                 vec4 c = texture(mainTex, uv0);
-	        fragColor = vec4(c.r, c.r, c.r, c.r);
-	    }
-	)";
+	            fragColor = vec4(c.r, c.r, c.r, c.r);
+	        }
+	    )";
     } fragment;
 } shaders;
 
@@ -53,22 +53,6 @@ struct GlyphInfo
     Vector3 positions[4];
     Vector2 uvs[4];
     float offsetX, offsetY;
-};
-
-
-class Font
-{
-public:
-    Font(uint8_t* fontData, uint32_t fontSize, uint32_t atlasWidth, uint32_t atlasHeight,
-         uint32_t firstChar, uint32_t charCount, uint32_t oversampleX, uint32_t oversampleY);
-
-    auto getGlyphInfo(uint32_t character, float offsetX, float offsetY) -> GlyphInfo;
-    auto getAtlasData() -> uint8_t*;
-   
-private:
-    std::unique_ptr<stbtt_packedchar[]> charInfo;
-    std::unique_ptr<uint8_t[]> atlasData;
-    uint32_t firstChar;
 };
 
 
