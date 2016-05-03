@@ -1,6 +1,5 @@
 #include "common/ExampleBase.h"
 #include "common/Matrix.h"
-#include "common/Vector2.h"
 #define STB_TRUETYPE_IMPLEMENTATION
 #include <stb_truetype.h>
 #include <memory>
@@ -121,7 +120,7 @@ void Example::initFont()
 
     const std::string text = "Baked string";
 
-    for (int i = 0; i < text.size(); ++i)
+    for (size_t i = 0; i < text.size(); ++i)
     {
         int x1, y1, x2, y2;
         stbtt_GetCodepointBitmapBox(&fontInfo, text[i], scale, scale, &x1, &y1, &x2, &y2);
