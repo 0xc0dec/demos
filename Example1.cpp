@@ -341,6 +341,9 @@ void Example::shutdown()
     glDeleteBuffers(1, &rotatingLabel.vertexBuffer);
     glDeleteBuffers(1, &rotatingLabel.uvBuffer);
     glDeleteBuffers(1, &rotatingLabel.indexBuffer);
+    glDeleteVertexArrays(1, &atlasQuad.vao);
+    glDeleteBuffers(1, &atlasQuad.vertexBuffer);
+    glDeleteBuffers(1, &atlasQuad.uvBuffer);
     glDeleteTextures(1, &font.texture);
     glDeleteProgram(program.handle);
 }
