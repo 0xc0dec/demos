@@ -7,6 +7,7 @@ platform-dependent code needed for the example to run and are not required for u
 The repository contains all dependencies needed to compile the example on Windows.
 
 ![1](/Example1.png?raw=true)
+![1](/Example2.png?raw=true)
 
 ## Dependencies
 * stb-truetype
