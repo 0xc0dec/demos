@@ -68,8 +68,6 @@ public:
 private:
     std::unique_ptr<stbtt_packedchar[]> charInfo;
     std::unique_ptr<uint8_t[]> atlasData;
-    uint32_t atlasWidth;
-    uint32_t atlasHeight;
     uint32_t firstChar;
 };
 
@@ -92,12 +90,11 @@ private:
     void renderRotatingLabel(float dt);
     void renderAtlasQuad(float dt);
 
+    auto getGlyphInfo(uint32_t character, float offsetX, float offsetY) -> GlyphInfo;
+
     virtual void init() override final;
     virtual void shutdown() override final;
     virtual void render(float dt) override final;
-
-    const uint32_t fontAtlasWidth = 1024;
-    const uint32_t fontAtlasHeight = 1024;
 
     struct
     {
@@ -110,16 +107,14 @@ private:
         } uniforms;
     } program;
 
-    std::unique_ptr<Font> font;
-    GLuint fontTexture = 0;
     Matrix viewProjMatrix;
 
     struct
     {
+        GLuint vao = 0;
         GLuint vertexBuffer = 0;
         GLuint uvBuffer = 0;
         GLuint indexBuffer = 0;
-        GLuint vao = 0;
         uint16_t indexElementCount = 0;
         float angle = 0;
     } rotatingLabel;
@@ -131,41 +126,27 @@ private:
         GLuint uvBuffer = 0;
         float time = 0;
     } atlasQuad;
+
+    struct
+    {
+        const uint32_t size = 40;
+        const uint32_t atlasWidth = 1024;
+        const uint32_t atlasHeight = 1024;
+        const uint32_t oversampleX = 2;
+        const uint32_t oversampleY = 2;
+        const uint32_t firstChar = ' ';
+        const uint32_t charCount = '~' - ' ';
+        std::unique_ptr<stbtt_packedchar[]> charInfo;
+        GLuint texture = 0;
+    } font;
 };
 
 
-Font::Font(uint8_t* fontData, uint32_t fontSize, uint32_t atlasWidth, uint32_t atlasHeight,
-    uint32_t firstChar, uint32_t charCount, uint32_t oversampleX, uint32_t oversampleY):
-    atlasWidth(atlasWidth),
-    atlasHeight(atlasHeight),
-    firstChar(firstChar)
-{
-    charInfo = std::make_unique<stbtt_packedchar[]>(charCount);
-    atlasData = std::make_unique<uint8_t[]>(atlasWidth * atlasHeight);
-
-    stbtt_pack_context context;
-    if (!stbtt_PackBegin(&context, atlasData.get(), atlasWidth, atlasHeight, 0, 1, nullptr))
-        DIE("Failed to initialize font");
-
-    stbtt_PackSetOversampling(&context, oversampleX, oversampleY);
-    if (!stbtt_PackFontRange(&context, fontData, 0, fontSize, firstChar, charCount, charInfo.get()))
-        DIE("Failed to pack font");
-
-    stbtt_PackEnd(&context);
-}
-
-
-auto Font::getAtlasData() -> uint8_t*
-{
-    return atlasData.get();
-}
-
-
-auto Font::getGlyphInfo(uint32_t character, float offsetX, float offsetY) -> GlyphInfo
+auto Example::getGlyphInfo(uint32_t character, float offsetX, float offsetY) -> GlyphInfo
 {
     stbtt_aligned_quad quad;
 
-    stbtt_GetPackedQuad(charInfo.get(), atlasWidth, atlasHeight, character - firstChar, &offsetX, &offsetY, &quad, 1);
+    stbtt_GetPackedQuad(font.charInfo.get(), font.atlasWidth, font.atlasHeight, character - font.firstChar, &offsetX, &offsetY, &quad, 1);
     auto xmin = quad.x0;
     auto xmax = quad.x1;
     auto ymin = -quad.y1;
@@ -197,12 +178,24 @@ void Example::initProgram()
 void Example::initFont()
 {
     auto fontData = readFile("C:/windows/fonts/arial.ttf");
-    font = std::make_unique<Font>(fontData.data(), 40, fontAtlasWidth, fontAtlasHeight, ' ', '~' - ' ', 2, 2);
+    auto atlasData = std::make_unique<uint8_t[]>(font.atlasWidth * font.atlasHeight);
 
-    glGenTextures(1, &fontTexture);
-    glBindTexture(GL_TEXTURE_2D, fontTexture);
+    font.charInfo = std::make_unique<stbtt_packedchar[]>(font.charCount);
+
+    stbtt_pack_context context;
+    if (!stbtt_PackBegin(&context, atlasData.get(), font.atlasWidth, font.atlasHeight, 0, 1, nullptr))
+        DIE("Failed to initialize font");
+
+    stbtt_PackSetOversampling(&context, font.oversampleX, font.oversampleY);
+    if (!stbtt_PackFontRange(&context, fontData.data(), 0, font.size, font.firstChar, font.charCount, font.charInfo.get()))
+        DIE("Failed to pack font");
+
+    stbtt_PackEnd(&context);
+
+    glGenTextures(1, &font.texture);
+    glBindTexture(GL_TEXTURE_2D, font.texture);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, fontAtlasWidth, fontAtlasHeight, 0, GL_RED, GL_UNSIGNED_BYTE, font->getAtlasData());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, font.atlasWidth, font.atlasHeight, 0, GL_RED, GL_UNSIGNED_BYTE, atlasData.get());
     glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
     glGenerateMipmap(GL_TEXTURE_2D);
 }
@@ -232,7 +225,7 @@ void Example::initRotatingLabel()
     float offsetX = 0, offsetY = 0;
     for (auto c : text)
     {
-        auto glyphInfo = font->getGlyphInfo(c, offsetX, offsetY);
+        auto glyphInfo = getGlyphInfo(c, offsetX, offsetY);
         offsetX = glyphInfo.offsetX;
         offsetY = glyphInfo.offsetY;
 
@@ -364,7 +357,7 @@ void Example::shutdown()
     glDeleteBuffers(1, &rotatingLabel.vertexBuffer);
     glDeleteBuffers(1, &rotatingLabel.uvBuffer);
     glDeleteBuffers(1, &rotatingLabel.indexBuffer);
-    glDeleteTextures(1, &fontTexture);
+    glDeleteTextures(1, &font.texture);
     glDeleteProgram(program.handle);
 }
 
@@ -391,7 +384,7 @@ void Example::render(float dt)
     glUniformMatrix4fv(program.uniforms.viewProjMatrix, 1, GL_FALSE, viewProjMatrix.m);
 
     // Font texture
-    glBindTexture(GL_TEXTURE_2D, fontTexture);
+    glBindTexture(GL_TEXTURE_2D, font.texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
