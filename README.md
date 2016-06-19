@@ -1,5 +1,5 @@
 ## About
-A (hopefully) self-explanatory example demonstrating how to render TrueType font in OpenGL 3+ with the help of
+A (hopefully) self-explanatory example demonstrating how to render TrueType fonts in OpenGL 3+ with the help of
 [stb_truetype](https://github.com/nothings/stb) library.
 
 The essential part is contained in `Example1.cpp` and `Example2.cpp` files. Directories `vendor` and `common` hold
