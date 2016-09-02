@@ -296,13 +296,11 @@ void Example::renderRotatingLabel(float dt)
 {
     rotatingLabel.angle += dt;
 
-    // Bind world matrix
     auto worldMatrix = Matrix::createTranslation(Vector3(0, 5, -30));
     worldMatrix.rotateY(rotatingLabel.angle);
     worldMatrix.scaleByVector(Vector3(0.05f, 0.05f, 1));
     glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, worldMatrix.m);
 
-    // Draw vertex array object using indexes
     glBindVertexArray(rotatingLabel.vao);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rotatingLabel.indexBuffer);
     glDrawElements(GL_TRIANGLES, rotatingLabel.indexElementCount, GL_UNSIGNED_SHORT, nullptr);
@@ -314,12 +312,10 @@ void Example::renderAtlasQuad(float dt)
     atlasQuad.time += dt;
     auto distance = -10 - 5 * sinf(atlasQuad.time);
 
-    // Bind world matrix
     auto worldMatrix = Matrix::createTranslation(Vector3(0, -6, distance));
     worldMatrix.scaleByVector(Vector3(6, 6, 1));
     glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, worldMatrix.m);
 
-    // Draw vertex array object without index
     glBindVertexArray(atlasQuad.vao);
     glDrawArrays(GL_TRIANGLES, 0, 6); // 6 vertices
 }
