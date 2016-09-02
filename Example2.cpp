@@ -13,36 +13,36 @@ static struct
             #version 330 core
 
             in vec4 position;
-	        in vec2 texCoord0;
+	    in vec2 texCoord0;
 
             uniform mat4 worldMatrix;
             uniform mat4 viewProjMatrix;
-	        out vec2 uv0;
+	    out vec2 uv0;
 
             void main()
-	        {
-	            gl_Position = viewProjMatrix * worldMatrix * position;
-		        uv0 = texCoord0;
-	        }
+	    {
+	        gl_Position = viewProjMatrix * worldMatrix * position;
+	        uv0 = texCoord0;
+	    }
         )";
     } vertex;
 
     struct
     {
         const char* font = R"(
-	        #version 330 core
+	    #version 330 core
 
             uniform sampler2D mainTex;
 
             in vec2 uv0;
-	        out vec4 fragColor;
+	    out vec4 fragColor;
 
             void main()
-	        {
+	    {
                 vec4 c = texture(mainTex, uv0);
-	            fragColor = vec4(c.r, c.r, c.r, 1 - c.r);
-	        }
-	    )";
+	        fragColor = vec4(c.r, c.r, c.r, 1 - c.r);
+	    }
+	)";
     } fragment;
 } shaders;
 
@@ -201,12 +201,10 @@ void Example::initTextQuad()
 
 void Example::renderTextQuad()
 {
-    // Bind world matrix
     auto worldMatrix = Matrix::createTranslation(Vector3(0, 0, -15));
     worldMatrix.scaleByVector(Vector3(6, 6, 1));
     glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, worldMatrix.m);
 
-    // Draw vertex array object without index
     glBindVertexArray(textQuad.vao);
     glDrawArrays(GL_TRIANGLES, 0, 6); // 6 vertices
 }
@@ -237,7 +235,6 @@ void Example::render(float dt)
     glClearColor(0, 0.5f, 0.6f, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Setting some state
     glDisable(GL_CULL_FACE);
     glDepthMask(GL_TRUE);
     glEnable(GL_DEPTH_TEST);
@@ -245,14 +242,10 @@ void Example::render(float dt)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    // Bind shader program and some object-agnostic uniforms
-
     glUseProgram(program.handle);
 
-    // Camera matrix
     glUniformMatrix4fv(program.uniforms.viewProjMatrix, 1, GL_FALSE, viewProjMatrix.m);
 
-    // Font texture
     glBindTexture(GL_TEXTURE_2D, font.texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
