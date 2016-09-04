@@ -1,6 +1,6 @@
 ## About
 A (hopefully) self-explanatory example demonstrating how to render TrueType fonts in OpenGL 3+ with the help of
-[stb_truetype](https://github.com/nothings/stb) library.
+[stb_truetype](https://github.com/nothings/stb) library. Written in C++11.
 
 The essential part is contained in `Example1.cpp` and `Example2.cpp` files. Directories `vendor` and `common` hold
 platform-dependent code needed for the example to run and are not required for understanging how the `stb_truetype` works.
