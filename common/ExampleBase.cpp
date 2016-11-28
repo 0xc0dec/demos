@@ -80,7 +80,7 @@ void ExampleBase::run()
 }
 
 
-GLuint ExampleBase::createProgram(const char* vs, const char* fs)
+auto ExampleBase::createProgram(const char* vs, const char* fs) -> GLuint
 {
     auto vertex = compileShader(GL_VERTEX_SHADER, vs);
     auto fragment = compileShader(GL_FRAGMENT_SHADER, fs);
@@ -91,7 +91,7 @@ GLuint ExampleBase::createProgram(const char* vs, const char* fs)
 }
 
 
-std::vector<uint8_t> ExampleBase::readFile(const char* path)
+auto ExampleBase::readFile(const char* path) -> std::vector<uint8_t>
 {
     std::ifstream file(path, std::ios::binary | std::ios::ate);
     if (!file.is_open())
