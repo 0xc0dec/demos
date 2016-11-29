@@ -8,6 +8,7 @@
 *.ilk
 *.idb
 *.user
+*VC.*db*
 build*
 *DS_Store*
 *DotSettings.user
