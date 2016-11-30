@@ -55,17 +55,19 @@ void ExampleBase::run()
         {
             switch (evt.type)
             {
-            case SDL_QUIT:
-                run = false;
-                break;
-            case SDL_KEYUP:
-                if (evt.key.keysym.sym == SDLK_ESCAPE)
+                case SDL_QUIT:
                     run = false;
-                break;
-            case SDL_WINDOWEVENT:
-                if (evt.window.event == SDL_WINDOWEVENT_CLOSE)
-                    run = false;
-                break;
+                    break;
+                case SDL_KEYUP:
+                    if (evt.key.keysym.sym == SDLK_ESCAPE)
+                        run = false;
+                    break;
+                case SDL_WINDOWEVENT:
+                    if (evt.window.event == SDL_WINDOWEVENT_CLOSE)
+                        run = false;
+                    break;
+                default:
+                    break;
             }
         }
 
