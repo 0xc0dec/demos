@@ -5,7 +5,6 @@
 #include <stb_truetype.h>
 #include <memory>
 
-
 static struct
 {
     struct
@@ -14,39 +13,38 @@ static struct
             #version 330 core
 
             in vec4 position;
-	        in vec2 texCoord0;
+            in vec2 texCoord0;
 
             uniform mat4 worldMatrix;
             uniform mat4 viewProjMatrix;
-	        out vec2 uv0;
+            out vec2 uv0;
 
             void main()
-	        {
-	            gl_Position = viewProjMatrix * worldMatrix * position;
-	            uv0 = texCoord0;
-	        }
+            {
+                gl_Position = viewProjMatrix * worldMatrix * position;
+                uv0 = texCoord0;
+            }
         )";
     } vertex;
 
     struct
     {
         const char* font = R"(
-	        #version 330 core
+            #version 330 core
 
             uniform sampler2D mainTex;
 
             in vec2 uv0;
-	        out vec4 fragColor;
+            out vec4 fragColor;
 
             void main()
-	        {
+            {
                 vec4 c = texture(mainTex, uv0);
-    	        fragColor = vec4(c.r, c.r, c.r, c.r);
-	        }
-	    )";
+                fragColor = vec4(c.r, c.r, c.r, c.r);
+            }
+        )";
     } fragment;
 } shaders;
-
 
 struct GlyphInfo
 {
@@ -54,7 +52,6 @@ struct GlyphInfo
     Vector2 uvs[4];
     float offsetX, offsetY;
 };
-
 
 class Example final: public ExampleBase
 {
@@ -125,7 +122,6 @@ private:
     } font;
 };
 
-
 auto Example::getGlyphInfo(uint32_t character, float offsetX, float offsetY) -> GlyphInfo
 {
     stbtt_aligned_quad quad;
@@ -151,13 +147,11 @@ auto Example::getGlyphInfo(uint32_t character, float offsetX, float offsetY) -> 
     return info;
 }
 
-
 void Example::initProgram()
 {
     program.handle = createProgram(shaders.vertex.font, shaders.fragment.font);
     glUseProgram(program.handle);
 }
-
 
 void Example::initFont()
 {
@@ -184,18 +178,16 @@ void Example::initFont()
     glGenerateMipmap(GL_TEXTURE_2D);
 }
 
-
 void Example::initUniforms()
 {
-    auto viewMatrix = Matrix::identity();
-    auto projectionMatrix = Matrix::createPerspective(60, 1.0f * canvasWidth / canvasHeight, 0.05f, 100.0f);
+    const auto viewMatrix = Matrix::identity();
+    const auto projectionMatrix = Matrix::createPerspective(60, 1.0f * canvasWidth / canvasHeight, 0.05f, 100.0f);
     viewProjMatrix = projectionMatrix * viewMatrix;
 
     program.uniforms.viewProjMatrix = glGetUniformLocation(program.handle, "viewProjMatrix");
     program.uniforms.worldMatrix = glGetUniformLocation(program.handle, "worldMatrix");
     program.uniforms.texture = glGetUniformLocation(program.handle, "mainTex");
 }
-
 
 void Example::initRotatingLabel()
 {
@@ -209,7 +201,7 @@ void Example::initRotatingLabel()
     float offsetX = 0, offsetY = 0;
     for (auto c : text)
     {
-        auto glyphInfo = getGlyphInfo(c, offsetX, offsetY);
+	    const auto glyphInfo = getGlyphInfo(c, offsetX, offsetY);
         offsetX = glyphInfo.offsetX;
         offsetY = glyphInfo.offsetY;
 
@@ -252,7 +244,6 @@ void Example::initRotatingLabel()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * rotatingLabel.indexElementCount, indexes.data(), GL_STATIC_DRAW);
 }
 
-
 void Example::initAtlasQuad()
 {
     const float vertices[] =
@@ -291,7 +282,6 @@ void Example::initAtlasQuad()
     glEnableVertexAttribArray(1);
 }
 
-
 void Example::renderRotatingLabel(float dt)
 {
     rotatingLabel.angle += dt;
@@ -306,11 +296,10 @@ void Example::renderRotatingLabel(float dt)
     glDrawElements(GL_TRIANGLES, rotatingLabel.indexElementCount, GL_UNSIGNED_SHORT, nullptr);
 }
 
-
 void Example::renderAtlasQuad(float dt)
 {
     atlasQuad.time += dt;
-    auto distance = -10 - 5 * sinf(atlasQuad.time);
+    const auto distance = -10 - 5 * sinf(atlasQuad.time);
 
     auto worldMatrix = Matrix::createTranslation(Vector3(0, -6, distance));
     worldMatrix.scaleByVector(Vector3(6, 6, 1));
@@ -320,7 +309,6 @@ void Example::renderAtlasQuad(float dt)
     glDrawArrays(GL_TRIANGLES, 0, 6); // 6 vertices
 }
 
-
 void Example::init()
 {
     initFont();
@@ -329,7 +317,6 @@ void Example::init()
     initProgram();
     initUniforms();
 }
-
 
 void Example::shutdown()
 {
@@ -343,7 +330,6 @@ void Example::shutdown()
     glDeleteTextures(1, &font.texture);
     glDeleteProgram(program.handle);
 }
-
 
 void Example::render(float dt)
 {
@@ -376,10 +362,9 @@ void Example::render(float dt)
     renderAtlasQuad(dt);
 }
 
-
 int main()
 {
-    Example example{ 800, 600, false };
+    Example example{800, 600, false};
     example.run();
     return 0;
 }

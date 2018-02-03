@@ -4,7 +4,6 @@
 #include <stb_truetype.h>
 #include <memory>
 
-
 static struct
 {
     struct
@@ -13,39 +12,38 @@ static struct
             #version 330 core
 
             in vec4 position;
-	        in vec2 texCoord0;
+            in vec2 texCoord0;
 
             uniform mat4 worldMatrix;
             uniform mat4 viewProjMatrix;
-	        out vec2 uv0;
+            out vec2 uv0;
 
             void main()
-	        {
-	            gl_Position = viewProjMatrix * worldMatrix * position;
-	            uv0 = texCoord0;
-	        }
+            {
+                gl_Position = viewProjMatrix * worldMatrix * position;
+                uv0 = texCoord0;
+            }
         )";
     } vertex;
 
     struct
     {
         const char* font = R"(
-	        #version 330 core
+            #version 330 core
 
             uniform sampler2D mainTex;
 
             in vec2 uv0;
-	        out vec4 fragColor;
+            out vec4 fragColor;
 
             void main()
-	        {
+            {
                 vec4 c = texture(mainTex, uv0);
-	            fragColor = vec4(c.r, c.r, c.r, 1 - c.r);
-	        }
-	    )";
+                fragColor = vec4(c.r, c.r, c.r, 1 - c.r);
+            }
+        )";
     } fragment;
 } shaders;
-
 
 class Example final: public ExampleBase
 {
@@ -95,13 +93,11 @@ private:
     } font;
 };
 
-
 void Example::initProgram()
 {
     program.handle = createProgram(shaders.vertex.font, shaders.fragment.font);
     glUseProgram(program.handle);
 }
-
 
 void Example::initFont()
 {
@@ -113,21 +109,20 @@ void Example::initFont()
     int ascent, descent, lineGap, x = 0;
     stbtt_GetFontVMetrics(&fontInfo, &ascent, &descent, &lineGap);
 
-    auto scale = stbtt_ScaleForPixelHeight(&fontInfo, font.size);
+	const auto scale = stbtt_ScaleForPixelHeight(&fontInfo, font.size);
     ascent *= scale;
 
     auto pixels = std::make_unique<uint8_t[]>(font.textureWidth * font.textureHeight);
 
     const std::string text = "Baked string";
 
-    for (size_t i = 0; i < text.size(); ++i)
+    for (auto i = 0; i < text.size(); ++i)
     {
         int x1, y1, x2, y2;
         stbtt_GetCodepointBitmapBox(&fontInfo, text[i], scale, scale, &x1, &y1, &x2, &y2);
 
-        auto y = ascent + y1;
-    
-        int byteOffset = x + y  * font.textureWidth;
+        const auto y = ascent + y1;
+        const int byteOffset = x + y  * font.textureWidth;
         stbtt_MakeCodepointBitmap(&fontInfo, pixels.get() + byteOffset, x2 - x1, y2 - y1, font.textureWidth, scale, scale, text[i]);
     
         int ax;
@@ -149,16 +144,13 @@ void Example::initFont()
     glGenerateMipmap(GL_TEXTURE_2D);
 }
 
-
 void Example::initUniforms()
 {
     viewProjMatrix = Matrix::createPerspective(60, 1.0f * canvasWidth / canvasHeight, 0.05f, 100.0f);
-
     program.uniforms.viewProjMatrix = glGetUniformLocation(program.handle, "viewProjMatrix");
     program.uniforms.worldMatrix = glGetUniformLocation(program.handle, "worldMatrix");
     program.uniforms.texture = glGetUniformLocation(program.handle, "mainTex");
 }
-
 
 void Example::initTextQuad()
 {
@@ -198,7 +190,6 @@ void Example::initTextQuad()
     glEnableVertexAttribArray(1);
 }
 
-
 void Example::renderTextQuad()
 {
     auto worldMatrix = Matrix::createTranslation(Vector3(0, 0, -15));
@@ -209,7 +200,6 @@ void Example::renderTextQuad()
     glDrawArrays(GL_TRIANGLES, 0, 6); // 6 vertices
 }
 
-
 void Example::init()
 {
     initFont();
@@ -217,7 +207,6 @@ void Example::init()
     initProgram();
     initUniforms();
 }
-
 
 void Example::shutdown()
 {
@@ -227,7 +216,6 @@ void Example::shutdown()
     glDeleteTextures(1, &font.texture);
     glDeleteProgram(program.handle);
 }
-
 
 void Example::render(float dt)
 {
@@ -258,10 +246,9 @@ void Example::render(float dt)
     renderTextQuad();
 }
 
-
 int main()
 {
-    Example example{ 800, 600, false };
+    Example example{800, 600, false};
     example.run();
     return 0;
 }
