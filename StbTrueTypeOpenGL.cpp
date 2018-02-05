@@ -1,4 +1,4 @@
-#include "common/ExampleBase.h"
+#include "common/DemoBase.h"
 #include "common/Matrix.h"
 #include "common/Vector2.h"
 #define STB_TRUETYPE_IMPLEMENTATION
@@ -53,11 +53,11 @@ struct GlyphInfo
     float offsetX, offsetY;
 };
 
-class Example final: public ExampleBase
+class Example final: public DemoBase
 {
 public:
     Example(int canvasWidth, int canvasHeight, bool fullScreen):
-        ExampleBase(canvasWidth, canvasHeight, fullScreen)
+        DemoBase(canvasWidth, canvasHeight, fullScreen)
     {
     }
 

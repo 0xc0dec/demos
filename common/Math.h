@@ -2,7 +2,6 @@
 
 #include <cmath>
 
-
 class Math final
 {
 public:
@@ -15,7 +14,6 @@ public:
 
     static auto degToRad(float degrees) -> float;
 };
-
 
 inline bool Math::approxZero(float value, float tolerance)
 {

@@ -8,12 +8,11 @@
 
 #define DIE(msg) do { std::cerr << msg << std::endl; exit(1); } while (0)
 
-
-class ExampleBase
+class DemoBase
 {
 public:
-    ExampleBase(int canvasWidth, int canvasHeight, bool fullScreen);
-    virtual ~ExampleBase();
+    DemoBase(int canvasWidth, int canvasHeight, bool fullScreen);
+    virtual ~DemoBase();
 
     void run();
 

@@ -2,7 +2,6 @@
 
 #include "Vector3.h"
 
-
 class Matrix final
 {
 public:
@@ -29,7 +28,6 @@ public:
     auto operator*(const Matrix& m) const -> Matrix;
     auto operator*=(const Matrix& m) -> Matrix&;
 };
-
 
 inline auto Matrix::operator*(const Matrix& m) const -> Matrix
 {

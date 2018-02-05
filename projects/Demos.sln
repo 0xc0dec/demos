@@ -1,11 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example1", "Example1.vcxproj", "{BED5B222-6018-4A41-902D-F8006BAEBE89}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StbTrueTypeOpenGL", "StbTrueTypeOpenGL.vcxproj", "{BED5B222-6018-4A41-902D-F8006BAEBE89}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E25E82BC-7EED-4068-B588-E6793F381AB9} = {E25E82BC-7EED-4068-B588-E6793F381AB9}
+	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example2", "Example2.vcxproj", "{AA1F6E1F-C89D-4189-94BA-C1ED518DD4CA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StbTrueTypeOpenGLBaked", "StbTrueTypeOpenGLBaked.vcxproj", "{AA1F6E1F-C89D-4189-94BA-C1ED518DD4CA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E25E82BC-7EED-4068-B588-E6793F381AB9} = {E25E82BC-7EED-4068-B588-E6793F381AB9}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Vendor", "Vendor.vcxproj", "{E25E82BC-7EED-4068-B588-E6793F381AB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,8 +39,19 @@ Global
 		{AA1F6E1F-C89D-4189-94BA-C1ED518DD4CA}.Release|x64.Build.0 = Release|x64
 		{AA1F6E1F-C89D-4189-94BA-C1ED518DD4CA}.Release|x86.ActiveCfg = Release|Win32
 		{AA1F6E1F-C89D-4189-94BA-C1ED518DD4CA}.Release|x86.Build.0 = Release|Win32
+		{E25E82BC-7EED-4068-B588-E6793F381AB9}.Debug|x64.ActiveCfg = Debug|x64
+		{E25E82BC-7EED-4068-B588-E6793F381AB9}.Debug|x64.Build.0 = Debug|x64
+		{E25E82BC-7EED-4068-B588-E6793F381AB9}.Debug|x86.ActiveCfg = Debug|Win32
+		{E25E82BC-7EED-4068-B588-E6793F381AB9}.Debug|x86.Build.0 = Debug|Win32
+		{E25E82BC-7EED-4068-B588-E6793F381AB9}.Release|x64.ActiveCfg = Release|x64
+		{E25E82BC-7EED-4068-B588-E6793F381AB9}.Release|x64.Build.0 = Release|x64
+		{E25E82BC-7EED-4068-B588-E6793F381AB9}.Release|x86.ActiveCfg = Release|Win32
+		{E25E82BC-7EED-4068-B588-E6793F381AB9}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6FFE5B67-0956-447C-81D0-C7A1401142F5}
 	EndGlobalSection
 EndGlobal

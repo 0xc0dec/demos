@@ -1,4 +1,4 @@
-#include "common/ExampleBase.h"
+#include "common/DemoBase.h"
 #include "common/Matrix.h"
 #define STB_TRUETYPE_IMPLEMENTATION
 #include <stb_truetype.h>
@@ -45,11 +45,11 @@ static struct
     } fragment;
 } shaders;
 
-class Example final: public ExampleBase
+class Example final: public DemoBase
 {
 public:
     Example(int canvasWidth, int canvasHeight, bool fullScreen):
-        ExampleBase(canvasWidth, canvasHeight, fullScreen)
+        DemoBase(canvasWidth, canvasHeight, fullScreen)
     {
     }
 

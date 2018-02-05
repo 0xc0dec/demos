@@ -2,15 +2,12 @@
 #include "Math.h"
 #include <memory>
 
-
 const size_t MatrixSize = sizeof(float) * 16;
-
 
 Matrix::Matrix()
 {
     *this = identity();
 }
-
 
 Matrix::Matrix(float m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24,
                float m31, float m32, float m33, float m34, float m41, float m42, float m43, float m44)
@@ -33,7 +30,6 @@ Matrix::Matrix(float m11, float m12, float m13, float m14, float m21, float m22,
     m[15] = m44;
 }
 
-
 auto Matrix::identity() -> Matrix
 {
     static Matrix m(
@@ -43,7 +39,6 @@ auto Matrix::identity() -> Matrix
         0, 0, 0, 1);
     return m;
 }
-
 
 auto Matrix::createPerspective(float fieldOfView, float aspectRatio, float znear, float zfar) -> Matrix
 {
@@ -64,7 +59,6 @@ auto Matrix::createPerspective(float fieldOfView, float aspectRatio, float znear
     return result;
 }
 
-
 auto Matrix::createTranslation(const Vector3& translation) -> Matrix
 {
     Matrix result;
@@ -74,7 +68,6 @@ auto Matrix::createTranslation(const Vector3& translation) -> Matrix
     return result;
 }
 
-
 auto Matrix::createScale(const Vector3& scale) -> Matrix
 {
     Matrix result;
@@ -83,7 +76,6 @@ auto Matrix::createScale(const Vector3& scale) -> Matrix
     result.m[10] = scale.z;
     return result;
 }
-
 
 auto Matrix::createRotationY(float radianAngle) -> Matrix
 {
@@ -100,13 +92,11 @@ auto Matrix::createRotationY(float radianAngle) -> Matrix
     return result;
 }
 
-
 void Matrix::translate(const Vector3& t)
 {
     auto tm = createTranslation(t);
     *this *= tm;
 }
-
 
 void Matrix::scaleByVector(const Vector3& s)
 {
@@ -114,13 +104,11 @@ void Matrix::scaleByVector(const Vector3& s)
     *this *= sm;
 }
 
-
 void Matrix::rotateY(float radianAngle)
 {
     auto r = createRotationY(radianAngle);
     *this *= r;
 }
-
 
 auto Matrix::operator*=(const Matrix& m2) -> Matrix&
 {

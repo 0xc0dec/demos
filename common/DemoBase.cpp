@@ -1,11 +1,10 @@
-#include "ExampleBase.h"
+#include "DemoBase.h"
 #include <GL/glew.h>
 #include <fstream>
 #include <unordered_map>
 #include <string>
 
-
-ExampleBase::ExampleBase(int canvasWidth, int canvasHeight, bool fullScreen):
+DemoBase::DemoBase(int canvasWidth, int canvasHeight, bool fullScreen):
     canvasWidth(canvasWidth),
     canvasHeight(canvasHeight)
 {
@@ -22,7 +21,7 @@ ExampleBase::ExampleBase(int canvasWidth, int canvasHeight, bool fullScreen):
     if (fullScreen)
         flags |= SDL_WINDOW_FULLSCREEN;
 
-    window = SDL_CreateWindow("Example 1", x, y, canvasWidth, canvasHeight, flags);
+    window = SDL_CreateWindow("Demo", x, y, canvasWidth, canvasHeight, flags);
     context = SDL_GL_CreateContext(window);
 
     glewExperimental = true;
@@ -31,8 +30,7 @@ ExampleBase::ExampleBase(int canvasWidth, int canvasHeight, bool fullScreen):
     SDL_GL_SetSwapInterval(1);
 }
 
-
-ExampleBase::~ExampleBase()
+DemoBase::~DemoBase()
 {
     if (context)
         SDL_GL_DeleteContext(context);
@@ -41,8 +39,7 @@ ExampleBase::~ExampleBase()
     SDL_Quit();
 }
 
-
-void ExampleBase::run()
+void DemoBase::run()
 {
     init();
 
@@ -81,8 +78,7 @@ void ExampleBase::run()
     }
 }
 
-
-auto ExampleBase::createProgram(const char* vs, const char* fs) -> GLuint
+auto DemoBase::createProgram(const char* vs, const char* fs) -> GLuint
 {
     auto vertex = compileShader(GL_VERTEX_SHADER, vs);
     auto fragment = compileShader(GL_FRAGMENT_SHADER, fs);
@@ -92,8 +88,7 @@ auto ExampleBase::createProgram(const char* vs, const char* fs) -> GLuint
     return program;
 }
 
-
-auto ExampleBase::readFile(const char* path) -> std::vector<uint8_t>
+auto DemoBase::readFile(const char* path) -> std::vector<uint8_t>
 {
     std::ifstream file(path, std::ios::binary | std::ios::ate);
     if (!file.is_open())
@@ -106,8 +101,7 @@ auto ExampleBase::readFile(const char* path) -> std::vector<uint8_t>
     return bytes;
 }
 
-
-auto ExampleBase::compileShader(GLenum type, const char* src) -> GLuint
+auto DemoBase::compileShader(GLenum type, const char* src) -> GLuint
 {
     static std::unordered_map<GLuint, std::string> typeNames =
     {
@@ -135,8 +129,7 @@ auto ExampleBase::compileShader(GLenum type, const char* src) -> GLuint
     return shader;
 }
 
-
-auto ExampleBase::linkProgram(GLuint vs, GLuint fs) -> GLint
+auto DemoBase::linkProgram(GLuint vs, GLuint fs) -> GLint
 {
     auto program = glCreateProgram();
     glAttachShader(program, vs);
