@@ -1,6 +1,5 @@
 ## About
-A set of graphics demos for learning and playing around. Written in C++14 and is (hopefully) clean and self-documented.
-Project files provided are for Visual Studio 2017. All dependencies are included, the solution should "just compile"
+A set of graphics demos made for learning and playing around with. Code is (hopefully) clean and self-documented, to the best of my abilities. All dependencies are included, project files provided are for Visual Studio 2017. The solution should "just compile"
 from the get-go.
 
 ## Demos
