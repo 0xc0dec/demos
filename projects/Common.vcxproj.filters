@@ -1,21 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="..\common\Vector3.h">
-    </ClInclude>
-    <ClInclude Include="..\common\Math.h">
-    </ClInclude>
-    <ClInclude Include="..\common\Matrix.h">
-    </ClInclude>
-    <ClInclude Include="..\common\Vector2.h">
-    </ClInclude>
-    <ClInclude Include="..\common\DemoBase.h">
-    </ClInclude>
+    <ClCompile Include="..\src\common\DemoBase.cpp" />
+    <ClCompile Include="..\src\common\Matrix.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\common\Matrix.cpp">
-    </ClCompile>
-    <ClCompile Include="..\common\DemoBase.cpp">
-    </ClCompile>
+    <ClInclude Include="..\src\common\DemoBase.h" />
+    <ClInclude Include="..\src\common\Math.h" />
+    <ClInclude Include="..\src\common\Matrix.h" />
+    <ClInclude Include="..\src\common\Vector2.h" />
+    <ClInclude Include="..\src\common\Vector3.h" />
   </ItemGroup>
 </Project>

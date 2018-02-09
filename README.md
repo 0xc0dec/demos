@@ -6,8 +6,8 @@ from the get-go.
 * `StbTrueTypeOpenGL.cpp` and `StbTrueTypeOpenGLBaked`: example of rendering TrueType font using
 [stb_truetype](https://github.com/nothings/stb) library.
 
-![1](/StbTrueTypeOpenGL.png?raw=true)
-![1](/StbTrueTypeOpenGLBaked.png?raw=true)
+![1](/screenshots/StbTrueTypeOpenGL.png?raw=true)
+![1](/screenshots/StbTrueTypeOpenGLBaked.png?raw=true)
 
 * To be continued...
 
