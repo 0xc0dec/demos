@@ -15,8 +15,8 @@ DemoBase::DemoBase(int canvasWidth, int canvasHeight, bool fullScreen):
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-    auto x = SDL_WINDOWPOS_CENTERED;
-    auto y = SDL_WINDOWPOS_CENTERED;
+    const auto x = SDL_WINDOWPOS_CENTERED;
+    const auto y = SDL_WINDOWPOS_CENTERED;
     auto flags = SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI;
     if (fullScreen)
         flags |= SDL_WINDOW_FULLSCREEN;

@@ -10,8 +10,7 @@ static struct
 {
 	struct
 	{
-		const char* font =
-			R"(
+		const char* font = R"(
             #version 330 core
 
             in vec4 position;
@@ -31,8 +30,7 @@ static struct
 
 	struct
 	{
-		const char* font =
-			R"(
+		const char* font = R"(
             #version 330 core
 
             uniform sampler2D mainTex;
