@@ -1,5 +1,7 @@
 #include "common/DemoBase.h"
-#include "common/Matrix.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #define STB_TRUETYPE_IMPLEMENTATION
 #include <stb_truetype.h>
 #include <memory>
@@ -68,7 +70,7 @@ private:
 		} uniforms;
 	} program;
 
-	Matrix viewProjMatrix;
+	glm::mat4 viewProjMatrix;
 
 	struct
 	{
@@ -115,8 +117,8 @@ private:
 
 			const auto y = ascent + y1;
 			const int byteOffset = x + y * font.textureWidth;
-			stbtt_MakeCodepointBitmap(&fontInfo, pixels.get() + byteOffset, x2 - x1, y2 - y1, font.textureWidth, scale, scale,
-			                          text[i]);
+			stbtt_MakeCodepointBitmap(&fontInfo, pixels.get() + byteOffset, x2 - x1, y2 - y1, font.textureWidth,
+				scale, scale, text[i]);
 
 			int ax;
 			stbtt_GetCodepointHMetrics(&fontInfo, text[i], &ax, nullptr);
@@ -132,15 +134,14 @@ private:
 		glGenTextures(1, &font.texture);
 		glBindTexture(GL_TEXTURE_2D, font.texture);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, font.textureWidth, font.textureHeight, 0, GL_RED, GL_UNSIGNED_BYTE,
-		             pixels.get());
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, font.textureWidth, font.textureHeight, 0, GL_RED, GL_UNSIGNED_BYTE, pixels.get());
 		glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
 	void initUniforms()
 	{
-		viewProjMatrix = Matrix::createPerspective(60, 1.0f * canvasWidth / canvasHeight, 0.05f, 100.0f);
+		viewProjMatrix = glm::perspective(glm::radians(60.0f), 1.0f * canvasWidth / canvasHeight, 0.05f, 100.0f);
 		program.uniforms.viewProjMatrix = glGetUniformLocation(program.handle, "viewProjMatrix");
 		program.uniforms.worldMatrix = glGetUniformLocation(program.handle, "worldMatrix");
 		program.uniforms.texture = glGetUniformLocation(program.handle, "mainTex");
@@ -186,9 +187,8 @@ private:
 
 	void renderTextQuad()
 	{
-		auto worldMatrix = Matrix::createTranslation(Vector3(0, 0, -15));
-		worldMatrix.scaleByVector(Vector3(6, 6, 1));
-		glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, worldMatrix.m);
+		const auto worldMatrix = glm::scale(glm::translate(glm::mat4{}, {0, 0, -15}), {6, 6, 1});
+		glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(worldMatrix));
 
 		glBindVertexArray(textQuad.vao);
 		glDrawArrays(GL_TRIANGLES, 0, 6); // 6 vertices
@@ -226,7 +226,7 @@ private:
 
 		glUseProgram(program.handle);
 
-		glUniformMatrix4fv(program.uniforms.viewProjMatrix, 1, GL_FALSE, viewProjMatrix.m);
+		glUniformMatrix4fv(program.uniforms.viewProjMatrix, 1, GL_FALSE, glm::value_ptr(viewProjMatrix));
 
 		glBindTexture(GL_TEXTURE_2D, font.texture);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);

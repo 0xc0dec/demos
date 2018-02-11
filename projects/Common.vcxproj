@@ -20,14 +20,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\common\DemoBase.cpp" />
-    <ClCompile Include="..\src\common\Matrix.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\common\DemoBase.h" />
-    <ClInclude Include="..\src\common\Math.h" />
-    <ClInclude Include="..\src\common\Matrix.h" />
-    <ClInclude Include="..\src\common\Vector2.h" />
-    <ClInclude Include="..\src\common\Vector3.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0D29A93A-4712-433D-80BF-03DB8A484E06}</ProjectGuid>
