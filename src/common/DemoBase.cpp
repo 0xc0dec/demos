@@ -68,8 +68,8 @@ void DemoBase::run()
             }
         }
 
-        auto time = SDL_GetTicks() / 1000.0f;
-        auto dt = time - lastTime;
+        const auto time = SDL_GetTicks() / 1000.0f;
+        const auto dt = time - lastTime;
         lastTime = time;
 
         render(dt);
@@ -80,9 +80,9 @@ void DemoBase::run()
 
 auto DemoBase::createProgram(const char* vs, const char* fs) -> GLuint
 {
-    auto vertex = compileShader(GL_VERTEX_SHADER, vs);
-    auto fragment = compileShader(GL_FRAGMENT_SHADER, fs);
-    auto program = linkProgram(vertex, fragment);
+    const auto vertex = compileShader(GL_VERTEX_SHADER, vs);
+    const auto fragment = compileShader(GL_FRAGMENT_SHADER, fs);
+    const auto program = linkProgram(vertex, fragment);
     glDeleteShader(vertex);
     glDeleteShader(fragment);
     return program;
@@ -93,12 +93,14 @@ auto DemoBase::readFile(const char* path) -> std::vector<uint8_t>
     std::ifstream file(path, std::ios::binary | std::ios::ate);
     if (!file.is_open())
         DIE("Failed to open file " << path);
-    auto size = file.tellg();
+    
+	const auto size = file.tellg();
     file.seekg(0, std::ios::beg);
     auto bytes = std::vector<uint8_t>(size);
     file.read(reinterpret_cast<char*>(&bytes[0]), size);
     file.close();
-    return bytes;
+    
+	return bytes;
 }
 
 auto DemoBase::compileShader(GLenum type, const char* src) -> GLuint
@@ -109,7 +111,7 @@ auto DemoBase::compileShader(GLenum type, const char* src) -> GLuint
         { GL_FRAGMENT_SHADER, "fragment" }
     };
 
-    auto shader = glCreateShader(type);
+    const auto shader = glCreateShader(type);
 
     glShaderSource(shader, 1, &src, nullptr);
     glCompileShader(shader);
@@ -131,7 +133,7 @@ auto DemoBase::compileShader(GLenum type, const char* src) -> GLuint
 
 auto DemoBase::linkProgram(GLuint vs, GLuint fs) -> GLint
 {
-    auto program = glCreateProgram();
+    const auto program = glCreateProgram();
     glAttachShader(program, vs);
     glAttachShader(program, fs);
     glLinkProgram(program);
