@@ -204,7 +204,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)..\build\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\build\$(Configuration)\tmp\Vendor\</IntDir>
-    <IncludePath>$(ProjectDir)..\vendor\sdl\2.0.4\include;$(ProjectDir)..\vendor\glew\include;$(ProjectDir)..\vendor\stb\truetype\1.11\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\vendor\sdl\2.0.4\include;$(ProjectDir)..\vendor\glew\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -216,7 +216,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)..\build\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\build\$(Configuration)\tmp\Vendor\</IntDir>
-    <IncludePath>$(ProjectDir)..\vendor\sdl\2.0.4\include;$(ProjectDir)..\vendor\glew\include;$(ProjectDir)..\vendor\stb\truetype\1.11\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\vendor\sdl\2.0.4\include;$(ProjectDir)..\vendor\glew\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

@@ -83,7 +83,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)..\build\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\build\$(Configuration)\tmp\StbTrueTypeOpenGLBaked\</IntDir>
-    <IncludePath>$(ProjectDir)..\vendor\sdl\2.0.4\include;$(ProjectDir)..\vendor\glew\include;$(ProjectDir)..\vendor\stb\truetype\1.11\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\vendor\sdl\2.0.4\include;$(ProjectDir)..\vendor\glew\include;$(ProjectDir)..\vendor\stb_truetype\1.11\;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\build\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -96,7 +96,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)..\build\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\build\$(Configuration)\tmp\StbTrueTypeOpenGLBaked\</IntDir>
-    <IncludePath>$(ProjectDir)..\vendor\sdl\2.0.4\include;$(ProjectDir)..\vendor\glew\include;$(ProjectDir)..\vendor\stb\truetype\1.11\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\vendor\sdl\2.0.4\include;$(ProjectDir)..\vendor\glew\include;$(ProjectDir)..\vendor\stb_truetype\1.11\;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\build\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
