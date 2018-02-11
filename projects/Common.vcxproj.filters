@@ -2,8 +2,15 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\src\common\DemoBase.cpp" />
+    <ClCompile Include="..\src\common\Transform.cpp" />
+    <ClCompile Include="..\src\common\Camera.cpp" />
+    <ClCompile Include="..\src\common\Device.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\common\DemoBase.h" />
+    <ClInclude Include="..\src\common\Transform.h" />
+    <ClInclude Include="..\src\common\Camera.h" />
+    <ClInclude Include="..\src\common\Device.h" />
+    <ClInclude Include="..\src\common\Common.h" />
   </ItemGroup>
 </Project>

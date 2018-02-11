@@ -1,81 +1,33 @@
+/*
+    Copyright (c) Aleksey Fedotov
+    MIT license
+*/
+
 #include "DemoBase.h"
+#include "Common.h"
+#include "Device.h"
 #include <GL/glew.h>
 #include <fstream>
 #include <unordered_map>
 #include <string>
 
-DemoBase::DemoBase(int canvasWidth, int canvasHeight, bool fullScreen):
-    canvasWidth(canvasWidth),
-    canvasHeight(canvasHeight)
+DemoBase::DemoBase(uint32_t canvasWidth, uint32_t canvasHeight, bool fullScreen):
+	canvasWidth(canvasWidth),
+	canvasHeight(canvasHeight),
+	device(canvasWidth, canvasHeight, "Demo", fullScreen)
 {
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) < 0)
-        DIE("Failed to initialize SDL");
-
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
-    const auto x = SDL_WINDOWPOS_CENTERED;
-    const auto y = SDL_WINDOWPOS_CENTERED;
-    auto flags = SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI;
-    if (fullScreen)
-        flags |= SDL_WINDOW_FULLSCREEN;
-
-    window = SDL_CreateWindow("Demo", x, y, canvasWidth, canvasHeight, flags);
-    context = SDL_GL_CreateContext(window);
-
-    glewExperimental = true;
-    glewInit();
-
-    SDL_GL_SetSwapInterval(1);
-}
-
-DemoBase::~DemoBase()
-{
-    if (context)
-        SDL_GL_DeleteContext(context);
-    if (window)
-        SDL_DestroyWindow(window);
-    SDL_Quit();
 }
 
 void DemoBase::run()
 {
-    init();
-
-    float lastTime = 0;
-    auto run = true;
-    while (run)
-    {
-        SDL_Event evt;
-        while (SDL_PollEvent(&evt))
-        {
-            switch (evt.type)
-            {
-                case SDL_QUIT:
-                    run = false;
-                    break;
-                case SDL_KEYUP:
-                    if (evt.key.keysym.sym == SDLK_ESCAPE)
-                        run = false;
-                    break;
-                case SDL_WINDOWEVENT:
-                    if (evt.window.event == SDL_WINDOWEVENT_CLOSE)
-                        run = false;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        const auto time = SDL_GetTicks() / 1000.0f;
-        const auto dt = time - lastTime;
-        lastTime = time;
-
-        render(dt);
-
-        SDL_GL_SwapWindow(window);
-    }
+	init();
+	while (!device.closeRequested() && !device.isKeyPressed(SDLK_ESCAPE, true))
+	{
+		device.beginUpdate();
+		render();
+		device.endUpdate();
+	}
+	shutdown();
 }
 
 auto DemoBase::createProgram(const char* vs, const char* fs) -> GLuint

@@ -1,4 +1,11 @@
+/*
+    Copyright (c) Aleksey Fedotov
+    MIT license
+*/
+
 #include "common/DemoBase.h"
+#include "common/Device.h"
+#include "common/Common.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -58,8 +65,8 @@ struct GlyphInfo
 class Demo final : public DemoBase
 {
 public:
-	Demo(int canvasWidth, int canvasHeight, bool fullScreen):
-		DemoBase(canvasWidth, canvasHeight, fullScreen)
+	Demo(int canvasWidth, int canvasHeight):
+		DemoBase(canvasWidth, canvasHeight, false)
 	{
 	}
 
@@ -108,6 +115,60 @@ private:
 		std::unique_ptr<stbtt_packedchar[]> charInfo;
 		GLuint texture = 0;
 	} font;
+
+	void init() override final
+	{
+		initFont();
+		initRotatingLabel();
+		initAtlasQuad();
+		initProgram();
+		initUniforms();
+	}
+
+	void shutdown() override final
+	{
+		glDeleteVertexArrays(1, &rotatingLabel.vao);
+		glDeleteBuffers(1, &rotatingLabel.vertexBuffer);
+		glDeleteBuffers(1, &rotatingLabel.uvBuffer);
+		glDeleteBuffers(1, &rotatingLabel.indexBuffer);
+		glDeleteVertexArrays(1, &atlasQuad.vao);
+		glDeleteBuffers(1, &atlasQuad.vertexBuffer);
+		glDeleteBuffers(1, &atlasQuad.uvBuffer);
+		glDeleteTextures(1, &font.texture);
+		glDeleteProgram(program.handle);
+	}
+
+	void render() override final
+	{
+		glViewport(0, 0, canvasWidth, canvasHeight);
+		glClearColor(0, 0.5f, 0.6f, 1);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// Setting some state
+		glDisable(GL_CULL_FACE);
+		glDepthMask(GL_TRUE);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		glUseProgram(program.handle);
+
+		glUniformMatrix4fv(program.uniforms.viewProjMatrix, 1, GL_FALSE, glm::value_ptr(viewProjMatrix));
+
+		glBindTexture(GL_TEXTURE_2D, font.texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 8);
+		glActiveTexture(GL_TEXTURE0);
+		glUniform1i(program.uniforms.texture, 0);
+
+		auto dt = device.getTimeDelta();
+		renderRotatingLabel(dt);
+		renderAtlasQuad(dt);
+	}
 
 	void initProgram()
 	{
@@ -298,64 +359,11 @@ private:
 
 		return info;
 	}
-
-	void init() override final
-	{
-		initFont();
-		initRotatingLabel();
-		initAtlasQuad();
-		initProgram();
-		initUniforms();
-	}
-
-	void shutdown() override final
-	{
-		glDeleteVertexArrays(1, &rotatingLabel.vao);
-		glDeleteBuffers(1, &rotatingLabel.vertexBuffer);
-		glDeleteBuffers(1, &rotatingLabel.uvBuffer);
-		glDeleteBuffers(1, &rotatingLabel.indexBuffer);
-		glDeleteVertexArrays(1, &atlasQuad.vao);
-		glDeleteBuffers(1, &atlasQuad.vertexBuffer);
-		glDeleteBuffers(1, &atlasQuad.uvBuffer);
-		glDeleteTextures(1, &font.texture);
-		glDeleteProgram(program.handle);
-	}
-
-	void render(float dt) override final
-	{
-		glViewport(0, 0, canvasWidth, canvasHeight);
-		glClearColor(0, 0.5f, 0.6f, 1);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		// Setting some state
-		glDisable(GL_CULL_FACE);
-		glDepthMask(GL_TRUE);
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LEQUAL);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		glUseProgram(program.handle);
-
-		glUniformMatrix4fv(program.uniforms.viewProjMatrix, 1, GL_FALSE, glm::value_ptr(viewProjMatrix));
-
-		glBindTexture(GL_TEXTURE_2D, font.texture);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 8);
-		glActiveTexture(GL_TEXTURE0);
-		glUniform1i(program.uniforms.texture, 0);
-
-		renderRotatingLabel(dt);
-		renderAtlasQuad(dt);
-	}
 };
 
 int main()
 {
-	Demo example{800, 600, false};
-	example.run();
+	Demo demo{800, 600};
+	demo.run();
 	return 0;
 }
