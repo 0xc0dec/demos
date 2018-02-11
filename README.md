@@ -14,3 +14,4 @@ The solution should "just compile" from the get-go.
 * stb_truetype
 * SDL
 * GLEW
+* glm
