@@ -1,6 +1,7 @@
 #include "common/DemoBase.h"
-#include "common/Matrix.h"
-#include "common/Vector2.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #define STB_TRUETYPE_IMPLEMENTATION
 #include <stb_truetype.h>
 #include <memory>
@@ -50,8 +51,8 @@ static struct
 
 struct GlyphInfo
 {
-	Vector3 positions[4];
-	Vector2 uvs[4];
+	glm::vec3 positions[4];
+	glm::vec2 uvs[4];
 	float offsetX = 0;
 	float offsetY = 0;
 };
@@ -77,7 +78,7 @@ private:
 		} uniforms;
 	} program;
 
-	Matrix viewProjMatrix;
+	glm::mat4 viewProjMatrix;
 
 	struct
 	{
@@ -128,8 +129,7 @@ private:
 			DIE("Failed to initialize font");
 
 		stbtt_PackSetOversampling(&context, font.oversampleX, font.oversampleY);
-		if (!stbtt_PackFontRange(&context, fontData.data(), 0, font.size, font.firstChar, font.charCount,
-		                         font.charInfo.get()))
+		if (!stbtt_PackFontRange(&context, fontData.data(), 0, font.size, font.firstChar, font.charCount, font.charInfo.get()))
 			DIE("Failed to pack font");
 
 		stbtt_PackEnd(&context);
@@ -137,17 +137,16 @@ private:
 		glGenTextures(1, &font.texture);
 		glBindTexture(GL_TEXTURE_2D, font.texture);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, font.atlasWidth, font.atlasHeight, 0, GL_RED, GL_UNSIGNED_BYTE,
-		             atlasData.get());
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, font.atlasWidth, font.atlasHeight, 0, GL_RED, GL_UNSIGNED_BYTE, atlasData.get());
 		glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
 	void initUniforms()
 	{
-		const auto viewMatrix = Matrix::identity();
-		const auto projectionMatrix = Matrix::createPerspective(60, 1.0f * canvasWidth / canvasHeight, 0.05f, 100.0f);
-		viewProjMatrix = projectionMatrix * viewMatrix;
+		const glm::mat4 viewMatrix{};
+		const auto projMatrix = glm::perspective(glm::radians(60.0f), 1.0f * canvasWidth / canvasHeight, 0.05f, 100.0f);
+		viewProjMatrix = projMatrix * viewMatrix;
 
 		program.uniforms.viewProjMatrix = glGetUniformLocation(program.handle, "viewProjMatrix");
 		program.uniforms.worldMatrix = glGetUniformLocation(program.handle, "worldMatrix");
@@ -158,8 +157,8 @@ private:
 	{
 		const std::string text = "Rotating in world space";
 
-		std::vector<Vector3> vertices;
-		std::vector<Vector2> uvs;
+		std::vector<glm::vec3> vertices;
+		std::vector<glm::vec2> uvs;
 		std::vector<uint16_t> indexes;
 
 		uint16_t lastIndex = 0;
@@ -193,21 +192,20 @@ private:
 
 		glGenBuffers(1, &rotatingLabel.vertexBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, rotatingLabel.vertexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 		glEnableVertexAttribArray(0);
 
 		glGenBuffers(1, &rotatingLabel.uvBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, rotatingLabel.uvBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * uvs.size(), uvs.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * uvs.size(), uvs.data(), GL_STATIC_DRAW);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 		glEnableVertexAttribArray(1);
 
 		rotatingLabel.indexElementCount = indexes.size();
 		glGenBuffers(1, &rotatingLabel.indexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rotatingLabel.indexBuffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * rotatingLabel.indexElementCount, indexes.data(),
-		             GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * rotatingLabel.indexElementCount, indexes.data(), GL_STATIC_DRAW);
 	}
 
 	void initAtlasQuad()
@@ -252,10 +250,13 @@ private:
 	{
 		rotatingLabel.angle += dt;
 
-		auto worldMatrix = Matrix::createTranslation(Vector3(0, 5, -30));
-		worldMatrix.rotateY(rotatingLabel.angle);
-		worldMatrix.scaleByVector(Vector3(0.05f, 0.05f, 1));
-		glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, worldMatrix.m);
+		const auto worldMatrix = glm::scale(
+			glm::rotate(
+				glm::translate(glm::mat4{}, {0, 5, -30}),
+				rotatingLabel.angle,
+				{0, 1, 0}),
+			{0.05f, 0.05f, 1});
+		glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(worldMatrix));
 
 		glBindVertexArray(rotatingLabel.vao);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rotatingLabel.indexBuffer);
@@ -267,9 +268,8 @@ private:
 		atlasQuad.time += dt;
 		const auto distance = -10 - 5 * sinf(atlasQuad.time);
 
-		auto worldMatrix = Matrix::createTranslation(Vector3(0, -6, distance));
-		worldMatrix.scaleByVector(Vector3(6, 6, 1));
-		glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, worldMatrix.m);
+		const auto worldMatrix = glm::scale(glm::translate(glm::mat4{}, {0, -6, distance}), {6, 6, 1});
+		glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(worldMatrix));
 
 		glBindVertexArray(atlasQuad.vao);
 		glDrawArrays(GL_TRIANGLES, 0, 6); // 6 vertices
@@ -286,7 +286,7 @@ private:
 		auto ymin = -quad.y1;
 		auto ymax = -quad.y0;
 
-		auto info = GlyphInfo();
+		GlyphInfo info{};
 		info.offsetX = offsetX;
 		info.offsetY = offsetY;
 		info.positions[0] = {xmin, ymin, 0};
@@ -339,7 +339,7 @@ private:
 
 		glUseProgram(program.handle);
 
-		glUniformMatrix4fv(program.uniforms.viewProjMatrix, 1, GL_FALSE, viewProjMatrix.m);
+		glUniformMatrix4fv(program.uniforms.viewProjMatrix, 1, GL_FALSE, glm::value_ptr(viewProjMatrix));
 
 		glBindTexture(GL_TEXTURE_2D, font.texture);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
