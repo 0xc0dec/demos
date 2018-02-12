@@ -5,6 +5,7 @@
     <ClCompile Include="..\src\common\Transform.cpp" />
     <ClCompile Include="..\src\common\Camera.cpp" />
     <ClCompile Include="..\src\common\Device.cpp" />
+    <ClCompile Include="..\src\common\Spectator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\common\DemoBase.h" />
@@ -12,5 +13,6 @@
     <ClInclude Include="..\src\common\Camera.h" />
     <ClInclude Include="..\src\common\Device.h" />
     <ClInclude Include="..\src\common\Common.h" />
+    <ClInclude Include="..\src\common\Spectator.h" />
   </ItemGroup>
 </Project>

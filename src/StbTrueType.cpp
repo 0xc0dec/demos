@@ -144,7 +144,6 @@ private:
 		glClearColor(0, 0.5f, 0.6f, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// Setting some state
 		glDisable(GL_CULL_FACE);
 		glDepthMask(GL_TRUE);
 		glEnable(GL_DEPTH_TEST);
@@ -165,7 +164,7 @@ private:
 		glActiveTexture(GL_TEXTURE0);
 		glUniform1i(program.uniforms.texture, 0);
 
-		auto dt = device.getTimeDelta();
+		const auto dt = device.getTimeDelta();
 		renderRotatingLabel(dt);
 		renderAtlasQuad(dt);
 	}

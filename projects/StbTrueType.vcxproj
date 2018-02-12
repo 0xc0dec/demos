@@ -19,26 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\common\Camera.cpp" />
-    <ClCompile Include="..\src\common\DemoBase.cpp" />
-    <ClCompile Include="..\src\common\Device.cpp" />
-    <ClCompile Include="..\src\common\Spectator.cpp" />
-    <ClCompile Include="..\src\common\Transform.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\src\common\Camera.h" />
-    <ClInclude Include="..\src\common\Common.h" />
-    <ClInclude Include="..\src\common\DemoBase.h" />
-    <ClInclude Include="..\src\common\Device.h" />
-    <ClInclude Include="..\src\common\Spectator.h" />
-    <ClInclude Include="..\src\common\Transform.h" />
+    <ClCompile Include="..\src\StbTrueType.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{0D29A93A-4712-433D-80BF-03DB8A484E06}</ProjectGuid>
+    <ProjectGuid>{BED5B222-6018-4A41-902D-F8006BAEBE89}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Common</RootNamespace>
+    <RootNamespace>StbTrueType</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
-    <ProjectName>Common</ProjectName>
+    <ProjectName>StbTrueType</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -55,13 +43,13 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -88,27 +76,27 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)..\build\</OutDir>
-    <IntDir>$(ProjectDir)..\build\tmp\Common\</IntDir>
+    <IntDir>$(ProjectDir)..\build\tmp\StbTrueType\</IntDir>
     <IncludePath>$(ProjectDir)..\vendor\sdl\2.0.4\include;$(ProjectDir)..\vendor\glew\include;$(ProjectDir)..\vendor\stb\truetype\1.11\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)..\build\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)..\build\$(Configuration)\tmp\Common\</IntDir>
-    <IncludePath>$(ProjectDir)..\vendor\sdl\2.0.4\include;$(ProjectDir)..\vendor\glew\include;$(ProjectDir)..\vendor\glm\0.9.8.4\;$(IncludePath)</IncludePath>
+    <IntDir>$(ProjectDir)..\build\$(Configuration)\tmp\StbTrueType\</IntDir>
+    <IncludePath>$(ProjectDir)..\vendor\sdl\2.0.4\include;$(ProjectDir)..\vendor\glew\include;$(ProjectDir)..\vendor\stb_truetype\1.11\;$(ProjectDir)..\vendor\glm\0.9.8.4\;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\build\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)..\build\</OutDir>
-    <IntDir>$(ProjectDir)..\build\tmp\Common\</IntDir>
+    <IntDir>$(ProjectDir)..\build\tmp\StbTrueType\</IntDir>
     <IncludePath>$(ProjectDir)..\vendor\sdl\2.0.4\include;$(ProjectDir)..\vendor\glew\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)..\build\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)..\build\$(Configuration)\tmp\Common\</IntDir>
-    <IncludePath>$(ProjectDir)..\vendor\sdl\2.0.4\include;$(ProjectDir)..\vendor\glew\include;$(ProjectDir)..\vendor\glm\0.9.8.4\;$(IncludePath)</IncludePath>
+    <IntDir>$(ProjectDir)..\build\$(Configuration)\tmp\StbTrueType\</IntDir>
+    <IncludePath>$(ProjectDir)..\vendor\sdl\2.0.4\include;$(ProjectDir)..\vendor\glew\include;$(ProjectDir)..\vendor\stb_truetype\1.11\;$(ProjectDir)..\vendor\glm\0.9.8.4\;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\build\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -140,7 +128,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>winmm.lib;imm32.lib;version.lib;opengl32.lib;Vendor.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;imm32.lib;version.lib;opengl32.lib;Vendor.lib;Common.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
@@ -182,7 +170,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>winmm.lib;imm32.lib;version.lib;opengl32.lib;Vendor.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;imm32.lib;version.lib;opengl32.lib;Vendor.lib;Common.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
