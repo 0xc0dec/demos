@@ -3,6 +3,7 @@ project(Demos)
 
 set(CMAKE_SUPPRESS_REGENERATION true)
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Config types" FORCE)
+
 add_compile_options(-std=c++14)
 
 if (MSVC)
@@ -13,12 +14,8 @@ endif()
 
 # Demos
 
-file(GLOB DEMOS_COMMON "src/common/*.cpp" "src/common/*.h")
-
-source_group("common" FILES ${DEMOS_COMMON})
-
-function(set_default_definitions NAME)
-    target_compile_definitions(${NAME} PRIVATE
+function(set_default_definitions TARGET)
+    target_compile_definitions(${TARGET} PRIVATE
         HAVE_LIBC
         GLEW_STATIC
         SDL_HAPTIC_DISABLED
@@ -27,10 +24,8 @@ function(set_default_definitions NAME)
     )
 endfunction()
 
-function(add_exe NAME ENTRYPOINT)
-    add_executable(${NAME} ${DEMOS_COMMON} ${ENTRYPOINT})
-
-    target_include_directories(${NAME} PRIVATE
+function(set_default_includes TARGET)
+    target_include_directories(${TARGET} PRIVATE
         "src"
         "vendor" # TODO needed?
         "vendor/glew/1.13/include"
@@ -38,16 +33,35 @@ function(add_exe NAME ENTRYPOINT)
         "vendor/stb_truetype/1.11"
         "vendor/glm/0.9.8.4"
     )
-
-    target_link_libraries(${NAME} Vendor)
-
-    if (MSVC)
-        target_compile_options(${NAME} PRIVATE /wd4267 /wd4244 /wd4312)
-    endif()
-
-    set_default_definitions(${NAME})
 endfunction()
 
+function(add_exe TARGET ENTRYPOINT)
+    source_group("" FILES ${ENTRYPOINT})
+    add_executable(${TARGET} ${ENTRYPOINT})
+    set_default_includes(${TARGET})
+    target_link_libraries(${TARGET} Vendor Common)
+
+    if (MSVC)
+        target_compile_options(${TARGET} PRIVATE /wd4267 /wd4244 /wd4312)
+    endif()
+
+    set_default_definitions(${TARGET})
+endfunction()
+
+function(add_common)
+    file(GLOB DEMOS_COMMON "src/common/*.cpp" "src/common/*.h")
+    source_group("" FILES ${DEMOS_COMMON})
+    add_library(Common ${DEMOS_COMMON})
+    set_default_includes(Common)
+
+    if (MSVC)
+        target_compile_options(Common PRIVATE /wd4267 /wd4244 /wd4312)
+    endif()
+
+    set_default_definitions(Common)
+endfunction()
+
+add_common()
 add_exe(StbTrueType "src/StbTrueType.cpp")
 add_exe(Transform "src/Transform.cpp")
 
