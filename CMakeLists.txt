@@ -11,9 +11,6 @@ if (MSVC)
     add_compile_options("$<$<CONFIG:RELEASE>:/MT>")
 endif()
 
-
-# Demos
-
 function(set_default_definitions TARGET)
     target_compile_definitions(${TARGET} PRIVATE
         HAVE_LIBC
@@ -26,16 +23,16 @@ endfunction()
 
 function(set_default_includes TARGET)
     target_include_directories(${TARGET} PRIVATE
-        "src"
-        "vendor" # TODO needed?
-        "vendor/glew/1.13/include"
-        "vendor/SDL/2.0.4/include"
-        "vendor/stb_truetype/1.11"
-        "vendor/glm/0.9.8.4"
+        "${CMAKE_SOURCE_DIR}/src"
+        "${CMAKE_SOURCE_DIR}/vendor" # TODO needed?
+        "${CMAKE_SOURCE_DIR}/vendor/glew/1.13/include"
+        "${CMAKE_SOURCE_DIR}/vendor/SDL/2.0.4/include"
+        "${CMAKE_SOURCE_DIR}/vendor/stb_truetype/1.11"
+        "${CMAKE_SOURCE_DIR}/vendor/glm/0.9.8.4"
     )
 endfunction()
 
-function(add_exe TARGET ENTRYPOINT)
+function(add_demo TARGET ENTRYPOINT)
     source_group("" FILES ${ENTRYPOINT})
     add_executable(${TARGET} ${ENTRYPOINT})
     set_default_includes(${TARGET})
@@ -48,24 +45,8 @@ function(add_exe TARGET ENTRYPOINT)
     set_default_definitions(${TARGET})
 endfunction()
 
-function(add_common)
-    file(GLOB DEMOS_COMMON "src/common/*.cpp" "src/common/*.h")
-    source_group("" FILES ${DEMOS_COMMON})
-    add_library(Common ${DEMOS_COMMON})
-    set_default_includes(Common)
-
-    if (MSVC)
-        target_compile_options(Common PRIVATE /wd4267 /wd4244 /wd4312)
-    endif()
-
-    set_default_definitions(Common)
-endfunction()
-
-add_common()
-add_exe(StbTrueType "src/StbTrueType.cpp")
-add_exe(Transform "src/Transform.cpp")
-
-
-# Vendor
-
+add_subdirectory("src/common")
 add_subdirectory("vendor")
+
+add_demo(StbTrueType "src/stb-truetype/StbTrueType.cpp")
+add_demo(Transform "src/transform/Transform.cpp")
