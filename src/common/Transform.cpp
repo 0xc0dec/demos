@@ -84,17 +84,17 @@ auto Transform::invTransposedWorldMatrix() const -> glm::mat4
 
 auto Transform::worldViewMatrix(const Camera &camera) const -> glm::mat4
 {
-    return camera.getViewMatrix() * worldMatrix();
+    return camera.viewMatrix() * worldMatrix();
 }
 
 auto Transform::worldViewProjMatrix(const Camera &camera) const -> glm::mat4
 {
-    return camera.getViewProjectionMatrix() * worldMatrix();
+    return camera.viewProjMatrix() * worldMatrix();
 }
 
 auto Transform::invTransposedWorldViewMatrix(const Camera &camera) const -> glm::mat4
 {
-    return glm::transpose(glm::inverse(camera.getViewMatrix() * worldMatrix()));
+    return glm::transpose(glm::inverse(camera.viewMatrix() * worldMatrix()));
 }
 
 auto Transform::translateLocal(const glm::vec3 &translation) -> Transform&

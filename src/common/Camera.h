@@ -12,25 +12,25 @@
 class Camera final
 {
 public:
-    auto getTransform() -> Transform& { return transform; }
+    auto transform() -> Transform& { return transform_; }
 
     auto setPerspective(float fov, float aspectRatio, float nearClip, float farClip) -> Camera&;
     auto setOrthographic(float width, float height, float nearClip, float farClip) -> Camera&;
 
-    auto getViewMatrix() const -> const glm::mat4 { return glm::inverse(transform.worldMatrix()); }
-    auto getInvViewMatrix() const -> const glm::mat4 { return glm::inverse(getViewMatrix()); }
-    auto getProjectionMatrix() const -> const glm::mat4;
-    auto getViewProjectionMatrix() const -> const glm::mat4 { return getProjectionMatrix() * getViewMatrix(); }
-    auto getInvViewProjectionMatrix() const -> const glm::mat4 { return glm::inverse(getViewProjectionMatrix()); }
+    auto viewMatrix() const -> const glm::mat4 { return glm::inverse(transform_.worldMatrix()); }
+    auto invViewMatrix() const -> const glm::mat4 { return glm::inverse(viewMatrix()); }
+    auto projMatrix() const -> const glm::mat4;
+    auto viewProjMatrix() const -> const glm::mat4 { return projMatrix() * viewMatrix(); }
+    auto invViewProjMatrix() const -> const glm::mat4 { return glm::inverse(viewProjMatrix()); }
 
 protected:
-    bool ortho = false;
-    float fov = glm::degrees(60.0f);
-    float aspectRatio = 1;
-    float orthoWidth = 1;
-    float orthoHeight = 1;
-    float nearClip = 1;
-    float farClip = 100;
+    bool ortho_ = false;
+    float fov_ = glm::degrees(60.0f);
+    float aspectRatio_ = 1;
+    float orthoWidth_ = 1;
+    float orthoHeight_ = 1;
+    float nearClip_ = 1;
+    float farClip_ = 100;
     
-    Transform transform;
+    Transform transform_;
 };

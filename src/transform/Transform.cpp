@@ -94,8 +94,8 @@ private:
 		t3.setLocalScale({0.5f, 0.5f, 0.5f});
 		t3.setParent(&t2);
 
-		camera.getTransform().setLocalPosition({10, 10, 10});
-		camera.getTransform().lookAt({0, 0, 0}, {0, 1, 0});
+		camera.transform().setLocalPosition({10, 10, 10});
+		camera.transform().lookAt({0, 0, 0}, {0, 1, 0});
 	}
 
 	void shutdown() override final
@@ -106,7 +106,7 @@ private:
 
 	void render() override final
 	{
-		applySpectator(camera.getTransform(), device);
+		applySpectator(camera.transform(), device);
 		
 		const auto dt = device.getTimeDelta();
 		const auto deltaAngle = glm::radians(100 * dt);
@@ -127,7 +127,7 @@ private:
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		glUseProgram(program.handle);
-		glUniformMatrix4fv(program.uniforms.viewProjMatrix, 1, GL_FALSE, glm::value_ptr(camera.getViewProjectionMatrix()));
+		glUniformMatrix4fv(program.uniforms.viewProjMatrix, 1, GL_FALSE, glm::value_ptr(camera.viewProjMatrix()));
 		
 		glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(t1.worldMatrix()));
 		drawQuad();
