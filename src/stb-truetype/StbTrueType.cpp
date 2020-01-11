@@ -3,7 +3,7 @@
     MIT license
 */
 
-#include "common/DemoBase.h"
+#include "common/AppBase.h"
 #include "common/Device.h"
 #include "common/Common.h"
 #include <glm/glm.hpp>
@@ -164,7 +164,7 @@ private:
 		glActiveTexture(GL_TEXTURE0);
 		glUniform1i(program.uniforms.texture, 0);
 
-		const auto dt = device_.getTimeDelta();
+		const auto dt = device_.timeDelta();
 		renderRotatingLabel(dt);
 		renderAtlasQuad(dt);
 	}

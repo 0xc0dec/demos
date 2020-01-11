@@ -3,7 +3,7 @@
     MIT license
 */
 
-#include "common/DemoBase.h"
+#include "common/AppBase.h"
 #include "common/Device.h"
 #include "common/Common.h"
 #include "common/Camera.h"
@@ -108,7 +108,7 @@ private:
 	{
 		applySpectator(camera.transform(), device_);
 		
-		const auto dt = device_.getTimeDelta();
+		const auto dt = device_.timeDelta();
 		const auto deltaAngle = glm::radians(100 * dt);
 		root.rotate({0, 1, 0}, deltaAngle, TransformSpace::World);
 		t1.rotate({0, 0, 1}, deltaAngle, TransformSpace::Self);
