@@ -169,7 +169,7 @@ private:
 
 int main()
 {
-	App demo{800, 600};
+	App demo{1366, 768};
 	demo.run();
 	return 0;
 }
