@@ -50,10 +50,10 @@ static struct
 	} fragment;
 } shaders;
 
-class Demo final : public AppBase
+class App final : public AppBase
 {
 public:
-	Demo(int canvasWidth, int canvasHeight):
+	App(int canvasWidth, int canvasHeight):
 		AppBase(canvasWidth, canvasHeight, false)
 	{
 	}
@@ -83,7 +83,7 @@ private:
 
 	void init() override final
 	{
-		initProgram();
+		initShaders();
 		initQuad();
 
 		t2.setLocalPosition({3, 3, 3});
@@ -139,7 +139,7 @@ private:
 		drawQuad();
 	}
 
-	void initProgram()
+	void initShaders()
 	{
 		program.handle = createProgram(shaders.vertex.font, shaders.fragment.font);
 		program.uniforms.viewProjMatrix = glGetUniformLocation(program.handle, "viewProjMatrix");
@@ -205,7 +205,7 @@ private:
 
 int main()
 {
-	Demo demo{800, 600};
+	App demo{800, 600};
 	demo.run();
 	return 0;
 }

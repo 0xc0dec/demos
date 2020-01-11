@@ -6,53 +6,13 @@
 #include "common/AppBase.h"
 #include "common/Device.h"
 #include "common/Common.h"
+#include "Shaders.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #define STB_TRUETYPE_IMPLEMENTATION
 #include <stb_truetype.h>
 #include <memory>
-
-static struct
-{
-	struct
-	{
-		const char* font = R"(
-            #version 330 core
-
-            in vec4 position;
-            in vec2 texCoord0;
-
-            uniform mat4 worldMatrix;
-            uniform mat4 viewProjMatrix;
-            out vec2 uv0;
-
-            void main()
-            {
-                gl_Position = viewProjMatrix * worldMatrix * position;
-                uv0 = texCoord0;
-            }
-        )";
-	} vertex;
-
-	struct
-	{
-		const char* font = R"(
-            #version 330 core
-
-            uniform sampler2D mainTex;
-
-            in vec2 uv0;
-            out vec4 fragColor;
-
-            void main()
-            {
-                vec4 c = texture(mainTex, uv0);
-                fragColor = vec4(c.r, c.r, c.r, c.r);
-            }
-        )";
-	} fragment;
-} shaders;
 
 struct GlyphInfo
 {
@@ -62,10 +22,10 @@ struct GlyphInfo
 	float offsetY = 0;
 };
 
-class Demo final : public AppBase
+class App final : public AppBase
 {
 public:
-	Demo(int canvasWidth, int canvasHeight):
+	App(int canvasWidth, int canvasHeight):
 		AppBase(canvasWidth, canvasHeight, false)
 	{
 	}
@@ -121,7 +81,7 @@ private:
 		initFont();
 		initRotatingLabel();
 		initAtlasQuad();
-		initProgram();
+		initShaders();
 		initUniforms();
 	}
 
@@ -169,8 +129,9 @@ private:
 		renderAtlasQuad(dt);
 	}
 
-	void initProgram()
+	void initShaders()
 	{
+		static StbTrueTypeDemo::Shaders shaders;
 		program.handle = createProgram(shaders.vertex.font, shaders.fragment.font);
 		glUseProgram(program.handle);
 	}
@@ -223,7 +184,7 @@ private:
 		float offsetX = 0, offsetY = 0;
 		for (auto c : text)
 		{
-			const auto glyphInfo = getGlyphInfo(c, offsetX, offsetY);
+			const auto glyphInfo = makeGlyphInfo(c, offsetX, offsetY);
 			offsetX = glyphInfo.offsetX;
 			offsetY = glyphInfo.offsetY;
 
@@ -291,12 +252,14 @@ private:
 		glGenVertexArrays(1, &atlasQuad.vao);
 		glBindVertexArray(atlasQuad.vao);
 
+		// Vertices
 		glGenBuffers(1, &atlasQuad.vertexBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, atlasQuad.vertexBuffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * 18, vertices, GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 		glEnableVertexAttribArray(0);
 
+		// Texture coordinates
 		glGenBuffers(1, &atlasQuad.uvBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, atlasQuad.uvBuffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * 12, uvs, GL_STATIC_DRAW);
@@ -308,12 +271,9 @@ private:
 	{
 		rotatingLabel.angle += dt;
 
-		const auto worldMatrix = glm::scale(
-			glm::rotate(
-				glm::translate(glm::mat4{}, {0, 5, -30}),
-				rotatingLabel.angle,
-				{0, 1, 0}),
-			{0.05f, 0.05f, 1});
+		auto worldMatrix = glm::translate(glm::mat4{}, {0, 5, -30});
+		worldMatrix = glm::rotate(worldMatrix, rotatingLabel.angle, {0, 1, 0});
+		worldMatrix = glm::scale(worldMatrix, {0.05f, 0.05f, 1});
 		glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(worldMatrix));
 
 		glBindVertexArray(rotatingLabel.vao);
@@ -326,14 +286,15 @@ private:
 		atlasQuad.time += dt;
 		const auto distance = -10 - 5 * sinf(atlasQuad.time);
 
-		const auto worldMatrix = glm::scale(glm::translate(glm::mat4{}, {0, -6, distance}), {6, 6, 1});
+		auto worldMatrix = glm::translate(glm::mat4{}, {0, -6, distance});
+		worldMatrix = glm::scale(worldMatrix, {6, 6, 1});
 		glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(worldMatrix));
 
 		glBindVertexArray(atlasQuad.vao);
 		glDrawArrays(GL_TRIANGLES, 0, 6); // 6 vertices
 	}
 
-	auto getGlyphInfo(uint32_t character, float offsetX, float offsetY) -> GlyphInfo
+	auto makeGlyphInfo(uint32_t character, float offsetX, float offsetY) -> GlyphInfo
 	{
 		stbtt_aligned_quad quad;
 
@@ -362,7 +323,7 @@ private:
 
 int main()
 {
-	Demo demo{800, 600};
+	App demo{1366, 768};
 	demo.run();
 	return 0;
 }
