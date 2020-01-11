@@ -8,47 +8,10 @@
 #include "common/Common.h"
 #include "common/Camera.h"
 #include "common/Spectator.h"
+#include "Shaders.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-static struct
-{
-	struct
-	{
-		const char* font = R"(
-            #version 330 core
-
-            in vec4 position;
-            in vec2 texCoord0;
-
-            uniform mat4 worldMatrix;
-            uniform mat4 viewProjMatrix;
-            out vec2 uv0;
-
-            void main()
-            {
-                gl_Position = viewProjMatrix * worldMatrix * position;
-                uv0 = texCoord0;
-            }
-        )";
-	} vertex;
-
-	struct
-	{
-		const char* font = R"(
-            #version 330 core
-
-            in vec2 uv0;
-            out vec4 fragColor;
-
-            void main()
-            {
-                fragColor = vec4(uv0.x, uv0.y, 0, 1);
-            }
-        )";
-	} fragment;
-} shaders;
 
 class App final : public AppBase
 {
@@ -141,6 +104,7 @@ private:
 
 	void initShaders()
 	{
+		static TransformDemo::Shaders shaders;
 		program.handle = createProgram(shaders.vertex.font, shaders.fragment.font);
 		program.uniforms.viewProjMatrix = glGetUniformLocation(program.handle, "viewProjMatrix");
 		program.uniforms.worldMatrix = glGetUniformLocation(program.handle, "worldMatrix");
