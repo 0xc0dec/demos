@@ -9,10 +9,10 @@
 #include <glm/gtc/matrix_transform.inl>
 #include <algorithm>
 
-static const uint32_t dirtyBitLocal = 1;
-static const uint32_t dirtyBitWorld = 1 << 1;
-static const uint32_t dirtyBitInvTransposedWorld = 1 << 2;
-static const uint32_t dirtyBitAll = dirtyBitLocal | dirtyBitWorld | dirtyBitInvTransposedWorld;
+static const uint32_t LOCAL_BIT = 1;
+static const uint32_t WORLD_BIT = 1 << 1;
+static const uint32_t INV_TRANSPOSED_WORLD_BIT = 1 << 2;
+static const uint32_t ALL_BIT = LOCAL_BIT | WORLD_BIT | INV_TRANSPOSED_WORLD_BIT;
 
 auto Transform::setParent(Transform *parent) -> Transform&
 {
@@ -26,7 +26,7 @@ auto Transform::setParent(Transform *parent) -> Transform&
         this->parent_ = parent;
         if (parent)
             parent->children_.push_back(this);
-        setDirtyWithChildren(dirtyBitWorld | dirtyBitInvTransposedWorld);
+        setDirtyWithChildren(WORLD_BIT | INV_TRANSPOSED_WORLD_BIT);
     }
 
     return *this;
@@ -45,12 +45,12 @@ auto Transform::clearChildren() -> Transform&
 
 auto Transform::matrix() const -> glm::mat4
 {
-    if (dirtyFlags_ & dirtyBitLocal)
+    if (dirtyFlags_ & LOCAL_BIT)
     {
         matrix_ = glm::translate(glm::mat4(1.0f), localPosition_) *
                  glm::mat4_cast(localRotation_) *
                  glm::scale(glm::mat4(1.0f), localScale_);
-        dirtyFlags_ &= ~dirtyBitLocal;
+        dirtyFlags_ &= ~LOCAL_BIT;
     }
 
     return matrix_;
@@ -58,13 +58,13 @@ auto Transform::matrix() const -> glm::mat4
 
 auto Transform::worldMatrix() const -> glm::mat4
 {
-    if (dirtyFlags_ & dirtyBitWorld)
+    if (dirtyFlags_ & WORLD_BIT)
     {
         if (parent_)
             worldMatrix_ = parent_->worldMatrix() * matrix();
         else
             worldMatrix_ = matrix();
-        dirtyFlags_ &= ~dirtyBitWorld;
+        dirtyFlags_ &= ~WORLD_BIT;
     }
 
     return worldMatrix_;
@@ -72,11 +72,11 @@ auto Transform::worldMatrix() const -> glm::mat4
 
 auto Transform::invTransposedWorldMatrix() const -> glm::mat4
 {
-    if (dirtyFlags_ & dirtyBitInvTransposedWorld)
+    if (dirtyFlags_ & INV_TRANSPOSED_WORLD_BIT)
     {
         invTransposedWorldMatrix_ = worldMatrix();
         invTransposedWorldMatrix_ = glm::transpose(glm::inverse(invTransposedWorldMatrix_));
-        dirtyFlags_ &= ~dirtyBitInvTransposedWorld;
+        dirtyFlags_ &= ~INV_TRANSPOSED_WORLD_BIT;
     }
 
     return invTransposedWorldMatrix_;
@@ -100,7 +100,7 @@ auto Transform::invTransposedWorldViewMatrix(const Camera &camera) const -> glm:
 auto Transform::translateLocal(const glm::vec3 &translation) -> Transform&
 {
     localPosition_ += translation;
-    setDirtyWithChildren(dirtyBitAll);
+    setDirtyWithChildren(ALL_BIT);
     return *this;
 }
 
@@ -126,7 +126,7 @@ auto Transform::rotate(const glm::quat &rotation, TransformSpace space) -> Trans
             break;
     }
 
-    setDirtyWithChildren(dirtyBitAll);
+    setDirtyWithChildren(ALL_BIT);
 
     return *this;
 }
@@ -143,14 +143,14 @@ auto Transform::scaleLocal(const glm::vec3 &scale) -> Transform&
     localScale_.x *= scale.x;
     localScale_.y *= scale.y;
     localScale_.z *= scale.z;
-    setDirtyWithChildren(dirtyBitAll);
+    setDirtyWithChildren(ALL_BIT);
     return *this;
 }
 
 auto Transform::setLocalScale(const glm::vec3 &scale) -> Transform&
 {
     localScale_ = scale;
-    setDirtyWithChildren(dirtyBitAll);
+    setDirtyWithChildren(ALL_BIT);
     return *this;
 }
 
@@ -185,21 +185,21 @@ auto Transform::transformDirection(const glm::vec3 &direction) const -> glm::vec
 auto Transform::setLocalRotation(const glm::quat &rotation) -> Transform&
 {
     localRotation_ = rotation;
-    setDirtyWithChildren(dirtyBitAll);
+    setDirtyWithChildren(ALL_BIT);
     return *this;
 }
 
 auto Transform::setLocalRotation(const glm::vec3 &axis, float angle) -> Transform&
 {
     localRotation_ = glm::angleAxis(angle, axis);
-    setDirtyWithChildren(dirtyBitAll);
+    setDirtyWithChildren(ALL_BIT);
     return *this;
 }
 
 auto Transform::setLocalPosition(const glm::vec3 &position) -> Transform&
 {
     localPosition_ = position;
-    setDirtyWithChildren(dirtyBitAll);
+    setDirtyWithChildren(ALL_BIT);
     return *this;
 }
 
