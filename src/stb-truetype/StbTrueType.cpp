@@ -138,7 +138,7 @@ private:
 
 	void initFont()
 	{
-		auto fontData = readFile("C:/windows/fonts/arial.ttf");
+		auto fontData = readFile(dataPath("fonts/OpenSans-Regular.ttf").c_str());
 		auto atlasData = std::make_unique<uint8_t[]>(font.atlasWidth * font.atlasHeight);
 
 		font.charInfo = std::make_unique<stbtt_packedchar[]>(font.charCount);

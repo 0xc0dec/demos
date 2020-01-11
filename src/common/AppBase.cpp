@@ -32,7 +32,7 @@ void AppBase::run()
     shutdown();
 }
 
-auto AppBase::createProgram(const char* vs, const char* fs) -> GLuint
+auto AppBase::createProgram(const char *vs, const char *fs) -> GLuint
 {
     const auto vertex = compileShader(GL_VERTEX_SHADER, vs);
     const auto fragment = compileShader(GL_FRAGMENT_SHADER, fs);
@@ -42,7 +42,7 @@ auto AppBase::createProgram(const char* vs, const char* fs) -> GLuint
     return program;
 }
 
-auto AppBase::readFile(const char* path) -> std::vector<uint8_t>
+auto AppBase::readFile(const char *path) -> std::vector<uint8_t>
 {
     std::ifstream file(path, std::ios::binary | std::ios::ate);
     if (!file.is_open())
@@ -51,13 +51,18 @@ auto AppBase::readFile(const char* path) -> std::vector<uint8_t>
     const auto size = file.tellg();
     file.seekg(0, std::ios::beg);
     auto bytes = std::vector<uint8_t>(size);
-    file.read(reinterpret_cast<char*>(&bytes[0]), size);
+    file.read(reinterpret_cast<char *>(&bytes[0]), size);
     file.close();
 
     return bytes;
 }
 
-auto AppBase::compileShader(GLenum type, const char* src) -> GLuint
+auto AppBase::dataPath(const char *path) -> std::string
+{
+    return std::string("../../data/") + path;
+}
+
+auto AppBase::compileShader(GLenum type, const char *src) -> GLuint
 {
     static std::unordered_map<GLuint, std::string> typeNames =
     {

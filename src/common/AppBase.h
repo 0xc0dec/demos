@@ -31,6 +31,7 @@ protected:
 
     static auto createProgram(const char* vs, const char* fs) -> GLuint;
     static auto readFile(const char* path) -> std::vector<uint8_t>;
+	static auto dataPath(const char *path) -> std::string;
 
 private:
     static auto compileShader(GLenum type, const char* src) -> GLuint;
