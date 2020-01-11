@@ -10,14 +10,14 @@ all dependencies are included for easier building.
 
 # Demos
 ### `StbTrueType`
-Rendering TrueType font in OpenGL using [stb_truetype](https://github.com/nothings/stb) library.
+Rendering TrueType font using [stb_truetype](https://github.com/nothings/stb) library.
 
-![1](/screenshots/StbTrueType.png?raw=true)
+![Image](/screenshots/StbTrueType.png?raw=true)
 
 ### `Transform`
-Showcases reusable `Transform` and `Camera` classes for working with transform hierarchies and (first person) camera.
+Applying reusable `Transform` and `Camera` classes for working with transform hierarchies and (first person) camera.
 
-![1](/screenshots/Transform.png?raw=true)
+![Image](/screenshots/Transform.png?raw=true)
 
 ### To be continued...
 
