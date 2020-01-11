@@ -4,9 +4,9 @@ all dependencies are included.
 
 ## Building and running
 * `mkdir build && cd build`.
-* `cmake -G "Visual Studio 15 2017 Win64" ..` (or other generator depending on the OS/IDE).
-* In Visual Studio build `build/Demos.sln`. In CLion build the CMakeLists project directly. Not tested in other IDEs.
-* Run demo executables from `build/<target>/`.
+* `cmake -G "Visual Studio 16 2019" -A x64 ..` (or other generator depending on the IDE).
+* Build using the generated IDE files.
+* Run executables inside `build/<Debug|Release>/`.
 
 ## Demos
 * `StbTrueType.cpp`: rendering TrueType font in OpenGL using [stb_truetype](https://github.com/nothings/stb) library.
