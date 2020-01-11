@@ -62,11 +62,11 @@ struct GlyphInfo
 	float offsetY = 0;
 };
 
-class Demo final : public DemoBase
+class Demo final : public AppBase
 {
 public:
 	Demo(int canvasWidth, int canvasHeight):
-		DemoBase(canvasWidth, canvasHeight, false)
+		AppBase(canvasWidth, canvasHeight, false)
 	{
 	}
 
@@ -140,7 +140,7 @@ private:
 
 	void render() override final
 	{
-		glViewport(0, 0, canvasWidth, canvasHeight);
+		glViewport(0, 0, canvasWidth_, canvasHeight_);
 		glClearColor(0, 0.5f, 0.6f, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -164,7 +164,7 @@ private:
 		glActiveTexture(GL_TEXTURE0);
 		glUniform1i(program.uniforms.texture, 0);
 
-		const auto dt = device.getTimeDelta();
+		const auto dt = device_.getTimeDelta();
 		renderRotatingLabel(dt);
 		renderAtlasQuad(dt);
 	}
@@ -203,7 +203,7 @@ private:
 	void initUniforms()
 	{
 		const glm::mat4 viewMatrix{};
-		const auto projMatrix = glm::perspective(glm::radians(60.0f), 1.0f * canvasWidth / canvasHeight, 0.05f, 100.0f);
+		const auto projMatrix = glm::perspective(glm::radians(60.0f), 1.0f * canvasWidth_ / canvasHeight_, 0.05f, 100.0f);
 		viewProjMatrix = projMatrix * viewMatrix;
 
 		program.uniforms.viewProjMatrix = glGetUniformLocation(program.handle, "viewProjMatrix");

@@ -50,11 +50,11 @@ static struct
 	} fragment;
 } shaders;
 
-class Demo final : public DemoBase
+class Demo final : public AppBase
 {
 public:
 	Demo(int canvasWidth, int canvasHeight):
-		DemoBase(canvasWidth, canvasHeight, false)
+		AppBase(canvasWidth, canvasHeight, false)
 	{
 	}
 
@@ -106,16 +106,16 @@ private:
 
 	void render() override final
 	{
-		applySpectator(camera.transform(), device);
+		applySpectator(camera.transform(), device_);
 		
-		const auto dt = device.getTimeDelta();
+		const auto dt = device_.getTimeDelta();
 		const auto deltaAngle = glm::radians(100 * dt);
 		root.rotate({0, 1, 0}, deltaAngle, TransformSpace::World);
 		t1.rotate({0, 0, 1}, deltaAngle, TransformSpace::Self);
 		t2.rotate({0, 0, 1}, deltaAngle, TransformSpace::Self);
 		t3.rotate({0, 1, 0}, deltaAngle, TransformSpace::Parent);
 
-		glViewport(0, 0, canvasWidth, canvasHeight);
+		glViewport(0, 0, canvasWidth_, canvasHeight_);
 		glClearColor(0, 0.5f, 0.6f, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
