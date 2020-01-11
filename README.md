@@ -9,17 +9,17 @@ all dependencies are included for easier building.
 * Run executables inside `build/<Debug|Release>/`.
 
 # Demos
-## `StbTrueType`
+### `StbTrueType`
 Rendering TrueType font in OpenGL using [stb_truetype](https://github.com/nothings/stb) library.
 
 ![1](/screenshots/StbTrueType.png?raw=true)
 
-## `Transform`
+### `Transform`
 Showcases reusable `Transform` and `Camera` classes for working with transform hierarchies and (first person) camera.
 
 ![1](/screenshots/Transform.png?raw=true)
 
-## To be continued...
+### To be continued...
 
 # Dependencies
 * stb_truetype
