@@ -63,8 +63,8 @@ private:
 
 	void shutdown() override final
 	{
-		destroyQuad();
-		destroyProgram();
+		cleanupQuad();
+		cleanupProgram();
 	}
 
 	void render() override final
@@ -110,7 +110,7 @@ private:
 		program.uniforms.worldMatrix = glGetUniformLocation(program.handle, "worldMatrix");
 	}
 
-	void destroyProgram()
+	void cleanupProgram()
 	{
 		glDeleteProgram(program.handle);
 	}
@@ -153,7 +153,7 @@ private:
 		glEnableVertexAttribArray(1);
 	}
 
-	void destroyQuad()
+	void cleanupQuad()
 	{
 		glDeleteVertexArrays(1, &quad.vao);
 		glDeleteBuffers(1, &quad.vertexBuffer);
