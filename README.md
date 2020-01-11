@@ -1,6 +1,6 @@
 ## About
 A number of graphics demos made for learning and playing around with. The code is (hopefully) clean and self-documented,
-all dependencies are included.
+all dependencies are included for easier building.
 
 ## Building and running
 * `mkdir build && cd build`.
