@@ -24,8 +24,8 @@ Device::Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, b
     if (fullScreen)
         flags |= SDL_WINDOW_FULLSCREEN;
 
-    window = SDL_CreateWindow(title, x, y, canvasWidth, canvasHeight, flags);
-    context = SDL_GL_CreateContext(window);
+    window_ = SDL_CreateWindow(title, x, y, canvasWidth, canvasHeight, flags);
+    context_ = SDL_GL_CreateContext(window_);
 
     glewExperimental = true;
     glewInit();
@@ -35,10 +35,10 @@ Device::Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, b
 
 Device::~Device()
 {
-    if (context)
-        SDL_GL_DeleteContext(context);
-    if (window)
-        SDL_DestroyWindow(window);
+    if (context_)
+        SDL_GL_DeleteContext(context_);
+    if (window_)
+        SDL_DestroyWindow(window_);
     SDL_Quit();
 }
 
@@ -47,12 +47,12 @@ void Device::beginUpdate()
     readWindowState();
     prepareMouseState();
     prepareKeyboardState();
-    firstUpdate = false;
+    firstUpdate_ = false;
 
     SDL_Event evt;
     while (SDL_PollEvent(&evt))
     {
-		if (!firstUpdate)
+		if (!firstUpdate_)
 		{
 			processKeyboardEvent(evt);
 			processMouseEvent(evt);
@@ -60,7 +60,7 @@ void Device::beginUpdate()
 
 		const auto closeWindowEvent = evt.type == SDL_WINDOWEVENT && evt.window.event == SDL_WINDOWEVENT_CLOSE;
         if (evt.type == SDL_QUIT || closeWindowEvent)
-            _closeRequested = true;
+            closeRequested_ = true;
     }
 
 	static auto lastTicks = SDL_GetTicks();
@@ -68,14 +68,14 @@ void Device::beginUpdate()
 	const auto deltaTicks = ticks - lastTicks;
     if (deltaTicks > 0)
     {
-        dt = deltaTicks / 1000.0f;
+        dt_ = deltaTicks / 1000.0f;
         lastTicks = ticks;
     }
 }
 
 void Device::endUpdate()
 {
-	SDL_GL_SwapWindow(window);
+	SDL_GL_SwapWindow(window_);
 }
 
 void Device::setCursorCaptured(bool captured)
@@ -85,47 +85,47 @@ void Device::setCursorCaptured(bool captured)
 
 void Device::prepareMouseState()
 {
-    mouseDeltaX = mouseDeltaY = 0;
-    releasedMouseButtons.clear();
-    if (hasMouseFocus)
+    mouseDeltaX_ = mouseDeltaY_ = 0;
+    releasedMouseButtons_.clear();
+    if (hasMouseFocus_)
     {
-        for (const auto &pair : pressedMouseButtons)
-            pressedMouseButtons[pair.first] = false;
+        for (const auto &pair : pressedMouseButtons_)
+            pressedMouseButtons_[pair.first] = false;
     }
     else
     {
-        for (const auto &pair : pressedMouseButtons)
-            releasedMouseButtons.insert(pair.first);
-        pressedMouseButtons.clear();
+        for (const auto &pair : pressedMouseButtons_)
+            releasedMouseButtons_.insert(pair.first);
+        pressedMouseButtons_.clear();
     }
 }
 
 void Device::prepareKeyboardState()
 {
-    releasedKeys.clear();
-    if (hasKeyboardFocus)
+    releasedKeys_.clear();
+    if (hasKeyboardFocus_)
     {
-        for (auto &pair : pressedKeys)
+        for (auto &pair : pressedKeys_)
             pair.second = false; // not "pressed for the first time" anymore
     }
     else
     {
-        for (const auto &pair : pressedKeys)
-            releasedKeys.insert(pair.first);
-        pressedKeys.clear();
+        for (const auto &pair : pressedKeys_)
+            releasedKeys_.insert(pair.first);
+        pressedKeys_.clear();
     }
 }
 
 void Device::readWindowState()
 {
-    const auto flags = SDL_GetWindowFlags(window);
-    hasKeyboardFocus = (flags & SDL_WINDOW_INPUT_FOCUS) != 0;
-    hasMouseFocus = (flags & SDL_WINDOW_MOUSE_FOCUS) != 0;
+    const auto flags = SDL_GetWindowFlags(window_);
+    hasKeyboardFocus_ = (flags & SDL_WINDOW_INPUT_FOCUS) != 0;
+    hasMouseFocus_ = (flags & SDL_WINDOW_MOUSE_FOCUS) != 0;
 }
 
 void Device::processKeyboardEvent(const SDL_Event &evt)
 {
-    if (!hasKeyboardFocus)
+    if (!hasKeyboardFocus_)
         return;
 
     switch (evt.type)
@@ -136,13 +136,13 @@ void Device::processKeyboardEvent(const SDL_Event &evt)
             const auto code = evt.key.keysym.sym;
             if (evt.type == SDL_KEYUP)
             {
-                releasedKeys.insert(code);
-                pressedKeys.erase(code);
+                releasedKeys_.insert(code);
+                pressedKeys_.erase(code);
             }
             else
             {
-                pressedKeys[code] = pressedKeys.find(code) == pressedKeys.end(); // first time?
-                releasedKeys.erase(code);
+                pressedKeys_[code] = pressedKeys_.find(code) == pressedKeys_.end(); // first time?
+                releasedKeys_.erase(code);
             }
             break;
         }
@@ -153,29 +153,29 @@ void Device::processKeyboardEvent(const SDL_Event &evt)
 
 void Device::processMouseEvent(const SDL_Event &evt)
 {
-    if (!hasMouseFocus)
+    if (!hasMouseFocus_)
         return;
 
     switch (evt.type)
     {
         case SDL_MOUSEMOTION:
-            mouseDeltaX += evt.motion.xrel;
-            mouseDeltaY += evt.motion.yrel;
+            mouseDeltaX_ += evt.motion.xrel;
+            mouseDeltaY_ += evt.motion.yrel;
             break;
         case SDL_MOUSEBUTTONDOWN:
         {
             const auto btn = evt.button.button;
-            pressedMouseButtons[btn] = true; // pressed for the first time
-            releasedMouseButtons.erase(btn);
+            pressedMouseButtons_[btn] = true; // pressed for the first time
+            releasedMouseButtons_.erase(btn);
             break;
         }
         case SDL_MOUSEBUTTONUP:
         {
             const auto btn = evt.button.button;
-            if (pressedMouseButtons.find(btn) != pressedMouseButtons.end())
+            if (pressedMouseButtons_.find(btn) != pressedMouseButtons_.end())
             {
-                releasedMouseButtons.insert(btn);
-                pressedMouseButtons.erase(btn);
+                releasedMouseButtons_.insert(btn);
+                pressedMouseButtons_.erase(btn);
             }
             break;
         }
@@ -186,27 +186,27 @@ void Device::processMouseEvent(const SDL_Event &evt)
 
 bool Device::isKeyPressed(SDL_Keycode code, bool firstTime) const
 {
-    const auto where = pressedKeys.find(code);
-    return where != pressedKeys.end() && (!firstTime || where->second);
+    const auto where = pressedKeys_.find(code);
+    return where != pressedKeys_.end() && (!firstTime || where->second);
 }
 
 bool Device::isKeyReleased(SDL_Keycode code) const
 {
-    return releasedKeys.find(code) != releasedKeys.end();
+    return releasedKeys_.find(code) != releasedKeys_.end();
 }
 
-auto Device::getMouseMotion() const -> glm::vec2
+auto Device::mouseMotion() const -> glm::vec2
 {
-    return {mouseDeltaX, mouseDeltaY};
+    return {mouseDeltaX_, mouseDeltaY_};
 }
 
 bool Device::isMouseButtonDown(uint8_t button, bool firstTime) const
 {
-    const auto where = pressedMouseButtons.find(button);
-    return where != pressedMouseButtons.end() && (!firstTime || where->second);
+    const auto where = pressedMouseButtons_.find(button);
+    return where != pressedMouseButtons_.end() && (!firstTime || where->second);
 }
 
 bool Device::isMouseButtonReleased(uint8_t button) const
 {
-    return releasedMouseButtons.find(button) != releasedMouseButtons.end();
+    return releasedMouseButtons_.find(button) != releasedMouseButtons_.end();
 }

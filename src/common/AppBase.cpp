@@ -61,8 +61,8 @@ auto AppBase::compileShader(GLenum type, const char* src) -> GLuint
 {
     static std::unordered_map<GLuint, std::string> typeNames =
     {
-        { GL_VERTEX_SHADER, "vertex" },
-        { GL_FRAGMENT_SHADER, "fragment" }
+        {GL_VERTEX_SHADER, "vertex"},
+        {GL_FRAGMENT_SHADER, "fragment"}
     };
 
     const auto shader = glCreateShader(type);

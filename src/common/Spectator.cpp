@@ -11,8 +11,8 @@
 // Moves the given transform as a "spectator", i.e. flying first-person camera.
 void applySpectator(Transform &transform, Device &device, float mouseSensitivity, float movementSpeed)
 {
-	const auto mouseMotion = device.getMouseMotion();
-	const auto dt = device.getTimeDelta();
+	const auto mouseMotion = device.mouseMotion();
+	const auto dt = device.timeDelta();
 
     if (device.isMouseButtonDown(SDL_BUTTON_RIGHT, true))
         device.setCursorCaptured(true);

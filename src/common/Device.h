@@ -30,32 +30,32 @@ public:
     bool isKeyPressed(SDL_Keycode code, bool firstTime = false) const;
     bool isKeyReleased(SDL_Keycode code) const;
 
-    auto getMouseMotion() const -> glm::vec2;
+    auto mouseMotion() const -> glm::vec2;
     bool isMouseButtonDown(uint8_t button, bool firstTime = false) const;
     bool isMouseButtonReleased(uint8_t button) const;
 
-    bool closeRequested() const { return _closeRequested; }
+    bool closeRequested() const { return closeRequested_; }
 
-    auto getTimeDelta() const -> float { return dt; }
+    auto timeDelta() const -> float { return dt_; }
 
 private:
-    SDL_Window* window = nullptr;
-    SDL_GLContext context = nullptr;
+    SDL_Window* window_ = nullptr;
+    SDL_GLContext context_ = nullptr;
     
-    float dt = 0;
-    bool _closeRequested = false;
+    float dt_ = 0;
+    bool closeRequested_ = false;
 
-	bool hasMouseFocus = false;
-    bool hasKeyboardFocus = false;
-    bool firstUpdate = true;
+	bool hasMouseFocus_ = false;
+    bool hasKeyboardFocus_ = false;
+    bool firstUpdate_ = true;
 
-    std::unordered_map<SDL_Keycode, bool> pressedKeys;
-    std::unordered_set<SDL_Keycode> releasedKeys;
+    std::unordered_map<SDL_Keycode, bool> pressedKeys_;
+    std::unordered_set<SDL_Keycode> releasedKeys_;
 
-    int32_t mouseDeltaX = 0;
-    int32_t mouseDeltaY = 0;
-    std::unordered_map<uint8_t, bool> pressedMouseButtons;
-    std::unordered_set<uint8_t> releasedMouseButtons;
+    int32_t mouseDeltaX_ = 0;
+    int32_t mouseDeltaY_ = 0;
+    std::unordered_map<uint8_t, bool> pressedMouseButtons_;
+    std::unordered_set<uint8_t> releasedMouseButtons_;
 
     void prepareMouseState();
     void prepareKeyboardState();
