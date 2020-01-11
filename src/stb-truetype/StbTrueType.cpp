@@ -85,7 +85,7 @@ private:
 		initUniforms();
 	}
 
-	void shutdown() override final
+	void cleanup() override final
 	{
 		glDeleteVertexArrays(1, &rotatingLabel.vao);
 		glDeleteBuffers(1, &rotatingLabel.vertexBuffer);

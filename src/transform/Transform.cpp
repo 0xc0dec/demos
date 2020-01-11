@@ -47,7 +47,7 @@ private:
 	void init() override final
 	{
 		initShaders();
-		initQuad();
+		initQuadMesh();
 
 		t2.setLocalPosition({3, 3, 3});
 		t2.lookAt({0, 0, 0}, {0, 1, 0});
@@ -61,7 +61,7 @@ private:
 		camera.transform().lookAt({0, 0, 0}, {0, 1, 0});
 	}
 
-	void shutdown() override final
+	void cleanup() override final
 	{
 		cleanupQuad();
 		cleanupProgram();
@@ -115,7 +115,7 @@ private:
 		glDeleteProgram(program.handle);
 	}
 
-	void initQuad()
+	void initQuadMesh()
 	{
 		const float vertices[] =
 		{

@@ -29,7 +29,7 @@ void AppBase::run()
         device_.endUpdate();
     }
 
-    shutdown();
+    cleanup();
 }
 
 auto AppBase::createProgram(const char *vs, const char *fs) -> GLuint
