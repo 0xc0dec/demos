@@ -32,21 +32,21 @@ function(set_default_includes TARGET)
     )
 endfunction()
 
-function(add_demo TARGET ENTRYPOINT)
-    source_group("" FILES ${ENTRYPOINT})
-    add_executable(${TARGET} ${ENTRYPOINT})
+function(add_app TARGET DIR)
+    file(GLOB SRC "${DIR}/*.cpp" "${DIR}/*.h")
+    source_group("" FILES ${SRC})
+    add_executable(${TARGET} ${SRC})
     set_default_includes(${TARGET})
+    set_default_definitions(${TARGET})
     target_link_libraries(${TARGET} Vendor Common)
 
     if (MSVC)
         target_compile_options(${TARGET} PRIVATE /wd4267 /wd4244 /wd4312)
     endif()
-
-    set_default_definitions(${TARGET})
 endfunction()
 
 add_subdirectory("src/common")
 add_subdirectory("vendor")
 
-add_demo(StbTrueType "src/stb-truetype/StbTrueType.cpp")
-add_demo(Transform "src/transform/Transform.cpp")
+add_app(StbTrueType "${CMAKE_SOURCE_DIR}/src/stb-truetype")
+add_app(Transform "${CMAKE_SOURCE_DIR}/src/transform")
