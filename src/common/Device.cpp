@@ -12,7 +12,7 @@
 Device::Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen)
 {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) < 0)
-        DIE("Failed to initialize SDL");
+        PANIC("Failed to initialize SDL");
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);

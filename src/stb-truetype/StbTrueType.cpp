@@ -184,11 +184,11 @@ private:
 
 		stbtt_pack_context context;
 		if (!stbtt_PackBegin(&context, atlasData.get(), font.atlasWidth, font.atlasHeight, 0, 1, nullptr))
-			DIE("Failed to initialize font");
+			PANIC("Failed to initialize font");
 
 		stbtt_PackSetOversampling(&context, font.oversampleX, font.oversampleY);
 		if (!stbtt_PackFontRange(&context, fontData.data(), 0, font.size, font.firstChar, font.charCount, font.charInfo.get()))
-			DIE("Failed to pack font");
+			PANIC("Failed to pack font");
 
 		stbtt_PackEnd(&context);
 

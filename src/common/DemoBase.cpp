@@ -44,7 +44,7 @@ auto DemoBase::readFile(const char* path) -> std::vector<uint8_t>
 {
     std::ifstream file(path, std::ios::binary | std::ios::ate);
     if (!file.is_open())
-        DIE("Failed to open file " << path);
+        PANIC("Failed to open file " << path);
     
 	const auto size = file.tellg();
     file.seekg(0, std::ios::beg);
@@ -77,7 +77,7 @@ auto DemoBase::compileShader(GLenum type, const char* src) -> GLuint
         std::vector<GLchar> log(logLength);
         glGetShaderInfoLog(shader, logLength, nullptr, log.data());
         glDeleteShader(shader);
-        DIE("Failed to compile " << typeNames[type] << " shader: " << log.data());
+        PANIC("Failed to compile " << typeNames[type] << " shader: " << log.data());
     }
 
     return shader;
@@ -99,7 +99,7 @@ auto DemoBase::linkProgram(GLuint vs, GLuint fs) -> GLint
         std::vector<GLchar> log(logLength);
         glGetProgramInfoLog(program, logLength, nullptr, log.data());
         glDeleteProgram(program);
-        DIE("Failed to link program: " << log.data());
+        PANIC("Failed to link program: " << log.data());
     }
 
     return program;
