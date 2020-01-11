@@ -1,14 +1,14 @@
-## About
+# About
 A number of graphics demos made for learning and playing around with. The code is (hopefully) clean and self-documented,
 all dependencies are included for easier building.
 
-## Building and running
+# Building and running
 * `mkdir build && cd build`.
 * `cmake -G "Visual Studio 16 2019" -A x64 ..` (or other generator depending on the IDE).
 * Build using the generated IDE files.
 * Run executables inside `build/<Debug|Release>/`.
 
-## Demos
+# Demos
 * `StbTrueType.cpp`: rendering TrueType font in OpenGL using [stb_truetype](https://github.com/nothings/stb) library.
 
 ![1](/screenshots/StbTrueType.png?raw=true)
@@ -19,7 +19,7 @@ all dependencies are included for easier building.
 
 * To be continued...
 
-## Dependencies
+# Dependencies
 * stb_truetype
 * SDL
 * GLEW
