@@ -17,7 +17,7 @@ public:
     auto setPerspective(float fov, float aspectRatio, float nearClip, float farClip) -> Camera&;
     auto setOrthographic(float width, float height, float nearClip, float farClip) -> Camera&;
 
-    auto getViewMatrix() const -> const glm::mat4 { return glm::inverse(transform.getWorldMatrix()); }
+    auto getViewMatrix() const -> const glm::mat4 { return glm::inverse(transform.worldMatrix()); }
     auto getInvViewMatrix() const -> const glm::mat4 { return glm::inverse(getViewMatrix()); }
     auto getProjectionMatrix() const -> const glm::mat4;
     auto getViewProjectionMatrix() const -> const glm::mat4 { return getProjectionMatrix() * getViewMatrix(); }

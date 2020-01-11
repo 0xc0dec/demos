@@ -18,44 +18,45 @@ enum class TransformSpace
     World
 };
 
+// Represents an object transform data - a point in space with local coordinate system.
 class Transform final
 {
 public:
     // Can be used by anyone interested if a transform has changed. Goes from 0 to MAX_UINT, then wraps back.
-    auto getVersion() const -> uint32_t { return version; }
+    auto version() const -> uint32_t { return version_; }
 
+    auto parent() const -> Transform* { return parent_; }
     auto setParent(Transform *parent) -> Transform&;
-    auto getParent() const -> Transform* { return parent; }
 
-    auto getChild(uint32_t index) const -> Transform* { return children[index]; }
-    auto getChildrenCount() const -> uint32_t { return children.size(); }
+    auto child(uint32_t index) const -> Transform* { return children_[index]; }
+    auto childrenCount() const -> uint32_t { return children_.size(); }
     auto clearChildren() -> Transform&;
 
-    auto getLocalScale() const -> glm::vec3 { return localScale; }
+    auto localScale() const -> glm::vec3 { return localScale_; }
 
-    auto getWorldRotation() const -> glm::quat { return glm::quat_cast(getWorldMatrix()); }
-    auto getLocalRotation() const -> glm::quat { return localRotation; }
+    auto worldRotation() const -> glm::quat { return glm::quat_cast(worldMatrix()); }
+    auto localRotation() const -> glm::quat { return localRotation_; }
 
-    auto getWorldPosition() const -> glm::vec3 { return glm::vec3(getWorldMatrix()[3]); }
-    auto getLocalPosition() const -> glm::vec3 { return localPosition; }
+    auto worldPosition() const -> glm::vec3 { return glm::vec3(worldMatrix()[3]); }
+    auto localPosition() const -> glm::vec3 { return localPosition_; }
 
-    auto getWorldUp() const -> glm::vec3;
-    auto getLocalUp() const -> glm::vec3;
+    auto worldUpDir() const -> glm::vec3;
+    auto localUpDir() const -> glm::vec3;
 
-    auto getWorldDown() const -> glm::vec3;
-    auto getLocalDown() const -> glm::vec3;
+    auto worldDownDir() const -> glm::vec3;
+    auto localDownDir() const -> glm::vec3;
 
-    auto getWorldLeft() const -> glm::vec3;
-    auto getLocalLeft() const -> glm::vec3;
+    auto worldLeftDir() const -> glm::vec3;
+    auto localLeftDir() const -> glm::vec3;
 
-    auto getWorldRight() const -> glm::vec3;
-    auto getLocalRight() const -> glm::vec3;
+    auto worldRightDir() const -> glm::vec3;
+    auto localRightDir() const -> glm::vec3;
 
-    auto getWorldForward() const -> glm::vec3;
-    auto getLocalForward() const -> glm::vec3;
+    auto worldForwardDir() const -> glm::vec3;
+    auto localForwardDir() const -> glm::vec3;
 
-    auto getWorldBack() const -> glm::vec3;
-    auto getLocalBack() const -> glm::vec3;
+    auto worldBackDir() const -> glm::vec3;
+    auto localBackDir() const -> glm::vec3;
 
     auto translateLocal(const glm::vec3 &translation) -> Transform&;
     auto scaleLocal(const glm::vec3 &scale) -> Transform&;
@@ -71,29 +72,29 @@ public:
 
     auto lookAt(const glm::vec3 &target, const glm::vec3 &up) -> Transform&;
 
-    auto getMatrix() const -> glm::mat4;
-    auto getWorldMatrix() const -> glm::mat4;
-    auto getInvTransposedWorldMatrix() const -> glm::mat4;
-    auto getWorldViewMatrix(const Camera &camera) const -> glm::mat4;
-    auto getWorldViewProjMatrix(const Camera &camera) const -> glm::mat4;
-    auto getInvTransposedWorldViewMatrix(const Camera &camera) const -> glm::mat4;
+    auto matrix() const -> glm::mat4;
+    auto worldMatrix() const -> glm::mat4;
+    auto invTransposedWorldMatrix() const -> glm::mat4;
+    auto worldViewMatrix(const Camera &camera) const -> glm::mat4;
+    auto worldViewProjMatrix(const Camera &camera) const -> glm::mat4;
+    auto invTransposedWorldViewMatrix(const Camera &camera) const -> glm::mat4;
 
     auto transformPoint(const glm::vec3 &point) const -> glm::vec3;
     auto transformDirection(const glm::vec3 &direction) const -> glm::vec3;
     
 private:
-    uint32_t version = 0;
-    mutable uint32_t dirtyFlags = ~0;
+    uint32_t version_ = 0;
+    mutable uint32_t dirtyFlags_ = ~0;
 
-    Transform *parent = nullptr;
-    std::vector<Transform *> children;
+    Transform *parent_ = nullptr;
+    std::vector<Transform *> children_;
 
-    glm::vec3 localPosition;
-    glm::vec3 localScale{1, 1, 1};
-    glm::quat localRotation;
-    mutable glm::mat4 matrix;
-    mutable glm::mat4 worldMatrix;
-    mutable glm::mat4 invTransposedWorldMatrix;
+    glm::vec3 localPosition_;
+    glm::vec3 localScale_{1, 1, 1};
+    glm::quat localRotation_;
+    mutable glm::mat4 matrix_;
+    mutable glm::mat4 worldMatrix_;
+    mutable glm::mat4 invTransposedWorldMatrix_;
 
     void setDirtyWithChildren(uint32_t flags);
     void setChildrenDirty(uint32_t flags);

@@ -8,6 +8,7 @@
 #include "Device.h"
 #include <glm/gtx/vector_angle.hpp>
 
+// Moves the given transform as a "spectator", i.e. flying first-person camera.
 void applySpectator(Transform &transform, Device &device, float mouseSensitivity, float movementSpeed)
 {
 	const auto mouseMotion = device.getMouseMotion();
@@ -25,7 +26,7 @@ void applySpectator(Transform &transform, Device &device, float mouseSensitivity
 
         if (mouseMotion.y != 0)
         {
-	        const auto angleToUp = glm::angle(glm::normalize(transform.getLocalForward()), glm::vec3(0, 1, 0));
+	        const auto angleToUp = glm::angle(glm::normalize(transform.localForwardDir()), glm::vec3(0, 1, 0));
             auto delta = mouseSensitivity * -mouseMotion.y;
             if (delta > 0)
             {
@@ -44,17 +45,17 @@ void applySpectator(Transform &transform, Device &device, float mouseSensitivity
 
     auto movement = glm::vec3(0);
     if (device.isKeyPressed(SDLK_w, false))
-        movement += transform.getLocalForward();
+        movement += transform.localForwardDir();
     if (device.isKeyPressed(SDLK_s, false))
-        movement += transform.getLocalBack();
+        movement += transform.localBackDir();
     if (device.isKeyPressed(SDLK_a, false))
-        movement += transform.getLocalLeft();
+        movement += transform.localLeftDir();
     if (device.isKeyPressed(SDLK_d, false))
-        movement += transform.getLocalRight();
+        movement += transform.localRightDir();
     if (device.isKeyPressed(SDLK_q, false))
-        movement += transform.getLocalDown();
+        movement += transform.localDownDir();
     if (device.isKeyPressed(SDLK_e, false))
-        movement += transform.getLocalUp();
+        movement += transform.localUpDir();
     movement = dt * movementSpeed * glm::normalize(movement);
 
     if (!glm::any(glm::isnan(movement)))
