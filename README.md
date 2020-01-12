@@ -1,5 +1,5 @@
 # About
-A number of graphics demos made for learning and playing around with. The code is (hopefully) clean and self-documented,
+Graphics demos made for learning and playing around with. The code is (hopefully) clean and self-documented,
 all dependencies are included for easier building.
 
 # Building and running
@@ -9,15 +9,15 @@ all dependencies are included for easier building.
 * Run executables inside `build/<Debug|Release>/`.
 
 # Demos
-### `StbTrueType`
-Rendering TrueType font using [stb_truetype](https://github.com/nothings/stb) library.
-
-![Image](/screenshots/StbTrueType.png?raw=true)
-
 ### `Transform`
 Applying reusable `Transform` and `Camera` classes for working with transform hierarchies and (first person) camera.
 
 ![Image](/screenshots/Transform.png?raw=true)
+
+### `TrueType fonts`
+Rendering TrueType font using [stb_truetype](https://github.com/nothings/stb) library.
+
+![Image](/screenshots/StbTrueType.png?raw=true)
 
 ### To be continued...
 
