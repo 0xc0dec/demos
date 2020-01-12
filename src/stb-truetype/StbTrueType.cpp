@@ -105,9 +105,11 @@ private:
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glDisable(GL_CULL_FACE);
+		
 		glDepthMask(GL_TRUE);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
+
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -161,6 +163,7 @@ private:
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
+	// TODO Merge with initShaders()
 	void initUniforms()
 	{
 		const glm::mat4 viewMatrix{};

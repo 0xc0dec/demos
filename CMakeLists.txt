@@ -4,7 +4,7 @@ project(Demos)
 set(CMAKE_SUPPRESS_REGENERATION true)
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Config types" FORCE)
 
-add_compile_options(-std=c++14)
+add_compile_options(--std=c++14)
 
 if (MSVC)
     add_compile_options("$<$<CONFIG:DEBUG>:/MTd>")
@@ -28,6 +28,7 @@ function(set_default_includes TARGET)
         "${CMAKE_SOURCE_DIR}/vendor/glew/1.13/include"
         "${CMAKE_SOURCE_DIR}/vendor/SDL/2.0.4/include"
         "${CMAKE_SOURCE_DIR}/vendor/stb_truetype/1.11"
+        "${CMAKE_SOURCE_DIR}/vendor/stb_image/2.15"
         "${CMAKE_SOURCE_DIR}/vendor/glm/0.9.8.4"
     )
 endfunction()
@@ -50,3 +51,4 @@ add_subdirectory("vendor")
 
 add_app(StbTrueType "${CMAKE_SOURCE_DIR}/src/stb-truetype")
 add_app(Transform "${CMAKE_SOURCE_DIR}/src/transform")
+add_app(Skybox "${CMAKE_SOURCE_DIR}/src/skybox")

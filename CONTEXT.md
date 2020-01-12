@@ -1,6 +1,6 @@
 # Notes on what's going on and what's planned
 
 ## TODO
-* Fix cmake to support multiple source files in demo folders.
-* Skybox demo.
+* Check (and fix) camera aspect ratio.
+* Refactor code (better split between functions).
 * Introduce Vulkan demos.

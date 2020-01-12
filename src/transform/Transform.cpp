@@ -63,7 +63,7 @@ private:
 
 	void cleanup() override final
 	{
-		cleanupQuad();
+		cleanupQuadMesh();
 		cleanupProgram();
 	}
 
@@ -86,20 +86,18 @@ private:
 		glDepthMask(GL_TRUE);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		glUseProgram(program.handle);
 		glUniformMatrix4fv(program.uniforms.viewProjMatrix, 1, GL_FALSE, glm::value_ptr(camera.viewProjMatrix()));
 		
 		glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(t1.worldMatrix()));
-		drawQuad();
+		drawQuadMesh();
 
 		glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(t2.worldMatrix()));
-		drawQuad();
+		drawQuadMesh();
 
 		glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(t3.worldMatrix()));
-		drawQuad();
+		drawQuadMesh();
 	}
 
 	void initShaders()
@@ -153,14 +151,14 @@ private:
 		glEnableVertexAttribArray(1);
 	}
 
-	void cleanupQuad()
+	void cleanupQuadMesh()
 	{
 		glDeleteVertexArrays(1, &quad.vao);
 		glDeleteBuffers(1, &quad.vertexBuffer);
 		glDeleteBuffers(1, &quad.uvBuffer);
 	}
 
-	void drawQuad()
+	void drawQuadMesh()
 	{
 		glBindVertexArray(quad.vao);
 		glDrawArrays(GL_TRIANGLES, 0, 6);

@@ -9,17 +9,22 @@ all dependencies are included for easier building.
 * Run executables inside `build/<Debug|Release>/`.
 
 # Demos
-### `Transform`
-Applying reusable `Transform` and `Camera` classes for working with transform hierarchies and (first person) camera.
+## Transform
+Features reusable `Transform` and `Camera` classes for working with object hierarchies and (first person) camera.
 
-![Image](/screenshots/Transform.png?raw=true)
+![Image](/screenshots/transform.png?raw=true)
 
-### `TrueType fonts`
+## Skybox
+Rendering skybox on a single quad mesh with a bit of shader magic.
+
+![Image](/screenshots/skybox.png?raw=true)
+
+## TrueType
 Rendering TrueType font using [stb_truetype](https://github.com/nothings/stb) library.
 
-![Image](/screenshots/StbTrueType.png?raw=true)
+![Image](/screenshots/stb-truetype.png?raw=true)
 
-### To be continued...
+## To be continued...
 
 # Dependencies
 * stb_truetype
