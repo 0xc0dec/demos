@@ -16,8 +16,7 @@
 class App final : public AppBase
 {
 public:
-	App(int canvasWidth, int canvasHeight):
-		AppBase(canvasWidth, canvasHeight, false)
+	App(): AppBase(1366, 768, false)
 	{
 	}
 
@@ -57,6 +56,7 @@ private:
 		t3.setLocalScale({0.5f, 0.5f, 0.5f});
 		t3.setParent(&t2);
 
+		camera.setPerspective(45, 1.0f * canvasWidth_ / canvasHeight_, 0.1f, 100.0f);
 		camera.transform().setLocalPosition({10, 10, 10});
 		camera.transform().lookAt({0, 0, 0}, {0, 1, 0});
 	}
@@ -167,7 +167,6 @@ private:
 
 int main()
 {
-	App demo{1366, 768};
-	demo.run();
+	App().run();
 	return 0;
 }

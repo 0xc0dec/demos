@@ -18,8 +18,7 @@
 class App: public AppBase
 {
 public:
-	App(int canvasWidth, int canvasHeight) :
-		AppBase(canvasWidth, canvasHeight, false)
+	App(): AppBase(1366, 768, false)
 	{
 	}
 
@@ -55,6 +54,8 @@ private:
 		initQuadMesh();
 		initShaders();
 		initTextures();
+
+		camera.setPerspective(45, 1.0f * canvasWidth_ / canvasHeight_, 0.1f, 100.0f);
 	}
 
 	void loadFaceData(const char *path, GLenum target)
@@ -181,7 +182,6 @@ private:
 
 int main()
 {
-	App app{1366, 768};
-	app.run();
+	App().run();
 	return 0;
 }

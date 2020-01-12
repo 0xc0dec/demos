@@ -25,8 +25,7 @@ struct GlyphInfo
 class App final : public AppBase
 {
 public:
-	App(int canvasWidth, int canvasHeight):
-		AppBase(canvasWidth, canvasHeight, false)
+	App(): AppBase(1366, 768, false)
 	{
 	}
 
@@ -326,7 +325,6 @@ private:
 
 int main()
 {
-	App demo{1366, 768};
-	demo.run();
+	App().run();
 	return 0;
 }
