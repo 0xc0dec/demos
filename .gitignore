@@ -8,6 +8,7 @@
 *.ilk
 *.idb
 *.user
+.vscode
 *VC.*db*
 *.vs
 build*
