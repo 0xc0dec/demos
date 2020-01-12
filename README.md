@@ -31,6 +31,7 @@ TrueType font rendering using [stb_truetype](https://github.com/nothings/stb) li
 
 # Dependencies
 * stb_truetype
+* stb_image
 * SDL
 * GLEW
 * glm
