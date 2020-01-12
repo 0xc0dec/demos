@@ -40,7 +40,7 @@ private:
 			GLuint worldMatrix = 0;
 			GLuint texture = 0;
 		} uniforms;
-	} program;
+	} shader;
 
 	glm::mat4 viewProjMatrix;
 
@@ -81,20 +81,33 @@ private:
 		initRotatingLabel();
 		initAtlasQuad();
 		initShaders();
-		initUniforms();
+
+		const glm::mat4 viewMatrix{};
+		const auto projMatrix = glm::perspective(glm::radians(60.0f), 1.0f * canvasWidth_ / canvasHeight_, 0.05f, 100.0f);
+		viewProjMatrix = projMatrix * viewMatrix;
 	}
 
 	void cleanup() override final
+	{
+		cleanupRotatingLabel();
+		cleanupAtlasQuad();
+		glDeleteTextures(1, &font.texture);
+		glDeleteProgram(shader.handle);
+	}
+
+	void cleanupRotatingLabel()
 	{
 		glDeleteVertexArrays(1, &rotatingLabel.vao);
 		glDeleteBuffers(1, &rotatingLabel.vertexBuffer);
 		glDeleteBuffers(1, &rotatingLabel.uvBuffer);
 		glDeleteBuffers(1, &rotatingLabel.indexBuffer);
+	}
+
+	void cleanupAtlasQuad()
+	{
 		glDeleteVertexArrays(1, &atlasQuad.vao);
 		glDeleteBuffers(1, &atlasQuad.vertexBuffer);
 		glDeleteBuffers(1, &atlasQuad.uvBuffer);
-		glDeleteTextures(1, &font.texture);
-		glDeleteProgram(program.handle);
 	}
 
 	void render() override final
@@ -112,9 +125,9 @@ private:
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		glUseProgram(program.handle);
+		glUseProgram(shader.handle);
 
-		glUniformMatrix4fv(program.uniforms.viewProjMatrix, 1, GL_FALSE, glm::value_ptr(viewProjMatrix));
+		glUniformMatrix4fv(shader.uniforms.viewProjMatrix, 1, GL_FALSE, glm::value_ptr(viewProjMatrix));
 
 		glBindTexture(GL_TEXTURE_2D, font.texture);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
@@ -123,7 +136,7 @@ private:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 8);
 		glActiveTexture(GL_TEXTURE0);
-		glUniform1i(program.uniforms.texture, 0);
+		glUniform1i(shader.uniforms.texture, 0);
 
 		const auto dt = device_.timeDelta();
 		renderRotatingLabel(dt);
@@ -133,8 +146,13 @@ private:
 	void initShaders()
 	{
 		static StbTrueTypeDemo::Shaders shaders;
-		program.handle = createProgram(shaders.vertex.font, shaders.fragment.font);
-		glUseProgram(program.handle);
+		shader.handle = createProgram(shaders.vertex.font, shaders.fragment.font);
+		
+		glUseProgram(shader.handle);
+
+		shader.uniforms.viewProjMatrix = glGetUniformLocation(shader.handle, "viewProjMatrix");
+		shader.uniforms.worldMatrix = glGetUniformLocation(shader.handle, "worldMatrix");
+		shader.uniforms.texture = glGetUniformLocation(shader.handle, "mainTex");
 	}
 
 	void initFont()
@@ -160,18 +178,6 @@ private:
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, font.atlasWidth, font.atlasHeight, 0, GL_RED, GL_UNSIGNED_BYTE, atlasData.get());
 		glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
 		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-
-	// TODO Merge with initShaders()
-	void initUniforms()
-	{
-		const glm::mat4 viewMatrix{};
-		const auto projMatrix = glm::perspective(glm::radians(60.0f), 1.0f * canvasWidth_ / canvasHeight_, 0.05f, 100.0f);
-		viewProjMatrix = projMatrix * viewMatrix;
-
-		program.uniforms.viewProjMatrix = glGetUniformLocation(program.handle, "viewProjMatrix");
-		program.uniforms.worldMatrix = glGetUniformLocation(program.handle, "worldMatrix");
-		program.uniforms.texture = glGetUniformLocation(program.handle, "mainTex");
 	}
 
 	void initRotatingLabel()
@@ -276,7 +282,7 @@ private:
 		auto worldMatrix = glm::translate(glm::mat4{}, {0, 5, -30});
 		worldMatrix = glm::rotate(worldMatrix, rotatingLabel.angle, {0, 1, 0});
 		worldMatrix = glm::scale(worldMatrix, {0.05f, 0.05f, 1});
-		glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(worldMatrix));
+		glUniformMatrix4fv(shader.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(worldMatrix));
 
 		glBindVertexArray(rotatingLabel.vao);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rotatingLabel.indexBuffer);
@@ -290,7 +296,7 @@ private:
 
 		auto worldMatrix = glm::translate(glm::mat4{}, {0, -6, distance});
 		worldMatrix = glm::scale(worldMatrix, {6, 6, 1});
-		glUniformMatrix4fv(program.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(worldMatrix));
+		glUniformMatrix4fv(shader.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(worldMatrix));
 
 		glBindVertexArray(atlasQuad.vao);
 		glDrawArrays(GL_TRIANGLES, 0, 6); // 6 vertices
