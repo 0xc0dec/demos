@@ -181,7 +181,7 @@ private:
 
 int main()
 {
-	App app{375, 275};
+	App app{1366, 768};
 	app.run();
 	return 0;
 }
