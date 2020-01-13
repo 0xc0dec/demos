@@ -2,8 +2,8 @@
 Graphics demos made for learning and playing around with. The code is (hopefully) clean and self-documented,
 all dependencies are included for easier building.
 
-Demos do not use any complex dedicated engine code (at least yet), however some shared library code is still present.
-Its goal is to keep each demo easy to understand and close to the graphics API while not bloating it with lots of boilerplate stuff.
+There are no complex abstractions aka "engine", but a small library of shared code is still used.
+The goal is to keep things easy to understand while taking away as much boilerplate stuff as possible.
 
 # Building and running
 * `mkdir build && cd build`.
