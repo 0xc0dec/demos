@@ -23,7 +23,7 @@ public:
 	}
 
 private:
-	std::shared_ptr<QuadMesh> quadMesh;
+	std::shared_ptr<Mesh> quadMesh;
 
 	struct
 	{
@@ -44,7 +44,7 @@ private:
 	{
 		initShaders();
 
-		quadMesh = std::make_shared<QuadMesh>();
+		quadMesh = Mesh::quad();
 
 		t2.setLocalPosition({3, 3, 3});
 		t2.lookAt({0, 0, 0}, {0, 1, 0});

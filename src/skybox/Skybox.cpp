@@ -25,7 +25,7 @@ public:
 	}
 
 private:
-	std::shared_ptr<QuadMesh> quadMesh;
+	std::shared_ptr<Mesh> quadMesh;
 
 	struct
 	{
@@ -51,7 +51,7 @@ private:
 		initShaders();
 		initTextures();
 
-		quadMesh = std::make_shared<QuadMesh>();
+		quadMesh = Mesh::quad();
 
 		camera.setPerspective(45, 1.0f * canvasWidth_ / canvasHeight_, 0.1f, 100.0f);
 	}

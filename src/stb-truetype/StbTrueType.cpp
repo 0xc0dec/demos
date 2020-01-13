@@ -58,7 +58,7 @@ private:
 
 	struct
 	{
-		std::shared_ptr<QuadMesh> mesh;
+		std::shared_ptr<Mesh> mesh;
 		float time = 0;
 	} atlasQuad;
 
@@ -79,8 +79,9 @@ private:
 	{
 		initFont();
 		initRotatingLabel();
-		initAtlasQuad();
 		initShaders();
+
+		atlasQuad.mesh = Mesh::quad();
 
 		const glm::mat4 viewMatrix{};
 		const auto projMatrix = glm::perspective(glm::radians(60.0f), 1.0f * canvasWidth_ / canvasHeight_, 0.05f, 100.0f);
@@ -225,11 +226,6 @@ private:
 		glGenBuffers(1, &rotatingLabel.indexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rotatingLabel.indexBuffer);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * rotatingLabel.indexElementCount, indexes.data(), GL_STATIC_DRAW);
-	}
-
-	void initAtlasQuad()
-	{
-		atlasQuad.mesh = std::make_shared<QuadMesh>();
 	}
 
 	void renderRotatingLabel(float dt)
