@@ -6,7 +6,9 @@
 #include "common/AppBase.h"
 #include "common/Device.h"
 #include "common/Common.h"
+#include "common/Meshes.h"
 #include "Shaders.h"
+#include <memory>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -56,9 +58,7 @@ private:
 
 	struct
 	{
-		GLuint vao = 0;
-		GLuint vertexBuffer = 0;
-		GLuint uvBuffer = 0;
+		std::shared_ptr<QuadMesh> mesh;
 		float time = 0;
 	} atlasQuad;
 
@@ -90,7 +90,6 @@ private:
 	void cleanup() override final
 	{
 		cleanupRotatingLabel();
-		cleanupAtlasQuad();
 		glDeleteTextures(1, &font.texture);
 		glDeleteProgram(shader.handle);
 	}
@@ -101,13 +100,6 @@ private:
 		glDeleteBuffers(1, &rotatingLabel.vertexBuffer);
 		glDeleteBuffers(1, &rotatingLabel.uvBuffer);
 		glDeleteBuffers(1, &rotatingLabel.indexBuffer);
-	}
-
-	void cleanupAtlasQuad()
-	{
-		glDeleteVertexArrays(1, &atlasQuad.vao);
-		glDeleteBuffers(1, &atlasQuad.vertexBuffer);
-		glDeleteBuffers(1, &atlasQuad.uvBuffer);
 	}
 
 	void render() override final
@@ -237,42 +229,7 @@ private:
 
 	void initAtlasQuad()
 	{
-		const float vertices[] =
-		{
-			-1, -1, 0,
-			-1, 1, 0,
-			1, 1, 0,
-			-1, -1, 0,
-			1, 1, 0,
-			1, -1, 0,
-		};
-
-		const float uvs[] =
-		{
-			0, 1,
-			0, 0,
-			1, 0,
-			0, 1,
-			1, 0,
-			1, 1,
-		};
-
-		glGenVertexArrays(1, &atlasQuad.vao);
-		glBindVertexArray(atlasQuad.vao);
-
-		// Vertices
-		glGenBuffers(1, &atlasQuad.vertexBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, atlasQuad.vertexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * 18, vertices, GL_STATIC_DRAW);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-		glEnableVertexAttribArray(0);
-
-		// Texture coordinates
-		glGenBuffers(1, &atlasQuad.uvBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, atlasQuad.uvBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * 12, uvs, GL_STATIC_DRAW);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-		glEnableVertexAttribArray(1);
+		atlasQuad.mesh = std::make_shared<QuadMesh>();
 	}
 
 	void renderRotatingLabel(float dt)
@@ -298,8 +255,7 @@ private:
 		worldMatrix = glm::scale(worldMatrix, {6, 6, 1});
 		glUniformMatrix4fv(shader.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(worldMatrix));
 
-		glBindVertexArray(atlasQuad.vao);
-		glDrawArrays(GL_TRIANGLES, 0, 6); // 6 vertices
+		atlasQuad.mesh->draw();
 	}
 
 	auto makeGlyphInfo(uint32_t character, float offsetX, float offsetY) -> GlyphInfo

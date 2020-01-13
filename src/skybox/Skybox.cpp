@@ -8,7 +8,9 @@
 #include "common/Common.h"
 #include "common/Camera.h"
 #include "common/Spectator.h"
+#include "common/Meshes.h"
 #include "Shaders.h"
+#include <memory>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -23,12 +25,7 @@ public:
 	}
 
 private:
-	struct
-	{
-		GLuint vao = 0;
-		GLuint vertexBuffer = 0;
-		GLuint uvBuffer = 0;
-	} quadMesh;
+	std::shared_ptr<QuadMesh> quadMesh;
 
 	struct
 	{
@@ -51,9 +48,10 @@ private:
 
 	void init() override final
 	{
-		initQuadMesh();
 		initShaders();
 		initTextures();
+
+		quadMesh = std::make_shared<QuadMesh>();
 
 		camera.setPerspective(45, 1.0f * canvasWidth_ / canvasHeight_, 0.1f, 100.0f);
 	}
@@ -106,56 +104,10 @@ private:
 		shader.uniforms.texture = glGetUniformLocation(shader.handle, "skyboxTex");
 	}
 
-	void initQuadMesh()
-	{
-		const float vertices[] =
-		{
-			-1, -1, 0,
-			-1, 1, 0,
-			1, 1, 0,
-			-1, -1, 0,
-			1, 1, 0,
-			1, -1, 0,
-		};
-
-		const float uvs[] =
-		{
-			0, 1,
-			0, 0,
-			1, 0,
-			0, 1,
-			1, 0,
-			1, 1,
-		};
-
-		glGenVertexArrays(1, &quadMesh.vao);
-		glBindVertexArray(quadMesh.vao);
-
-		glGenBuffers(1, &quadMesh.vertexBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, quadMesh.vertexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * 18, vertices, GL_STATIC_DRAW);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-		glEnableVertexAttribArray(0);
-
-		glGenBuffers(1, &quadMesh.uvBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, quadMesh.uvBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * 12, uvs, GL_STATIC_DRAW);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-		glEnableVertexAttribArray(1);
-	}
-
 	void cleanup() override final
 	{
 		glDeleteProgram(shader.handle);
 		glDeleteTextures(1, &texture.handle);
-		cleanupQuadMesh();
-	}
-
-	void cleanupQuadMesh()
-	{
-		glDeleteVertexArrays(1, &quadMesh.vao);
-		glDeleteBuffers(1, &quadMesh.vertexBuffer);
-		glDeleteBuffers(1, &quadMesh.uvBuffer);
 	}
 
 	void render() override final
@@ -174,9 +126,7 @@ private:
 		glUniformMatrix4fv(shader.uniforms.viewMatrix, 1, GL_FALSE, glm::value_ptr(camera.viewMatrix()));
 		glUniform1i(shader.uniforms.texture, 0);
 
-		// Draw mesh
-		glBindVertexArray(quadMesh.vao);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		quadMesh->draw();
 	}
 };
 

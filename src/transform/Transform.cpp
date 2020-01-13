@@ -8,7 +8,9 @@
 #include "common/Common.h"
 #include "common/Camera.h"
 #include "common/Spectator.h"
+#include "common/Meshes.h"
 #include "Shaders.h"
+#include <memory>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -21,12 +23,7 @@ public:
 	}
 
 private:
-	struct
-	{
-		GLuint vao = 0;
-		GLuint vertexBuffer = 0;
-		GLuint uvBuffer = 0;
-	} quadMesh;
+	std::shared_ptr<QuadMesh> quadMesh;
 
 	struct
 	{
@@ -46,7 +43,8 @@ private:
 	void init() override final
 	{
 		initShaders();
-		initQuadMesh();
+
+		quadMesh = std::make_shared<QuadMesh>();
 
 		t2.setLocalPosition({3, 3, 3});
 		t2.lookAt({0, 0, 0}, {0, 1, 0});
@@ -63,7 +61,6 @@ private:
 
 	void cleanup() override final
 	{
-		cleanupQuadMesh();
 		glDeleteProgram(shader.handle);
 	}
 
@@ -91,13 +88,13 @@ private:
 		glUniformMatrix4fv(shader.uniforms.viewProjMatrix, 1, GL_FALSE, glm::value_ptr(camera.viewProjMatrix()));
 		
 		glUniformMatrix4fv(shader.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(t1.worldMatrix()));
-		drawQuadMesh();
+		quadMesh->draw();
 
 		glUniformMatrix4fv(shader.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(t2.worldMatrix()));
-		drawQuadMesh();
+		quadMesh->draw();
 
 		glUniformMatrix4fv(shader.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(t3.worldMatrix()));
-		drawQuadMesh();
+		quadMesh->draw();
 	}
 
 	void initShaders()
@@ -106,57 +103,6 @@ private:
 		shader.handle = createProgram(shaders.vertex.font, shaders.fragment.font);
 		shader.uniforms.viewProjMatrix = glGetUniformLocation(shader.handle, "viewProjMatrix");
 		shader.uniforms.worldMatrix = glGetUniformLocation(shader.handle, "worldMatrix");
-	}
-
-	void initQuadMesh()
-	{
-		const float vertices[] =
-		{
-			-1, -1, 0,
-			-1, 1, 0,
-			1, 1, 0,
-			-1, -1, 0,
-			1, 1, 0,
-			1, -1, 0,
-		};
-
-		const float uvs[] =
-		{
-			0, 1,
-			0, 0,
-			1, 0,
-			0, 1,
-			1, 0,
-			1, 1,
-		};
-
-		glGenVertexArrays(1, &quadMesh.vao);
-		glBindVertexArray(quadMesh.vao);
-
-		glGenBuffers(1, &quadMesh.vertexBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, quadMesh.vertexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * 18, vertices, GL_STATIC_DRAW);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-		glEnableVertexAttribArray(0);
-
-		glGenBuffers(1, &quadMesh.uvBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, quadMesh.uvBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * 12, uvs, GL_STATIC_DRAW);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-		glEnableVertexAttribArray(1);
-	}
-
-	void cleanupQuadMesh()
-	{
-		glDeleteVertexArrays(1, &quadMesh.vao);
-		glDeleteBuffers(1, &quadMesh.vertexBuffer);
-		glDeleteBuffers(1, &quadMesh.uvBuffer);
-	}
-
-	void drawQuadMesh()
-	{
-		glBindVertexArray(quadMesh.vao);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
 };
 
