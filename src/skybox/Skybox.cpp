@@ -26,6 +26,7 @@ public:
 
 private:
 	std::shared_ptr<Mesh> quadMesh;
+	std::shared_ptr<Mesh> boxMesh;
 
 	struct
 	{
@@ -37,7 +38,18 @@ private:
 			GLuint projMatrix = 0;
 			GLuint texture = 0;
 		} uniforms;
-	} shader;
+	} skyboxShader;
+
+	struct
+	{
+		GLuint handle = 0;
+
+		struct
+		{
+			GLuint viewProjMatrix = 0;
+			GLuint worldMatrix = 0;
+		} uniforms;
+	} meshShader;
 
 	struct
 	{
@@ -45,6 +57,7 @@ private:
 	} texture;
 
 	Camera camera;
+	Transform meshTransform;
 
 	void init() override final
 	{
@@ -52,8 +65,11 @@ private:
 		initTextures();
 
 		quadMesh = Mesh::quad();
+		boxMesh = Mesh::box();
 
 		camera.setPerspective(45, 1.0f * canvasWidth_ / canvasHeight_, 0.1f, 100.0f);
+		camera.transform().setLocalPosition({10, 10, 10});
+		camera.transform().lookAt({0, 0, 0}, {0, 1, 0});
 	}
 
 	void loadFaceData(const char *path, GLenum target)
@@ -98,15 +114,21 @@ private:
 	void initShaders()
 	{
 		static SkyboxDemo::Shaders shaders;
-		shader.handle = createProgram(shaders.vertex.skybox, shaders.fragment.skybox);
-		shader.uniforms.projMatrix = glGetUniformLocation(shader.handle, "projMatrix");
-		shader.uniforms.viewMatrix = glGetUniformLocation(shader.handle, "viewMatrix");
-		shader.uniforms.texture = glGetUniformLocation(shader.handle, "skyboxTex");
+
+		skyboxShader.handle = createProgram(shaders.vertex.skybox, shaders.fragment.skybox);
+		skyboxShader.uniforms.projMatrix = glGetUniformLocation(skyboxShader.handle, "projMatrix");
+		skyboxShader.uniforms.viewMatrix = glGetUniformLocation(skyboxShader.handle, "viewMatrix");
+		skyboxShader.uniforms.texture = glGetUniformLocation(skyboxShader.handle, "skyboxTex");
+
+		meshShader.handle = createProgram(shaders.vertex.simple, shaders.fragment.simple);
+		meshShader.uniforms.viewProjMatrix = glGetUniformLocation(meshShader.handle, "viewProjMatrix");
+		meshShader.uniforms.worldMatrix = glGetUniformLocation(meshShader.handle, "worldMatrix");
 	}
 
 	void cleanup() override final
 	{
-		glDeleteProgram(shader.handle);
+		glDeleteProgram(skyboxShader.handle);
+		glDeleteProgram(meshShader.handle);
 		glDeleteTextures(1, &texture.handle);
 	}
 
@@ -117,16 +139,32 @@ private:
 		glViewport(0, 0, canvasWidth_, canvasHeight_);
 		glClear(GL_DEPTH_BUFFER_BIT); // no need to clear color since we're rendering fullscreen quad anyway
 
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
+
+		// Skybox
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texture.handle);
-		
-		glUseProgram(shader.handle);
 
-		glUniformMatrix4fv(shader.uniforms.projMatrix, 1, GL_FALSE, glm::value_ptr(camera.projMatrix()));
-		glUniformMatrix4fv(shader.uniforms.viewMatrix, 1, GL_FALSE, glm::value_ptr(camera.viewMatrix()));
-		glUniform1i(shader.uniforms.texture, 0);
+		// Don't write to the depth buffer (the quad is always closest to the camera and prevents other objects from showing)
+		glDepthMask(GL_FALSE);
+
+		glUseProgram(skyboxShader.handle);
+		glUniformMatrix4fv(skyboxShader.uniforms.projMatrix, 1, GL_FALSE, glm::value_ptr(camera.projMatrix()));
+		glUniformMatrix4fv(skyboxShader.uniforms.viewMatrix, 1, GL_FALSE, glm::value_ptr(camera.viewMatrix()));
+		glUniform1i(skyboxShader.uniforms.texture, 0);
 
 		quadMesh->draw();
+
+		// Mesh
+
+		glDepthMask(GL_TRUE);
+
+		glUseProgram(meshShader.handle);
+		glUniformMatrix4fv(meshShader.uniforms.viewProjMatrix, 1, GL_FALSE, glm::value_ptr(camera.viewProjMatrix()));
+		glUniformMatrix4fv(meshShader.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(meshTransform.worldMatrix()));
+
+		boxMesh->draw();
 	}
 };
 

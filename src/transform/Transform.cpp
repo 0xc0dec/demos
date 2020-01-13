@@ -23,7 +23,7 @@ public:
 	}
 
 private:
-	std::shared_ptr<Mesh> quadMesh;
+	std::shared_ptr<Mesh> mesh;
 
 	struct
 	{
@@ -44,7 +44,7 @@ private:
 	{
 		initShaders();
 
-		quadMesh = Mesh::box();
+		mesh = Mesh::box();
 
 		t2.setLocalPosition({3, 3, 3});
 		t2.lookAt({0, 0, 0}, {0, 1, 0});
@@ -88,19 +88,19 @@ private:
 		glUniformMatrix4fv(shader.uniforms.viewProjMatrix, 1, GL_FALSE, glm::value_ptr(camera.viewProjMatrix()));
 		
 		glUniformMatrix4fv(shader.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(t1.worldMatrix()));
-		quadMesh->draw();
+		mesh->draw();
 
 		glUniformMatrix4fv(shader.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(t2.worldMatrix()));
-		quadMesh->draw();
+		mesh->draw();
 
 		glUniformMatrix4fv(shader.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(t3.worldMatrix()));
-		quadMesh->draw();
+		mesh->draw();
 	}
 
 	void initShaders()
 	{
 		static TransformDemo::Shaders shaders;
-		shader.handle = createProgram(shaders.vertex.font, shaders.fragment.font);
+		shader.handle = createProgram(shaders.vertex.simple, shaders.fragment.simple);
 		shader.uniforms.viewProjMatrix = glGetUniformLocation(shader.handle, "viewProjMatrix");
 		shader.uniforms.worldMatrix = glGetUniformLocation(shader.handle, "worldMatrix");
 	}

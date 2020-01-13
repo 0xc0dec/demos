@@ -6,7 +6,7 @@ namespace TransformDemo
     {
         struct
         {
-            const char *font = R"(
+            const char *simple = R"(
                 #version 330 core
 
                 in vec4 position;
@@ -26,7 +26,7 @@ namespace TransformDemo
 
         struct
         {
-            const char *font = R"(
+            const char *simple = R"(
                 #version 330 core
 
                 in vec2 uv0;
