@@ -8,7 +8,7 @@
 #include "common/Common.h"
 #include "common/Camera.h"
 #include "common/Spectator.h"
-#include "common/Meshes.h"
+#include "common/Mesh.h"
 #include "Shaders.h"
 #include <memory>
 #include <glm/glm.hpp>
@@ -44,7 +44,7 @@ private:
 	{
 		initShaders();
 
-		quadMesh = Mesh::quad();
+		quadMesh = Mesh::box();
 
 		t2.setLocalPosition({3, 3, 3});
 		t2.lookAt({0, 0, 0}, {0, 1, 0});

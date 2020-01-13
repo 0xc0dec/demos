@@ -7,7 +7,9 @@
 class Mesh
 {
 public:
+    // Build from vertex positions and texture coordinates
     Mesh(const std::vector<float> &positions, const std::vector<float> &uvs);
+
     ~Mesh();
 
     void draw();
@@ -19,6 +21,5 @@ private:
 
     int32_t verticesCount_ = 0;
     GLuint vao_ = 0;
-    GLuint vertexBuffer_ = 0;
-    GLuint uvBuffer_ = 0;
+    std::vector<GLuint> buffers_;
 };

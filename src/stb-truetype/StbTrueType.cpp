@@ -6,7 +6,7 @@
 #include "common/AppBase.h"
 #include "common/Device.h"
 #include "common/Common.h"
-#include "common/Meshes.h"
+#include "common/Mesh.h"
 #include "Shaders.h"
 #include <memory>
 #include <glm/glm.hpp>
