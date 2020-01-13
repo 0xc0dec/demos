@@ -11,6 +11,9 @@ The goal is to keep things easy to understand while taking away as much boilerpl
 * Build using the generated IDE files.
 * Run executables inside `build/<Debug|Release>/`.
 
+# Controls
+Some demos use first person camera. Use `Q-W-E-A-S-D` keys to move and hold right mouse button to rotate.
+
 # Demos
 ## Transform
 Object transform hierarchies and (first person) camera via reusable `Transform` and `Camera` classes.
