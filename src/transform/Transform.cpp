@@ -9,6 +9,7 @@
 #include "common/Camera.h"
 #include "common/Spectator.h"
 #include "common/Mesh.h"
+#include "common/ShaderProgram.h"
 #include "Shaders.h"
 #include <memory>
 #include <glm/glm.hpp>
@@ -24,17 +25,7 @@ public:
 
 private:
 	std::shared_ptr<Mesh> mesh;
-
-	struct
-	{
-		GLuint handle = 0;
-
-		struct
-		{
-			GLuint viewProjMatrix = 0;
-			GLuint worldMatrix = 0;
-		} uniforms;
-	} shader;
+	std::shared_ptr<ShaderProgram> shader;
 
 	Camera camera;
 	Transform root;
@@ -59,11 +50,6 @@ private:
 		camera.transform().lookAt({0, 0, 0}, {0, 1, 0});
 	}
 
-	void cleanup() override final
-	{
-		glDeleteProgram(shader.handle);
-	}
-
 	void render() override final
 	{
 		applySpectator(camera.transform(), device_);
@@ -84,25 +70,23 @@ private:
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 
-		glUseProgram(shader.handle);
-		glUniformMatrix4fv(shader.uniforms.viewProjMatrix, 1, GL_FALSE, glm::value_ptr(camera.viewProjMatrix()));
+		shader->use();
+		shader->setMatrixUniform("viewProjMatrix", glm::value_ptr(camera.viewProjMatrix()));
 		
-		glUniformMatrix4fv(shader.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(t1.worldMatrix()));
+		shader->setMatrixUniform("worldMatrix", glm::value_ptr(t1.worldMatrix()));
 		mesh->draw();
 
-		glUniformMatrix4fv(shader.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(t2.worldMatrix()));
+		shader->setMatrixUniform("worldMatrix", glm::value_ptr(t2.worldMatrix()));
 		mesh->draw();
 
-		glUniformMatrix4fv(shader.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(t3.worldMatrix()));
+		shader->setMatrixUniform("worldMatrix", glm::value_ptr(t3.worldMatrix()));
 		mesh->draw();
 	}
 
 	void initShaders()
 	{
 		static TransformDemo::Shaders shaders;
-		shader.handle = createProgram(shaders.vertex.simple, shaders.fragment.simple);
-		shader.uniforms.viewProjMatrix = glGetUniformLocation(shader.handle, "viewProjMatrix");
-		shader.uniforms.worldMatrix = glGetUniformLocation(shader.handle, "worldMatrix");
+		shader = std::make_shared<ShaderProgram>(shaders.vertex.simple, shaders.fragment.simple);
 	}
 };
 

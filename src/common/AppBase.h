@@ -25,15 +25,10 @@ protected:
 	uint32_t canvasHeight_ = 0;
 	Device device_;
 
-	virtual void init() = 0;
-	virtual void render() = 0;
-	virtual void cleanup() = 0;
+	virtual void init() {}
+	virtual void render() {}
+	virtual void cleanup() {}
 
-    static auto createProgram(const char* vs, const char* fs) -> GLuint;
     static auto readFile(const char* path) -> std::vector<uint8_t>;
 	static auto dataPath(const char *path) -> std::string;
-
-private:
-    static auto compileShader(GLenum type, const char* src) -> GLuint;
-    static auto linkProgram(GLuint vs, GLuint fs) -> GLint;
 };
