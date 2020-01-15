@@ -7,6 +7,7 @@
 #include "common/Device.h"
 #include "common/Common.h"
 #include "common/Mesh.h"
+#include "common/ShaderProgram.h"
 #include "Shaders.h"
 #include <memory>
 #include <glm/glm.hpp>
@@ -32,17 +33,7 @@ public:
 	}
 
 private:
-	struct
-	{
-		GLuint handle = 0;
-
-		struct
-		{
-			GLuint viewProjMatrix = 0;
-			GLuint worldMatrix = 0;
-			GLuint texture = 0;
-		} uniforms;
-	} shader;
+	std::shared_ptr<ShaderProgram> shader;
 
 	glm::mat4 viewProjMatrix;
 
@@ -92,7 +83,6 @@ private:
 	{
 		cleanupRotatingLabel();
 		glDeleteTextures(1, &font.texture);
-		glDeleteProgram(shader.handle);
 	}
 
 	void cleanupRotatingLabel()
@@ -118,9 +108,8 @@ private:
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		glUseProgram(shader.handle);
-
-		glUniformMatrix4fv(shader.uniforms.viewProjMatrix, 1, GL_FALSE, glm::value_ptr(viewProjMatrix));
+		shader->use();
+		shader->setMatrixUniform("viewProjMatrix", glm::value_ptr(viewProjMatrix));
 
 		glBindTexture(GL_TEXTURE_2D, font.texture);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
@@ -129,7 +118,8 @@ private:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 8);
 		glActiveTexture(GL_TEXTURE0);
-		glUniform1i(shader.uniforms.texture, 0);
+		
+		shader->setTextureUniform("mainTex", 0);
 
 		const auto dt = device_.timeDelta();
 		renderRotatingLabel(dt);
@@ -139,13 +129,7 @@ private:
 	void initShaders()
 	{
 		static StbTrueTypeDemo::Shaders shaders;
-		shader.handle = createProgram(shaders.vertex.font, shaders.fragment.font);
-		
-		glUseProgram(shader.handle);
-
-		shader.uniforms.viewProjMatrix = glGetUniformLocation(shader.handle, "viewProjMatrix");
-		shader.uniforms.worldMatrix = glGetUniformLocation(shader.handle, "worldMatrix");
-		shader.uniforms.texture = glGetUniformLocation(shader.handle, "mainTex");
+		shader = std::make_shared<ShaderProgram>(shaders.vertex.font, shaders.fragment.font);
 	}
 
 	void initFont()
@@ -235,7 +219,7 @@ private:
 		auto worldMatrix = glm::translate(glm::mat4{}, {0, 5, -30});
 		worldMatrix = glm::rotate(worldMatrix, rotatingLabel.angle, {0, 1, 0});
 		worldMatrix = glm::scale(worldMatrix, {0.05f, 0.05f, 1});
-		glUniformMatrix4fv(shader.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(worldMatrix));
+		shader->setMatrixUniform("worldMatrix", glm::value_ptr(worldMatrix));
 
 		glBindVertexArray(rotatingLabel.vao);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rotatingLabel.indexBuffer);
@@ -249,7 +233,7 @@ private:
 
 		auto worldMatrix = glm::translate(glm::mat4{}, {0, -6, distance});
 		worldMatrix = glm::scale(worldMatrix, {6, 6, 1});
-		glUniformMatrix4fv(shader.uniforms.worldMatrix, 1, GL_FALSE, glm::value_ptr(worldMatrix));
+		shader->setMatrixUniform("worldMatrix", glm::value_ptr(worldMatrix));
 
 		atlasQuad.mesh->draw();
 	}
