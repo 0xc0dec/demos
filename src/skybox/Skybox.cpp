@@ -23,31 +23,31 @@ public:
 	}
 
 private:
-	std::shared_ptr<Mesh> quadMesh;
-	std::shared_ptr<Mesh> boxMesh;
+	std::shared_ptr<Mesh> quadMesh_;
+	std::shared_ptr<Mesh> boxMesh_;
 
-	std::shared_ptr<ShaderProgram> skyboxShader;
-	std::shared_ptr<ShaderProgram> meshShader;
+	std::shared_ptr<ShaderProgram> skyboxShader_;
+	std::shared_ptr<ShaderProgram> meshShader_;
 
 	struct
 	{
 		GLuint handle;
-	} texture;
+	} texture_;
 
-	Camera camera;
-	Transform meshTransform;
+	Camera camera_;
+	Transform meshTransform_;
 
 	void init() override
 	{
 		initShaders();
 		initTextures();
 
-		quadMesh = Mesh::quad();
-		boxMesh = Mesh::box();
+		quadMesh_ = Mesh::quad();
+		boxMesh_ = Mesh::box();
 
-		camera.setPerspective(45, 1.0f * canvasWidth() / canvasHeight(), 0.1f, 100.0f);
-		camera.transform().setLocalPosition({10, 10, 10});
-		camera.transform().lookAt({0, 0, 0}, {0, 1, 0});
+		camera_.setPerspective(45, 1.0f * canvasWidth() / canvasHeight(), 0.1f, 100.0f);
+		camera_.transform().setLocalPosition({10, 10, 10});
+		camera_.transform().lookAt({0, 0, 0}, {0, 1, 0});
 	}
 
 	void loadFaceData(const char *path, GLenum target)
@@ -67,10 +67,10 @@ private:
 
 	void initTextures()
 	{
-		glGenTextures(1, &texture.handle);
+		glGenTextures(1, &texture_.handle);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, texture.handle);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, texture_.handle);
 
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -93,18 +93,18 @@ private:
 	{
 		static SkyboxDemo::Shaders shaders;
 
-		skyboxShader = std::make_shared<ShaderProgram>(shaders.vertex.skybox, shaders.fragment.skybox);
-		meshShader = std::make_shared<ShaderProgram>(shaders.vertex.simple, shaders.fragment.simple);
+		skyboxShader_ = std::make_shared<ShaderProgram>(shaders.vertex.skybox, shaders.fragment.skybox);
+		meshShader_ = std::make_shared<ShaderProgram>(shaders.vertex.simple, shaders.fragment.simple);
 	}
 
 	void cleanup() override
 	{
-		glDeleteTextures(1, &texture.handle);
+		glDeleteTextures(1, &texture_.handle);
 	}
 
 	void render() override
 	{
-		applySpectator(camera.transform(), device());
+		applySpectator(camera_.transform(), device());
 
 		glViewport(0, 0, canvasWidth(), canvasHeight());
 		glClear(GL_DEPTH_BUFFER_BIT); // no need to clear color since we're rendering fullscreen quad anyway
@@ -114,27 +114,27 @@ private:
 
 		// Skybox
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, texture.handle);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, texture_.handle);
 
 		// Don't write to the depth buffer (the quad is always closest to the camera and prevents other objects from showing)
 		glDepthMask(GL_FALSE);
 
-		skyboxShader->use();
-		skyboxShader->setMatrixUniform("projMatrix", glm::value_ptr(camera.projMatrix()));
-		skyboxShader->setMatrixUniform("viewMatrix", glm::value_ptr(camera.viewMatrix()));
-		skyboxShader->setTextureUniform("skyboxTex", 0);
+		skyboxShader_->use();
+		skyboxShader_->setMatrixUniform("projMatrix", glm::value_ptr(camera_.projMatrix()));
+		skyboxShader_->setMatrixUniform("viewMatrix", glm::value_ptr(camera_.viewMatrix()));
+		skyboxShader_->setTextureUniform("skyboxTex", 0);
 
-		quadMesh->draw();
+		quadMesh_->draw();
 
 		// Mesh
 
 		glDepthMask(GL_TRUE);
 
-		meshShader->use();
-		meshShader->setMatrixUniform("viewProjMatrix", glm::value_ptr(camera.viewProjMatrix()));
-		meshShader->setMatrixUniform("worldMatrix", glm::value_ptr(meshTransform.worldMatrix()));
+		meshShader_->use();
+		meshShader_->setMatrixUniform("viewProjMatrix", glm::value_ptr(camera_.viewProjMatrix()));
+		meshShader_->setMatrixUniform("worldMatrix", glm::value_ptr(meshTransform_.worldMatrix()));
 
-		boxMesh->draw();
+		boxMesh_->draw();
 	}
 };
 

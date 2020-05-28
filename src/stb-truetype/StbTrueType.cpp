@@ -33,9 +33,9 @@ public:
 	}
 
 private:
-	std::shared_ptr<ShaderProgram> shader;
+	std::shared_ptr<ShaderProgram> shader_;
 
-	glm::mat4 viewProjMatrix;
+	glm::mat4 viewProjMatrix_;
 
 	struct
 	{
@@ -45,13 +45,13 @@ private:
 		GLuint indexBuffer = 0;
 		uint16_t indexElementCount = 0;
 		float angle = 0;
-	} rotatingLabel;
+	} rotatingLabel_;
 
 	struct
 	{
 		std::shared_ptr<Mesh> mesh;
 		float time = 0;
-	} atlasQuad;
+	} atlasQuad_;
 
 	struct
 	{
@@ -64,7 +64,7 @@ private:
 		const uint32_t charCount = '~' - ' ';
 		std::unique_ptr<stbtt_packedchar[]> charInfo;
 		GLuint texture = 0;
-	} font;
+	} font_;
 
 	void init() override
 	{
@@ -72,25 +72,25 @@ private:
 		initRotatingLabel();
 		initShaders();
 
-		atlasQuad.mesh = Mesh::quad();
+		atlasQuad_.mesh = Mesh::quad();
 
 		const glm::mat4 viewMatrix{};
 		const auto projMatrix = glm::perspective(glm::radians(60.0f), 1.0f * canvasWidth() / canvasHeight(), 0.05f, 100.0f);
-		viewProjMatrix = projMatrix * viewMatrix;
+		viewProjMatrix_ = projMatrix * viewMatrix;
 	}
 
 	void cleanup() override
 	{
 		cleanupRotatingLabel();
-		glDeleteTextures(1, &font.texture);
+		glDeleteTextures(1, &font_.texture);
 	}
 
 	void cleanupRotatingLabel() const
 	{
-		glDeleteVertexArrays(1, &rotatingLabel.vao);
-		glDeleteBuffers(1, &rotatingLabel.vertexBuffer);
-		glDeleteBuffers(1, &rotatingLabel.uvBuffer);
-		glDeleteBuffers(1, &rotatingLabel.indexBuffer);
+		glDeleteVertexArrays(1, &rotatingLabel_.vao);
+		glDeleteBuffers(1, &rotatingLabel_.vertexBuffer);
+		glDeleteBuffers(1, &rotatingLabel_.uvBuffer);
+		glDeleteBuffers(1, &rotatingLabel_.indexBuffer);
 	}
 
 	void render() override
@@ -108,10 +108,10 @@ private:
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		shader->use();
-		shader->setMatrixUniform("viewProjMatrix", glm::value_ptr(viewProjMatrix));
+		shader_->use();
+		shader_->setMatrixUniform("viewProjMatrix", glm::value_ptr(viewProjMatrix_));
 
-		glBindTexture(GL_TEXTURE_2D, font.texture);
+		glBindTexture(GL_TEXTURE_2D, font_.texture);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -119,7 +119,7 @@ private:
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 8);
 		glActiveTexture(GL_TEXTURE0);
 		
-		shader->setTextureUniform("mainTex", 0);
+		shader_->setTextureUniform("mainTex", 0);
 
 		const auto dt = device().timeDelta();
 		renderRotatingLabel(dt);
@@ -129,30 +129,30 @@ private:
 	void initShaders()
 	{
 		static StbTrueTypeDemo::Shaders shaders;
-		shader = std::make_shared<ShaderProgram>(shaders.vertex.font, shaders.fragment.font);
+		shader_ = std::make_shared<ShaderProgram>(shaders.vertex.font, shaders.fragment.font);
 	}
 
 	void initFont()
 	{
 		auto fontData = readFile(dataPath("fonts/OpenSans-Regular.ttf").c_str());
-		auto atlasData = std::make_unique<uint8_t[]>(font.atlasWidth * font.atlasHeight);
+		auto atlasData = std::make_unique<uint8_t[]>(font_.atlasWidth * font_.atlasHeight);
 
-		font.charInfo = std::make_unique<stbtt_packedchar[]>(font.charCount);
+		font_.charInfo = std::make_unique<stbtt_packedchar[]>(font_.charCount);
 
 		stbtt_pack_context context;
-		if (!stbtt_PackBegin(&context, atlasData.get(), font.atlasWidth, font.atlasHeight, 0, 1, nullptr))
+		if (!stbtt_PackBegin(&context, atlasData.get(), font_.atlasWidth, font_.atlasHeight, 0, 1, nullptr))
 			PANIC("Failed to initialize font");
 
-		stbtt_PackSetOversampling(&context, font.oversampleX, font.oversampleY);
-		if (!stbtt_PackFontRange(&context, fontData.data(), 0, font.size, font.firstChar, font.charCount, font.charInfo.get()))
+		stbtt_PackSetOversampling(&context, font_.oversampleX, font_.oversampleY);
+		if (!stbtt_PackFontRange(&context, fontData.data(), 0, font_.size, font_.firstChar, font_.charCount, font_.charInfo.get()))
 			PANIC("Failed to pack font");
 
 		stbtt_PackEnd(&context);
 
-		glGenTextures(1, &font.texture);
-		glBindTexture(GL_TEXTURE_2D, font.texture);
+		glGenTextures(1, &font_.texture);
+		glBindTexture(GL_TEXTURE_2D, font_.texture);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, font.atlasWidth, font.atlasHeight, 0, GL_RED, GL_UNSIGNED_BYTE, atlasData.get());
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, font_.atlasWidth, font_.atlasHeight, 0, GL_RED, GL_UNSIGNED_BYTE, atlasData.get());
 		glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
@@ -191,59 +191,59 @@ private:
 			lastIndex += 4;
 		}
 
-		glGenVertexArrays(1, &rotatingLabel.vao);
-		glBindVertexArray(rotatingLabel.vao);
+		glGenVertexArrays(1, &rotatingLabel_.vao);
+		glBindVertexArray(rotatingLabel_.vao);
 
-		glGenBuffers(1, &rotatingLabel.vertexBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, rotatingLabel.vertexBuffer);
+		glGenBuffers(1, &rotatingLabel_.vertexBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, rotatingLabel_.vertexBuffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 		glEnableVertexAttribArray(0);
 
-		glGenBuffers(1, &rotatingLabel.uvBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, rotatingLabel.uvBuffer);
+		glGenBuffers(1, &rotatingLabel_.uvBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, rotatingLabel_.uvBuffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * uvs.size(), uvs.data(), GL_STATIC_DRAW);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 		glEnableVertexAttribArray(1);
 
-		rotatingLabel.indexElementCount = indexes.size();
-		glGenBuffers(1, &rotatingLabel.indexBuffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rotatingLabel.indexBuffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * rotatingLabel.indexElementCount, indexes.data(), GL_STATIC_DRAW);
+		rotatingLabel_.indexElementCount = indexes.size();
+		glGenBuffers(1, &rotatingLabel_.indexBuffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rotatingLabel_.indexBuffer);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * rotatingLabel_.indexElementCount, indexes.data(), GL_STATIC_DRAW);
 	}
 
 	void renderRotatingLabel(float dt)
 	{
-		rotatingLabel.angle += dt;
+		rotatingLabel_.angle += dt;
 
 		auto worldMatrix = glm::translate(glm::mat4{}, {0, 5, -30});
-		worldMatrix = glm::rotate(worldMatrix, rotatingLabel.angle, {0, 1, 0});
+		worldMatrix = glm::rotate(worldMatrix, rotatingLabel_.angle, {0, 1, 0});
 		worldMatrix = glm::scale(worldMatrix, {0.05f, 0.05f, 1});
-		shader->setMatrixUniform("worldMatrix", glm::value_ptr(worldMatrix));
+		shader_->setMatrixUniform("worldMatrix", glm::value_ptr(worldMatrix));
 
-		glBindVertexArray(rotatingLabel.vao);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rotatingLabel.indexBuffer);
-		glDrawElements(GL_TRIANGLES, rotatingLabel.indexElementCount, GL_UNSIGNED_SHORT, nullptr);
+		glBindVertexArray(rotatingLabel_.vao);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rotatingLabel_.indexBuffer);
+		glDrawElements(GL_TRIANGLES, rotatingLabel_.indexElementCount, GL_UNSIGNED_SHORT, nullptr);
 	}
 
 	void renderAtlasQuad(float dt)
 	{
-		atlasQuad.time += dt;
-		const auto distance = -10 - 5 * sinf(atlasQuad.time);
+		atlasQuad_.time += dt;
+		const auto distance = -10 - 5 * sinf(atlasQuad_.time);
 
 		auto worldMatrix = glm::translate(glm::mat4{}, {0, -6, distance});
 		worldMatrix = glm::scale(worldMatrix, {6, 6, 1});
-		shader->setMatrixUniform("worldMatrix", glm::value_ptr(worldMatrix));
+		shader_->setMatrixUniform("worldMatrix", glm::value_ptr(worldMatrix));
 
-		atlasQuad.mesh->draw();
+		atlasQuad_.mesh->draw();
 	}
 
 	auto makeGlyphInfo(uint32_t character, float offsetX, float offsetY) const -> GlyphInfo
 	{
 		stbtt_aligned_quad quad;
 
-		stbtt_GetPackedQuad(font.charInfo.get(), font.atlasWidth, font.atlasHeight,
-			character - font.firstChar, &offsetX, &offsetY, &quad, 1);
+		stbtt_GetPackedQuad(font_.charInfo.get(), font_.atlasWidth, font_.atlasHeight,
+			character - font_.firstChar, &offsetX, &offsetY, &quad, 1);
 		const auto xmin = quad.x0;
 		const auto xmax = quad.x1;
 		const auto ymin = -quad.y1;

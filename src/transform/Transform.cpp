@@ -23,42 +23,42 @@ public:
 	}
 
 private:
-	std::shared_ptr<Mesh> mesh;
+	std::shared_ptr<Mesh> mesh_;
 	std::shared_ptr<ShaderProgram> shader;
 
-	Camera camera;
-	Transform root;
-	Transform t1, t2, t3;
+	Camera camera_;
+	Transform root_;
+	Transform t1_, t2_, t3_;
 
 	void init() override
 	{
 		initShaders();
 
-		mesh = Mesh::box();
+		mesh_ = Mesh::box();
 
-		t2.setLocalPosition({3, 3, 3});
-		t2.lookAt({0, 0, 0}, {0, 1, 0});
-		t2.setParent(&root);
+		t2_.setLocalPosition({3, 3, 3});
+		t2_.lookAt({0, 0, 0}, {0, 1, 0});
+		t2_.setParent(&root_);
 
-		t3.setLocalPosition({0, 3, 0});
-		t3.setLocalScale({0.5f, 0.5f, 0.5f});
-		t3.setParent(&t2);
+		t3_.setLocalPosition({0, 3, 0});
+		t3_.setLocalScale({0.5f, 0.5f, 0.5f});
+		t3_.setParent(&t2_);
 
-		camera.setPerspective(45, 1.0f * canvasWidth() / canvasHeight(), 0.1f, 100.0f);
-		camera.transform().setLocalPosition({10, 10, 10});
-		camera.transform().lookAt({0, 0, 0}, {0, 1, 0});
+		camera_.setPerspective(45, 1.0f * canvasWidth() / canvasHeight(), 0.1f, 100.0f);
+		camera_.transform().setLocalPosition({10, 10, 10});
+		camera_.transform().lookAt({0, 0, 0}, {0, 1, 0});
 	}
 
 	void render() override
 	{
-		applySpectator(camera.transform(), device());
+		applySpectator(camera_.transform(), device());
 		
 		const auto dt = device().timeDelta();
 		const auto deltaAngle = glm::radians(100 * dt);
-		root.rotate({0, 1, 0}, deltaAngle, TransformSpace::World);
-		t1.rotate({0, 0, 1}, deltaAngle, TransformSpace::Self);
-		t2.rotate({0, 0, 1}, deltaAngle, TransformSpace::Self);
-		t3.rotate({0, 1, 0}, deltaAngle, TransformSpace::Parent);
+		root_.rotate({0, 1, 0}, deltaAngle, TransformSpace::World);
+		t1_.rotate({0, 0, 1}, deltaAngle, TransformSpace::Self);
+		t2_.rotate({0, 0, 1}, deltaAngle, TransformSpace::Self);
+		t3_.rotate({0, 1, 0}, deltaAngle, TransformSpace::Parent);
 
 		glViewport(0, 0, canvasWidth(), canvasHeight());
 		glClearColor(0, 0.5f, 0.6f, 1);
@@ -70,16 +70,16 @@ private:
 		glDepthFunc(GL_LEQUAL);
 
 		shader->use();
-		shader->setMatrixUniform("viewProjMatrix", glm::value_ptr(camera.viewProjMatrix()));
+		shader->setMatrixUniform("viewProjMatrix", glm::value_ptr(camera_.viewProjMatrix()));
 		
-		shader->setMatrixUniform("worldMatrix", glm::value_ptr(t1.worldMatrix()));
-		mesh->draw();
+		shader->setMatrixUniform("worldMatrix", glm::value_ptr(t1_.worldMatrix()));
+		mesh_->draw();
 
-		shader->setMatrixUniform("worldMatrix", glm::value_ptr(t2.worldMatrix()));
-		mesh->draw();
+		shader->setMatrixUniform("worldMatrix", glm::value_ptr(t2_.worldMatrix()));
+		mesh_->draw();
 
-		shader->setMatrixUniform("worldMatrix", glm::value_ptr(t3.worldMatrix()));
-		mesh->draw();
+		shader->setMatrixUniform("worldMatrix", glm::value_ptr(t3_.worldMatrix()));
+		mesh_->draw();
 	}
 
 	void cleanup() override
