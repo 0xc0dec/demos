@@ -58,6 +58,9 @@ void Device::beginUpdate()
 			processMouseEvent(evt);
 		}
 
+    	if (eventHandler_)
+			eventHandler_(evt);
+
 		const auto closeWindowEvent = evt.type == SDL_WINDOWEVENT && evt.window.event == SDL_WINDOWEVENT_CLOSE;
         if (evt.type == SDL_QUIT || closeWindowEvent)
             closeRequested_ = true;
@@ -73,7 +76,7 @@ void Device::beginUpdate()
     }
 }
 
-void Device::endUpdate()
+void Device::endUpdate() const
 {
 	SDL_GL_SwapWindow(window_);
 }

@@ -75,7 +75,7 @@ private:
 		atlasQuad.mesh = Mesh::quad();
 
 		const glm::mat4 viewMatrix{};
-		const auto projMatrix = glm::perspective(glm::radians(60.0f), 1.0f * canvasWidth_ / canvasHeight_, 0.05f, 100.0f);
+		const auto projMatrix = glm::perspective(glm::radians(60.0f), 1.0f * canvasWidth() / canvasHeight(), 0.05f, 100.0f);
 		viewProjMatrix = projMatrix * viewMatrix;
 	}
 
@@ -85,7 +85,7 @@ private:
 		glDeleteTextures(1, &font.texture);
 	}
 
-	void cleanupRotatingLabel()
+	void cleanupRotatingLabel() const
 	{
 		glDeleteVertexArrays(1, &rotatingLabel.vao);
 		glDeleteBuffers(1, &rotatingLabel.vertexBuffer);
@@ -95,7 +95,7 @@ private:
 
 	void render() override
 	{
-		glViewport(0, 0, canvasWidth_, canvasHeight_);
+		glViewport(0, 0, canvasWidth(), canvasHeight());
 		glClearColor(0, 0.5f, 0.6f, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -121,7 +121,7 @@ private:
 		
 		shader->setTextureUniform("mainTex", 0);
 
-		const auto dt = device_.timeDelta();
+		const auto dt = device().timeDelta();
 		renderRotatingLabel(dt);
 		renderAtlasQuad(dt);
 	}
@@ -238,16 +238,16 @@ private:
 		atlasQuad.mesh->draw();
 	}
 
-	auto makeGlyphInfo(uint32_t character, float offsetX, float offsetY) -> GlyphInfo
+	auto makeGlyphInfo(uint32_t character, float offsetX, float offsetY) const -> GlyphInfo
 	{
 		stbtt_aligned_quad quad;
 
 		stbtt_GetPackedQuad(font.charInfo.get(), font.atlasWidth, font.atlasHeight,
 			character - font.firstChar, &offsetX, &offsetY, &quad, 1);
-		auto xmin = quad.x0;
-		auto xmax = quad.x1;
-		auto ymin = -quad.y1;
-		auto ymax = -quad.y0;
+		const auto xmin = quad.x0;
+		const auto xmax = quad.x1;
+		const auto ymin = -quad.y1;
+		const auto ymax = -quad.y0;
 
 		GlyphInfo info{};
 		info.offsetX = offsetX;

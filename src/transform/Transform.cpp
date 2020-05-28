@@ -44,23 +44,23 @@ private:
 		t3.setLocalScale({0.5f, 0.5f, 0.5f});
 		t3.setParent(&t2);
 
-		camera.setPerspective(45, 1.0f * canvasWidth_ / canvasHeight_, 0.1f, 100.0f);
+		camera.setPerspective(45, 1.0f * canvasWidth() / canvasHeight(), 0.1f, 100.0f);
 		camera.transform().setLocalPosition({10, 10, 10});
 		camera.transform().lookAt({0, 0, 0}, {0, 1, 0});
 	}
 
 	void render() override
 	{
-		applySpectator(camera.transform(), device_);
+		applySpectator(camera.transform(), device());
 		
-		const auto dt = device_.timeDelta();
+		const auto dt = device().timeDelta();
 		const auto deltaAngle = glm::radians(100 * dt);
 		root.rotate({0, 1, 0}, deltaAngle, TransformSpace::World);
 		t1.rotate({0, 0, 1}, deltaAngle, TransformSpace::Self);
 		t2.rotate({0, 0, 1}, deltaAngle, TransformSpace::Self);
 		t3.rotate({0, 1, 0}, deltaAngle, TransformSpace::Parent);
 
-		glViewport(0, 0, canvasWidth_, canvasHeight_);
+		glViewport(0, 0, canvasWidth(), canvasHeight());
 		glClearColor(0, 0.5f, 0.6f, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -80,6 +80,10 @@ private:
 
 		shader->setMatrixUniform("worldMatrix", glm::value_ptr(t3.worldMatrix()));
 		mesh->draw();
+	}
+
+	void cleanup() override
+	{
 	}
 
 	void initShaders()

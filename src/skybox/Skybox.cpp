@@ -45,7 +45,7 @@ private:
 		quadMesh = Mesh::quad();
 		boxMesh = Mesh::box();
 
-		camera.setPerspective(45, 1.0f * canvasWidth_ / canvasHeight_, 0.1f, 100.0f);
+		camera.setPerspective(45, 1.0f * canvasWidth() / canvasHeight(), 0.1f, 100.0f);
 		camera.transform().setLocalPosition({10, 10, 10});
 		camera.transform().lookAt({0, 0, 0}, {0, 1, 0});
 	}
@@ -104,9 +104,9 @@ private:
 
 	void render() override
 	{
-		applySpectator(camera.transform(), device_);
+		applySpectator(camera.transform(), device());
 
-		glViewport(0, 0, canvasWidth_, canvasHeight_);
+		glViewport(0, 0, canvasWidth(), canvasHeight());
 		glClear(GL_DEPTH_BUFFER_BIT); // no need to clear color since we're rendering fullscreen quad anyway
 
 		glEnable(GL_DEPTH_TEST);
