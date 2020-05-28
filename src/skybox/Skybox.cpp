@@ -4,8 +4,6 @@
 */
 
 #include "common/AppBase.h"
-#include "common/Device.h"
-#include "common/Common.h"
 #include "common/Camera.h"
 #include "common/Spectator.h"
 #include "common/Mesh.h"
@@ -13,12 +11,11 @@
 #include "Shaders.h"
 #include <memory>
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-class App: public AppBase
+class App final: public AppBase
 {
 public:
 	App(): AppBase(1366, 768, false)
@@ -40,7 +37,7 @@ private:
 	Camera camera;
 	Transform meshTransform;
 
-	void init() override final
+	void init() override
 	{
 		initShaders();
 		initTextures();
@@ -100,12 +97,12 @@ private:
 		meshShader = std::make_shared<ShaderProgram>(shaders.vertex.simple, shaders.fragment.simple);
 	}
 
-	void cleanup() override final
+	void cleanup() override
 	{
 		glDeleteTextures(1, &texture.handle);
 	}
 
-	void render() override final
+	void render() override
 	{
 		applySpectator(camera.transform(), device_);
 

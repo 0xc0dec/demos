@@ -5,7 +5,6 @@
 
 #include "common/AppBase.h"
 #include "common/Device.h"
-#include "common/Common.h"
 #include "common/Camera.h"
 #include "common/Spectator.h"
 #include "common/Mesh.h"
@@ -31,7 +30,7 @@ private:
 	Transform root;
 	Transform t1, t2, t3;
 
-	void init() override final
+	void init() override
 	{
 		initShaders();
 
@@ -50,7 +49,7 @@ private:
 		camera.transform().lookAt({0, 0, 0}, {0, 1, 0});
 	}
 
-	void render() override final
+	void render() override
 	{
 		applySpectator(camera.transform(), device_);
 		

@@ -66,7 +66,7 @@ private:
 		GLuint texture = 0;
 	} font;
 
-	void init() override final
+	void init() override
 	{
 		initFont();
 		initRotatingLabel();
@@ -79,7 +79,7 @@ private:
 		viewProjMatrix = projMatrix * viewMatrix;
 	}
 
-	void cleanup() override final
+	void cleanup() override
 	{
 		cleanupRotatingLabel();
 		glDeleteTextures(1, &font.texture);
@@ -93,7 +93,7 @@ private:
 		glDeleteBuffers(1, &rotatingLabel.indexBuffer);
 	}
 
-	void render() override final
+	void render() override
 	{
 		glViewport(0, 0, canvasWidth_, canvasHeight_);
 		glClearColor(0, 0.5f, 0.6f, 1);
