@@ -31,7 +31,7 @@ TrueType font rendering using [stb_truetype](https://github.com/nothings/stb) li
 ![Image](/demos/stb-truetype/screenshot.png?raw=true)
 
 ## ImGui
-Basic ImGui integration example.
+Basic [ImGui](https://github.com/ocornut/imgui) integration example.
 
 ![Image](/demos/imgui/screenshot.png?raw=true)
 
@@ -43,3 +43,4 @@ Basic ImGui integration example.
 * SDL
 * GLEW
 * glm
+* ImGui
