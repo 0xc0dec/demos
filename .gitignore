@@ -9,9 +9,10 @@
 *.idb
 *.user
 .vscode
+/build/**/*
+!/build/*.cmd
 *VC.*db*
 *.vs
-build*
 *DS_Store*
 *DotSettings.user
 .idea*
