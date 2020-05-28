@@ -5,6 +5,7 @@
 
 #include "common/AppBase.h"
 #include <imgui.h>
+// Include these two as we use SDL + OpenGL stack
 #include <examples/imgui_impl_opengl3.h>
 #include <examples/imgui_impl_sdl.h>
 #include <GL/glew.h>
