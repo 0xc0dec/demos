@@ -18,17 +18,22 @@ Some demos use first person camera. Use `W-S-A-D-Q-E` keys to move and hold righ
 ## Transform
 Object transform hierarchies and (first person) camera via reusable `Transform` and `Camera` classes.
 
-![Image](/screenshots/transform.png?raw=true)
+![Image](/demos/transform/screenshot.png?raw=true)
 
 ## Skybox
 Skybox rendering on a single quad mesh using a bit of shader magic.
 
-![Image](/screenshots/skybox.png?raw=true)
+![Image](/demos/skybox/screenshot.png?raw=true)
 
 ## TrueType
 TrueType font rendering using [stb_truetype](https://github.com/nothings/stb) library.
 
-![Image](/screenshots/stb-truetype.png?raw=true)
+![Image](/demos/stb-truetype/screenshot.png?raw=true)
+
+## ImGui
+Basic ImGui integration example.
+
+![Image](/demos/imgui/screenshot.png?raw=true)
 
 ## To be continued...
 
