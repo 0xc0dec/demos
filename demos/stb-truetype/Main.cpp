@@ -134,7 +134,7 @@ private:
 
 	void initFont()
 	{
-		auto fontData = readFile(dataPath("fonts/OpenSans-Regular.ttf").c_str());
+		auto fontData = readFile(assetPath("fonts/OpenSans-Regular.ttf").c_str());
 		auto atlasData = std::make_unique<uint8_t[]>(font_.atlasWidth * font_.atlasHeight);
 
 		font_.charInfo = std::make_unique<stbtt_packedchar[]>(font_.charCount);
