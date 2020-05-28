@@ -1,7 +1,7 @@
 file(GLOB DEMOS_VENDOR_GLEW_SRC
     "glew/1.13/src/glew.c"
 )
- 
+
 if (WIN32)
     file(GLOB DEMOS_VENDOR_SDL_SRC
         "SDL/2.0.4/src/haptic/dummy/SDL_syshaptic.c"
@@ -176,6 +176,7 @@ target_include_directories(Vendor PRIVATE
     "."
     "glew/1.13/include"
     "SDL/2.0.4/include"
+    "imgui"
 )
 
 if (APPLE)
