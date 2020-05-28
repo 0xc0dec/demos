@@ -6,8 +6,8 @@ There are no complex abstractions aka "engine", but a small library of shared co
 The goal is to keep things easy to understand while taking away as much boilerplate stuff as possible.
 
 # Building and running
-* `mkdir build && cd build`.
-* `cmake -G "Visual Studio 16 2019" -A x64 ..` (or other generator depending on the IDE).
+* `cd build`.
+* `cmake -G "Visual Studio 16 2019" -A x64 ..` (or run a suitable build script in the folder, if any).
 * Build using the generated IDE files.
 * Run executables inside `build/<Debug|Release>/`.
 
