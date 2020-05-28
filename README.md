@@ -12,7 +12,7 @@ The goal is to keep things easy to understand while taking away as much boilerpl
 * Run executables inside `build/<Debug|Release>/`.
 
 # Controls
-Some demos use first person camera. Use `Q-W-E-A-S-D` keys to move and hold right mouse button to rotate.
+Some demos use first person camera. Use `W-S-A-D-Q-E` keys to move and hold right mouse button to rotate.
 
 # Demos
 ## Transform
