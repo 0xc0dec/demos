@@ -7,7 +7,7 @@ The goal is to keep things easy to understand while taking away as much boilerpl
 
 # Building and running
 * `cd build`.
-* `cmake -G "Visual Studio 16 2019" -A x64 ..` (or run a suitable build script in the folder, if any).
+* `cmake -G "Visual Studio 16 2019" -A x64 ..` (or run a suitable build script from the folder, e.g. `gen-msvc-2017-x64.cmd`).
 * Build using the generated IDE files.
 * Run executables inside `build/<Debug|Release>/`.
 
