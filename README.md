@@ -16,7 +16,7 @@ Some demos use first person camera. Use `W-S-A-D-Q-E` keys to move and hold righ
 
 # Demos
 ## Transform
-Object transform hierarchies and (first person) camera via reusable `Transform` and `Camera` classes.
+Object transform hierarchies and (first person) camera via reusable [`Transform`](demos/common/Transform.h) and [`Camera`](demos/common/Camera.h) classes.
 
 ![Image](/demos/transform/screenshot.png?raw=true)
 
