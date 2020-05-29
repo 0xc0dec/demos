@@ -4,7 +4,7 @@
 */
 
 #include "GLDevice.h"
-#include "Common.h"
+#include "../Common.h"
 #include <GL/glew.h>
 
 GLDevice::GLDevice(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen):

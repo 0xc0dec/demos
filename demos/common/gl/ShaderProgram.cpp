@@ -1,6 +1,11 @@
+/*
+    Copyright (c) Aleksey Fedotov
+    MIT license
+*/
+
 #include "ShaderProgram.h"
-#include "Formatter.h"
-#include "Common.h"
+#include "../Formatter.h"
+#include "../Common.h"
 #include <vector>
 
 static auto compileShader(GLuint type, const void *src, uint32_t length) -> GLint
@@ -74,7 +79,7 @@ ShaderProgram::~ShaderProgram()
     glDeleteProgram(handle_);
 }
 
-void ShaderProgram::use()
+void ShaderProgram::use() const
 {
     glUseProgram(handle_);
 }

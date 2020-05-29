@@ -3,11 +3,11 @@
     MIT license
 */
 
-#include "common/GLAppBase.h"
 #include "common/Camera.h"
 #include "common/Spectator.h"
 #include "common/Mesh.h"
-#include "common/ShaderProgram.h"
+#include "common/gl/GLAppBase.h"
+#include "common/gl/ShaderProgram.h"
 #include "Shaders.h"
 #include <memory>
 #include <glm/glm.hpp>

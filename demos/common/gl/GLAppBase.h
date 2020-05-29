@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "AppBase.h"
+#include "../AppBase.h"
 #include "GLDevice.h"
 
 class GLAppBase: public AppBase

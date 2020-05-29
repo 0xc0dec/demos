@@ -1,3 +1,8 @@
+/*
+    Copyright (c) Aleksey Fedotov
+    MIT license
+*/
+
 #pragma once
 
 #include <unordered_map>
@@ -10,7 +15,7 @@ public:
     ShaderProgram(const std::string &vertex, const std::string &fragment);
     ~ShaderProgram();
 
-    void use();
+    void use() const;
 
     void setMatrixUniform(const std::string &name, const float *data);
     void setTextureUniform(const std::string &name, uint32_t slot);

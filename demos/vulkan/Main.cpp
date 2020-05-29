@@ -3,22 +3,27 @@
     MIT license
 */
 
-class App
+#include "common/vk/VkAppBase.h"
+
+class App: public VkAppBase
 {
 public:
+	App(): VkAppBase(1366, 768, false)
+	{
+	}
 
-private:
-	void init()
+protected:
+	void init() override
 	{
 		
 	}
-
-	void run()
+	
+	void render() override
 	{
 		
 	}
-
-	void cleanup()
+	
+	void cleanup() override
 	{
 		
 	}
@@ -26,5 +31,5 @@ private:
 
 void main()
 {
-	
+	App().run();
 }

@@ -5,13 +5,13 @@
 
 #pragma once
 
-#include "Device.h"
+#include "../Device.h"
 
-class GLDevice final: public Device
+class VkDevice final: public Device
 {
 public:
-	GLDevice(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen);
-	~GLDevice();
+	VkDevice(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen);
+	~VkDevice() = default;
 
 	auto sdlGLContext() const -> SDL_GLContext { return context_; }
 

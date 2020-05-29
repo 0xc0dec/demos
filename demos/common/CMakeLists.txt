@@ -1,6 +1,10 @@
-file(GLOB DEMOS_COMMON "*.cpp" "*.h")
-source_group("" FILES ${DEMOS_COMMON})
-add_library(Common ${DEMOS_COMMON})
+file(GLOB SRC "*.cpp" "*.h")
+file(GLOB GL_SRC "gl/*.cpp" "gl/*.h")
+file(GLOB VK_SRC "vk/*.cpp" "vk/*.h")
+source_group("" FILES ${SRC})
+source_group("gl" FILES ${GL_SRC})
+source_group("vk" FILES ${VK_SRC})
+add_library(Common ${SRC} ${GL_SRC} ${VK_SRC})
 
 set_default_includes(Common)
 set_default_definitions(Common)
