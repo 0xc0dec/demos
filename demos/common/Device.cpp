@@ -5,7 +5,9 @@
 
 #include "Device.h"
 
-Device::Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen)
+Device::Device(uint32_t canvasWidth, uint32_t canvasHeight):
+	canvasWidth_(canvasWidth),
+	canvasHeight_(canvasHeight)
 {
 }
 

@@ -51,7 +51,7 @@ private:
 
 		// The actual render via OpenGL
 		
-		glViewport(0, 0, canvasWidth(), canvasHeight());
+		glViewport(0, 0, device()->canvasWidth(), device()->canvasHeight());
 		glClearColor(0, 0.5f, 0.6f, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		

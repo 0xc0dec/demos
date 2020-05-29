@@ -15,7 +15,7 @@
 class Device
 {
 public:
-    Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen);
+    Device(uint32_t canvasWidth, uint32_t canvasHeight);
     Device(const Device &other) = delete;
     Device(Device &&other) = delete;
 	
@@ -36,6 +36,9 @@ public:
     bool isMouseButtonDown(uint8_t button, bool firstTime = false) const;
     bool isMouseButtonReleased(uint8_t button) const;
 
+	auto canvasWidth() const -> uint32_t { return canvasWidth_; }
+	auto canvasHeight() const -> uint32_t { return canvasHeight_; }
+
     bool closeRequested() const { return closeRequested_; }
 
     auto timeDelta() const -> float { return dt_; }
@@ -54,6 +57,9 @@ private:
 	bool hasMouseFocus_ = false;
     bool hasKeyboardFocus_ = false;
     bool firstUpdate_ = true;
+
+	uint32_t canvasWidth_{};
+	uint32_t canvasHeight_{};
 
     std::unordered_map<SDL_Keycode, bool> pressedKeys_;
     std::unordered_set<SDL_Keycode> releasedKeys_;

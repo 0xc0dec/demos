@@ -12,8 +12,6 @@
 class AppBase
 {
 public:
-	AppBase(uint32_t canvasWidth, uint32_t canvasHeight, bool fullScreen);
-
 	virtual ~AppBase() = default;
 
 	void run();
@@ -21,17 +19,10 @@ public:
 protected:
 	std::unique_ptr<Device> device_;
 	
-	auto canvasWidth() const -> uint32_t { return canvasWidth_; }
-	auto canvasHeight() const -> uint32_t { return canvasHeight_; }
-
 	virtual void init() = 0;
 	virtual void render() = 0;
 	virtual void cleanup() = 0;
 
     static auto readFile(const char* path) -> std::vector<uint8_t>;
 	static auto assetPath(const char *path) -> std::string;
-
-private:
-	uint32_t canvasWidth_ = 0;
-	uint32_t canvasHeight_ = 0;
 };

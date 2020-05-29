@@ -74,7 +74,7 @@ private:
 		atlasQuad_.mesh = Mesh::quad();
 
 		const glm::mat4 viewMatrix{};
-		const auto projMatrix = glm::perspective(glm::radians(60.0f), 1.0f * canvasWidth() / canvasHeight(), 0.05f, 100.0f);
+		const auto projMatrix = glm::perspective(glm::radians(60.0f), 1.0f * device()->canvasWidth() / device()->canvasHeight(), 0.05f, 100.0f);
 		viewProjMatrix_ = projMatrix * viewMatrix;
 	}
 
@@ -94,7 +94,7 @@ private:
 
 	void render() override
 	{
-		glViewport(0, 0, canvasWidth(), canvasHeight());
+		glViewport(0, 0, device()->canvasWidth(), device()->canvasHeight());
 		glClearColor(0, 0.5f, 0.6f, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

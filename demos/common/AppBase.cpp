@@ -9,12 +9,6 @@
 #include <fstream>
 #include <string>
 
-AppBase::AppBase(uint32_t canvasWidth, uint32_t canvasHeight, bool fullScreen) :
-    canvasWidth_(canvasWidth),
-    canvasHeight_(canvasHeight)
-{
-}
-
 void AppBase::run()
 {
     init();
