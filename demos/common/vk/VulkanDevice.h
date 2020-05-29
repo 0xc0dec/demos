@@ -7,6 +7,7 @@
 
 #include "../Device.h"
 #include "VulkanCommon.h"
+#include "VulkanResource.h"
 
 namespace vk
 {
@@ -14,10 +15,12 @@ namespace vk
 	{
 	public:
 		Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen);
-		~Device() = default;
+		~Device();
 
 		void endUpdate() override;
 
 	private:
+		vk::Resource<VkInstance> instance_;
+		vk::Resource<VkSurfaceKHR> surface_;
 	};
 }

@@ -36,6 +36,8 @@ gl::Device::~Device()
 {
 	if (context_)
 		SDL_GL_DeleteContext(context_);
+	if (window_)
+        SDL_DestroyWindow(window_);
 }
 
 void gl::Device::endUpdate()
