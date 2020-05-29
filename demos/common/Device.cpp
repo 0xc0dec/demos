@@ -7,7 +7,6 @@
 #include "Common.h"
 #include <GL/glew.h>
 #include <iostream>
-#include <vector>
 
 Device::Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen)
 {

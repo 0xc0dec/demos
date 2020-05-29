@@ -17,11 +17,11 @@ public:
     auto setPerspective(float fov, float aspectRatio, float nearClip, float farClip) -> Camera&;
     auto setOrthographic(float width, float height, float nearClip, float farClip) -> Camera&;
 
-    auto viewMatrix() const -> const glm::mat4 { return glm::inverse(transform_.worldMatrix()); }
-    auto invViewMatrix() const -> const glm::mat4 { return glm::inverse(viewMatrix()); }
+    auto viewMatrix() const -> glm::mat4 { return glm::inverse(transform_.worldMatrix()); }
+    auto invViewMatrix() const -> glm::mat4 { return glm::inverse(viewMatrix()); }
     auto projMatrix() const -> const glm::mat4;
-    auto viewProjMatrix() const -> const glm::mat4 { return projMatrix() * viewMatrix(); }
-    auto invViewProjMatrix() const -> const glm::mat4 { return glm::inverse(viewProjMatrix()); }
+    auto viewProjMatrix() const -> glm::mat4 { return projMatrix() * viewMatrix(); }
+    auto invViewProjMatrix() const -> glm::mat4 { return glm::inverse(viewProjMatrix()); }
 
 protected:
     bool ortho_ = false;

@@ -128,7 +128,7 @@ private:
 
 	void initShaders()
 	{
-		static StbTrueTypeDemo::Shaders shaders;
+		static Shaders shaders;
 		shader_ = std::make_shared<ShaderProgram>(shaders.vertex.font, shaders.fragment.font);
 	}
 
