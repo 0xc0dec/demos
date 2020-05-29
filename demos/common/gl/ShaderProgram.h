@@ -9,36 +9,39 @@
 #include <string>
 #include <GL/glew.h>
 
-class ShaderProgram
+namespace gl
 {
-public:
-    ShaderProgram(const std::string &vertex, const std::string &fragment);
-    ~ShaderProgram();
+	class ShaderProgram
+	{
+	public:
+		ShaderProgram(const std::string &vertex, const std::string &fragment);
+		~ShaderProgram();
 
-    void use() const;
+		void use() const;
 
-    void setMatrixUniform(const std::string &name, const float *data);
-    void setTextureUniform(const std::string &name, uint32_t slot);
+		void setMatrixUniform(const std::string &name, const float *data);
+		void setTextureUniform(const std::string &name, uint32_t slot);
 
-private:
-    struct UniformInfo
-    {
-        uint32_t location;
-        uint32_t samplerIndex;
-    };
+	private:
+		struct UniformInfo
+		{
+			uint32_t location;
+			uint32_t samplerIndex;
+		};
 
-    struct AttributeInfo
-    {
-        uint32_t location;
-    };
+		struct AttributeInfo
+		{
+			uint32_t location;
+		};
 
-    GLuint handle_ = 0;
-    std::unordered_map<std::string, UniformInfo> uniforms_;
-    std::unordered_map<std::string, AttributeInfo> attributes_;
+		GLuint handle_ = 0;
+		std::unordered_map<std::string, UniformInfo> uniforms_;
+		std::unordered_map<std::string, AttributeInfo> attributes_;
 
-    void introspectUniforms();
-    void introspectAttributes();
+		void introspectUniforms();
+		void introspectAttributes();
 
-    auto uniformInfo(const std::string &name) -> UniformInfo;
-    auto attributeInfo(const std::string &name) -> AttributeInfo;
-};
+		auto uniformInfo(const std::string &name) -> UniformInfo;
+		auto attributeInfo(const std::string &name) -> AttributeInfo;
+	};
+}

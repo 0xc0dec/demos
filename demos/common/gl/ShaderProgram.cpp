@@ -59,7 +59,7 @@ static auto linkProgram(GLuint vs, GLuint fs) -> GLint
     return program;
 }
 
-ShaderProgram::ShaderProgram(const std::string &vertex, const std::string &fragment)
+gl::ShaderProgram::ShaderProgram(const std::string &vertex, const std::string &fragment)
 {
     const auto vs = compileShader(GL_VERTEX_SHADER, vertex.c_str(), vertex.size());
     const auto fs = compileShader(GL_FRAGMENT_SHADER, fragment.c_str(), fragment.size());
@@ -74,29 +74,29 @@ ShaderProgram::ShaderProgram(const std::string &vertex, const std::string &fragm
     introspectUniforms();
 }
 
-ShaderProgram::~ShaderProgram()
+gl::ShaderProgram::~ShaderProgram()
 {
     glDeleteProgram(handle_);
 }
 
-void ShaderProgram::use() const
+void gl::ShaderProgram::use() const
 {
     glUseProgram(handle_);
 }
 
-void ShaderProgram::setMatrixUniform(const std::string &name, const float *data)
+void gl::ShaderProgram::setMatrixUniform(const std::string &name, const float *data)
 {
     const auto info = uniformInfo(name);
     glUniformMatrix4fv(info.location, 1, GL_FALSE, data);
 }
 
-void ShaderProgram::setTextureUniform(const std::string &name, uint32_t slot)
+void gl::ShaderProgram::setTextureUniform(const std::string &name, uint32_t slot)
 {
     const auto info = uniformInfo(name);
     glUniform1i(info.location, slot);
 }
 
-auto ShaderProgram::uniformInfo(const std::string &name) -> UniformInfo
+auto gl::ShaderProgram::uniformInfo(const std::string &name) -> UniformInfo
 {
     if (uniforms_.count(name))
         return uniforms_.at(name);
@@ -104,7 +104,7 @@ auto ShaderProgram::uniformInfo(const std::string &name) -> UniformInfo
     return {};
 }
 
-auto ShaderProgram::attributeInfo(const std::string &name) -> AttributeInfo
+auto gl::ShaderProgram::attributeInfo(const std::string &name) -> AttributeInfo
 {
     if (attributes_.count(name))
         return attributes_.at(name);
@@ -112,7 +112,7 @@ auto ShaderProgram::attributeInfo(const std::string &name) -> AttributeInfo
     return {};
 }
 
-void ShaderProgram::introspectUniforms()
+void gl::ShaderProgram::introspectUniforms()
 {
     GLint activeUniforms;
     glGetProgramiv(handle_, GL_ACTIVE_UNIFORMS, &activeUniforms);
@@ -154,7 +154,7 @@ void ShaderProgram::introspectUniforms()
     }
 }
 
-void ShaderProgram::introspectAttributes()
+void gl::ShaderProgram::introspectAttributes()
 {
     GLint activeAttributes;
     glGetProgramiv(handle_, GL_ACTIVE_ATTRIBUTES, &activeAttributes);

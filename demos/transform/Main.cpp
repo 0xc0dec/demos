@@ -6,7 +6,7 @@
 #include "common/Camera.h"
 #include "common/Spectator.h"
 #include "common/Mesh.h"
-#include "common/gl/GLAppBase.h"
+#include "common/gl/OpenGLAppBase.h"
 #include "common/gl/ShaderProgram.h"
 #include "Shaders.h"
 #include <memory>
@@ -14,16 +14,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-class App final : public GLAppBase
+class App final : public gl::AppBase
 {
 public:
-	App(): GLAppBase(1366, 768, false)
+	App(): gl::AppBase(1366, 768, false)
 	{
 	}
 
 private:
 	std::shared_ptr<Mesh> mesh_;
-	std::shared_ptr<ShaderProgram> shader_;
+	std::shared_ptr<gl::ShaderProgram> shader_;
 
 	Camera camera_;
 	Transform root_;
@@ -88,7 +88,7 @@ private:
 	void initShaders()
 	{
 		static Shaders shaders;
-		shader_ = std::make_shared<ShaderProgram>(shaders.vertex.simple, shaders.fragment.simple);
+		shader_ = std::make_shared<gl::ShaderProgram>(shaders.vertex.simple, shaders.fragment.simple);
 	}
 };
 

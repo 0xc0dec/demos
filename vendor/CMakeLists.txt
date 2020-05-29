@@ -177,9 +177,22 @@ target_include_directories(Vendor PRIVATE
     "glew/1.13/include"
     "SDL/2.0.4/include"
     "imgui"
+    "vulkan/include"
 )
 
-if (APPLE)
+if (WIN32)
+    find_library(DEMOS_VULKAN_LIB
+        NAMES vulkan-1
+        HINTS "vulkan/lib"
+    )
+
+    set(DEMOS_VENDOR_PLATFORM_LIBS
+        ${DEMOS_VULKAN_LIB}
+        winmm.lib
+        imm32.lib
+        version.lib
+    )
+elseif(APPLE)
     find_library(DEMOS_VENDOR_CARBON_LIB Carbon)
     find_library(DEMOS_VENDOR_IOKIT_LIB IOKit)
     find_library(DEMOS_VENDOR_FORCEFEEDBACK_LIB ForceFeedback)
@@ -198,14 +211,6 @@ if (APPLE)
         ${DEMOS_VENDOR_COREAUDIO_LIB}
         ${DEMOS_VENDOR_COREVIDEO_LIB}
         ${DEMOS_VENDOR_COREFOUNDATION_LIB}
-    )
-endif()
-
-if (WIN32)
-    set(DEMOS_VENDOR_PLATFORM_LIBS
-        winmm.lib
-        imm32.lib
-        version.lib
     )
 endif()
 

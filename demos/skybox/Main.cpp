@@ -6,7 +6,7 @@
 #include "common/Camera.h"
 #include "common/Spectator.h"
 #include "common/Mesh.h"
-#include "common/gl/GLAppBase.h"
+#include "common/gl/OpenGLAppBase.h"
 #include "common/gl/ShaderProgram.h"
 #include "Shaders.h"
 #include <memory>
@@ -15,10 +15,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-class App final: public GLAppBase
+class App final: public gl::AppBase
 {
 public:
-	App(): GLAppBase(1366, 768, false)
+	App(): gl::AppBase(1366, 768, false)
 	{
 	}
 
@@ -26,8 +26,8 @@ private:
 	std::shared_ptr<Mesh> quadMesh_;
 	std::shared_ptr<Mesh> boxMesh_;
 
-	std::shared_ptr<ShaderProgram> skyboxShader_;
-	std::shared_ptr<ShaderProgram> meshShader_;
+	std::shared_ptr<gl::ShaderProgram> skyboxShader_;
+	std::shared_ptr<gl::ShaderProgram> meshShader_;
 
 	struct
 	{
@@ -93,8 +93,8 @@ private:
 	{
 		static Shaders shaders;
 
-		skyboxShader_ = std::make_shared<ShaderProgram>(shaders.vertex.skybox, shaders.fragment.skybox);
-		meshShader_ = std::make_shared<ShaderProgram>(shaders.vertex.simple, shaders.fragment.simple);
+		skyboxShader_ = std::make_shared<gl::ShaderProgram>(shaders.vertex.skybox, shaders.fragment.skybox);
+		meshShader_ = std::make_shared<gl::ShaderProgram>(shaders.vertex.simple, shaders.fragment.simple);
 	}
 
 	void cleanup() override

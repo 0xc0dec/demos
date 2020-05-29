@@ -31,6 +31,7 @@ function(set_default_includes TARGET)
         "${CMAKE_SOURCE_DIR}/vendor/stb_image/2.15"
         "${CMAKE_SOURCE_DIR}/vendor/glm/0.9.8.4"
         "${CMAKE_SOURCE_DIR}/vendor/imgui"
+        "${CMAKE_SOURCE_DIR}/vendor/vulkan/include"
     )
 endfunction()
 

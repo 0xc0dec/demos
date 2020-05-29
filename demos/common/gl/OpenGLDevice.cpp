@@ -3,12 +3,12 @@
     MIT license
 */
 
-#include "GLDevice.h"
+#include "OpenGLDevice.h"
 #include "../Common.h"
 #include <GL/glew.h>
 
-GLDevice::GLDevice(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen):
-	Device(canvasWidth, canvasHeight)
+gl::Device::Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen):
+	::Device(canvasWidth, canvasHeight)
 {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) < 0)
 		PANIC("Failed to initialize SDL");
@@ -32,13 +32,13 @@ GLDevice::GLDevice(uint32_t canvasWidth, uint32_t canvasHeight, const char *titl
 	SDL_GL_SetSwapInterval(1);
 }
 
-GLDevice::~GLDevice()
+gl::Device::~Device()
 {
 	if (context_)
 		SDL_GL_DeleteContext(context_);
 }
 
-void GLDevice::endUpdate()
+void gl::Device::endUpdate()
 {
 	SDL_GL_SwapWindow(window_);
 }

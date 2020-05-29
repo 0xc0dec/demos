@@ -6,17 +6,17 @@
 // This demo includes *.cpp files from ImGui in order to compile, this is apparently the way recommended by ImGui.
 // ImGui include paths are configured in CMake.
 
-#include "common/gl/GLAppBase.h"
+#include "common/gl/OpenGLAppBase.h"
 #include <imgui.h>
 // Include these two as we use SDL + OpenGL stack
 #include <examples/imgui_impl_opengl3.h>
 #include <examples/imgui_impl_sdl.h>
 #include <GL/glew.h>
 
-class App final : public GLAppBase
+class App final : public gl::AppBase
 {
 public:
-	App(): GLAppBase(1366, 768, false)
+	App(): gl::AppBase(1366, 768, false)
 	{
 	}
 

@@ -5,7 +5,7 @@
 
 #include "common/Common.h"
 #include "common/Mesh.h"
-#include "common/gl/GLAppBase.h"
+#include "common/gl/OpenGLAppBase.h"
 #include "common/gl/ShaderProgram.h"
 #include "Shaders.h"
 #include <memory>
@@ -24,15 +24,15 @@ struct GlyphInfo
 	float offsetY = 0;
 };
 
-class App final : public GLAppBase
+class App final : public gl::AppBase
 {
 public:
-	App(): GLAppBase(1366, 768, false)
+	App(): gl::AppBase(1366, 768, false)
 	{
 	}
 
 private:
-	std::shared_ptr<ShaderProgram> shader_;
+	std::shared_ptr<gl::ShaderProgram> shader_;
 
 	glm::mat4 viewProjMatrix_;
 
@@ -128,7 +128,7 @@ private:
 	void initShaders()
 	{
 		static Shaders shaders;
-		shader_ = std::make_shared<ShaderProgram>(shaders.vertex.font, shaders.fragment.font);
+		shader_ = std::make_shared<gl::ShaderProgram>(shaders.vertex.font, shaders.fragment.font);
 	}
 
 	void initFont()

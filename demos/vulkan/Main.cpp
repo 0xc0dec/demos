@@ -3,12 +3,12 @@
     MIT license
 */
 
-#include "common/vk/VkAppBase.h"
+#include "common/vk/VulkanAppBase.h"
 
-class App: public VkAppBase
+class App: public vk::AppBase
 {
 public:
-	App(): VkAppBase(1366, 768, false)
+	App(): vk::AppBase(1366, 768, false)
 	{
 	}
 
