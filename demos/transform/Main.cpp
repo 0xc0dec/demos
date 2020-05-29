@@ -88,7 +88,7 @@ private:
 
 	void initShaders()
 	{
-		static TransformDemo::Shaders shaders;
+		static Shaders shaders;
 		shader = std::make_shared<ShaderProgram>(shaders.vertex.simple, shaders.fragment.simple);
 	}
 };

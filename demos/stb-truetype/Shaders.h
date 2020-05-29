@@ -1,12 +1,16 @@
+/*
+    Copyright (c) Aleksey Fedotov
+    MIT license
+*/
+
 #pragma once
 
-namespace StbTrueTypeDemo
+struct Shaders
 {
-    struct Shaders
-    {
-        struct
-        {
-            const char *font = R"(
+	struct
+	{
+		const char *font =
+			R"(
                 #version 330 core
 
                 in vec4 position;
@@ -22,11 +26,12 @@ namespace StbTrueTypeDemo
                     uv0 = texCoord0;
                 }
             )";
-        } vertex;
+	} vertex;
 
-        struct
-        {
-            const char *font = R"(
+	struct
+	{
+		const char *font =
+			R"(
                 #version 330 core
 
                 uniform sampler2D mainTex;
@@ -40,6 +45,5 @@ namespace StbTrueTypeDemo
                     fragColor = vec4(c.r, c.r, c.r, c.r);
                 }
             )";
-        } fragment;
-    };
-}
+	} fragment;
+};

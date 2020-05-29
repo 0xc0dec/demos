@@ -1,12 +1,16 @@
+/*
+    Copyright (c) Aleksey Fedotov
+    MIT license
+*/
+
 #pragma once
 
-namespace TransformDemo
+struct Shaders
 {
-    struct Shaders
-    {
-        struct
-        {
-            const char *simple = R"(
+	struct
+	{
+		const char *simple =
+			R"(
                 #version 330 core
 
                 in vec4 position;
@@ -22,11 +26,12 @@ namespace TransformDemo
                     uv0 = texCoord0;
                 }
             )";
-        } vertex;
+	} vertex;
 
-        struct
-        {
-            const char *simple = R"(
+	struct
+	{
+		const char *simple =
+			R"(
                 #version 330 core
 
                 in vec2 uv0;
@@ -37,6 +42,5 @@ namespace TransformDemo
                     fragColor = vec4(uv0.x, uv0.y, 0, 1);
                 }
             )";
-        } fragment;
-    };
-}
+	} fragment;
+};

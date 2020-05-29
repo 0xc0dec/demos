@@ -1,12 +1,16 @@
+/*
+    Copyright (c) Aleksey Fedotov
+    MIT license
+*/
+
 #pragma once
 
-namespace SkyboxDemo
+struct Shaders
 {
-    struct Shaders
-    {
-        struct
-        {
-            const char *simple = R"(
+	struct
+	{
+		const char *simple =
+			R"(
                 #version 330 core
 
                 in vec4 position;
@@ -23,7 +27,8 @@ namespace SkyboxDemo
                 }
             )";
 
-            const char *skybox = R"(
+		const char *skybox =
+			R"(
                 #version 330 core
 
                 in vec4 position;
@@ -42,11 +47,12 @@ namespace SkyboxDemo
                     gl_Position = position;
                 }
             )";
-        } vertex;
+	} vertex;
 
-        struct
-        {
-            const char *simple = R"(
+	struct
+	{
+		const char *simple =
+			R"(
                 #version 330 core
 
                 in vec2 uv0;
@@ -58,7 +64,8 @@ namespace SkyboxDemo
                 }
             )";
 
-            const char *skybox = R"(
+		const char *skybox =
+			R"(
                 #version 330 core
 
                 uniform samplerCube skyboxTex;
@@ -71,6 +78,5 @@ namespace SkyboxDemo
                     fragColor = texture(skyboxTex, eyeDir);
                 }               
             )";
-        } fragment;
-    };
-}
+	} fragment;
+};

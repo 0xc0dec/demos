@@ -91,7 +91,7 @@ private:
 
 	void initShaders()
 	{
-		static SkyboxDemo::Shaders shaders;
+		static Shaders shaders;
 
 		skyboxShader_ = std::make_shared<ShaderProgram>(shaders.vertex.skybox, shaders.fragment.skybox);
 		meshShader_ = std::make_shared<ShaderProgram>(shaders.vertex.simple, shaders.fragment.simple);
