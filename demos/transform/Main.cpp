@@ -23,7 +23,7 @@ public:
 
 private:
 	std::shared_ptr<Mesh> mesh_;
-	std::shared_ptr<ShaderProgram> shader;
+	std::shared_ptr<ShaderProgram> shader_;
 
 	Camera camera_;
 	Transform root_;
@@ -68,16 +68,16 @@ private:
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 
-		shader->use();
-		shader->setMatrixUniform("viewProjMatrix", glm::value_ptr(camera_.viewProjMatrix()));
+		shader_->use();
+		shader_->setMatrixUniform("viewProjMatrix", glm::value_ptr(camera_.viewProjMatrix()));
 		
-		shader->setMatrixUniform("worldMatrix", glm::value_ptr(t1_.worldMatrix()));
+		shader_->setMatrixUniform("worldMatrix", glm::value_ptr(t1_.worldMatrix()));
 		mesh_->draw();
 
-		shader->setMatrixUniform("worldMatrix", glm::value_ptr(t2_.worldMatrix()));
+		shader_->setMatrixUniform("worldMatrix", glm::value_ptr(t2_.worldMatrix()));
 		mesh_->draw();
 
-		shader->setMatrixUniform("worldMatrix", glm::value_ptr(t3_.worldMatrix()));
+		shader_->setMatrixUniform("worldMatrix", glm::value_ptr(t3_.worldMatrix()));
 		mesh_->draw();
 	}
 
@@ -88,7 +88,7 @@ private:
 	void initShaders()
 	{
 		static Shaders shaders;
-		shader = std::make_shared<ShaderProgram>(shaders.vertex.simple, shaders.fragment.simple);
+		shader_ = std::make_shared<ShaderProgram>(shaders.vertex.simple, shaders.fragment.simple);
 	}
 };
 
