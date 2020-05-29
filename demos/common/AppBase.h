@@ -6,6 +6,7 @@
 #pragma once
 
 #include "Device.h"
+#include <memory>
 #include <vector>
 
 class AppBase
@@ -18,9 +19,10 @@ public:
 	void run();
 
 protected:
+	std::unique_ptr<Device> device_;
+	
 	auto canvasWidth() const -> uint32_t { return canvasWidth_; }
 	auto canvasHeight() const -> uint32_t { return canvasHeight_; }
-	auto device() -> Device& { return device_; }
 
 	virtual void init() = 0;
 	virtual void render() = 0;
@@ -32,5 +34,4 @@ protected:
 private:
 	uint32_t canvasWidth_ = 0;
 	uint32_t canvasHeight_ = 0;
-	Device device_;
 };

@@ -19,7 +19,7 @@ public:
 
     auto viewMatrix() const -> glm::mat4 { return glm::inverse(transform_.worldMatrix()); }
     auto invViewMatrix() const -> glm::mat4 { return glm::inverse(viewMatrix()); }
-    auto projMatrix() const -> const glm::mat4;
+    auto projMatrix() const -> glm::mat4;
     auto viewProjMatrix() const -> glm::mat4 { return projMatrix() * viewMatrix(); }
     auto invViewProjMatrix() const -> glm::mat4 { return glm::inverse(viewProjMatrix()); }
 

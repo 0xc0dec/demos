@@ -11,8 +11,7 @@
 
 AppBase::AppBase(uint32_t canvasWidth, uint32_t canvasHeight, bool fullScreen) :
     canvasWidth_(canvasWidth),
-    canvasHeight_(canvasHeight),
-    device_(canvasWidth, canvasHeight, "Demo", fullScreen)
+    canvasHeight_(canvasHeight)
 {
 }
 
@@ -20,11 +19,11 @@ void AppBase::run()
 {
     init();
 
-    while (!device_.closeRequested() && !device_.isKeyPressed(SDLK_ESCAPE, true))
+    while (!device_->closeRequested() && !device_->isKeyPressed(SDLK_ESCAPE, true))
     {
-        device_.beginUpdate();
+        device_->beginUpdate();
         render();
-        device_.endUpdate();
+        device_->endUpdate();
     }
 
     cleanup();

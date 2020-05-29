@@ -4,39 +4,14 @@
 */
 
 #include "Device.h"
-#include "Common.h"
-#include <GL/glew.h>
-#include <iostream>
 
 Device::Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen)
 {
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) < 0)
-        PANIC("Failed to initialize SDL");
-
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
-    const auto x = SDL_WINDOWPOS_CENTERED;
-    const auto y = SDL_WINDOWPOS_CENTERED;
-    auto flags = SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI;
-    if (fullScreen)
-        flags |= SDL_WINDOW_FULLSCREEN;
-
-    window_ = SDL_CreateWindow(title, x, y, canvasWidth, canvasHeight, flags);
-    context_ = SDL_GL_CreateContext(window_);
-
-    glewExperimental = true;
-    glewInit();
-
-    SDL_GL_SetSwapInterval(1);
 }
 
 Device::~Device()
 {
-    if (context_)
-        SDL_GL_DeleteContext(context_);
-    if (window_)
+	if (window_)
         SDL_DestroyWindow(window_);
     SDL_Quit();
 }
@@ -73,11 +48,6 @@ void Device::beginUpdate()
         dt_ = deltaTicks / 1000.0f;
         lastTicks = ticks;
     }
-}
-
-void Device::endUpdate() const
-{
-	SDL_GL_SwapWindow(window_);
 }
 
 void Device::setCursorCaptured(bool captured)

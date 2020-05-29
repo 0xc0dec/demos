@@ -18,13 +18,14 @@ public:
     Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen);
     Device(const Device &other) = delete;
     Device(Device &&other) = delete;
-    ~Device();
+	
+    virtual ~Device();
 
     auto operator=(const Device &other) -> Device& = delete;
     auto operator=(Device &&other) -> Device& = delete;
 
-    void beginUpdate();
-    void endUpdate() const;
+    virtual void beginUpdate();
+    virtual void endUpdate() {}
 
 	void setCursorCaptured(bool captured);
 
@@ -40,15 +41,14 @@ public:
     auto timeDelta() const -> float { return dt_; }
 
 	auto sdlWindow() const -> SDL_Window* { return window_; }
-	auto sdlGLContext() const -> SDL_GLContext { return context_; }
 
 	void onProcessEvent(const std::function<void(SDL_Event&)> &handler) { eventHandler_ = handler; }
 
-private:
+protected:
 	SDL_Window* window_ = nullptr;
-    SDL_GLContext context_ = nullptr;
-    
-    float dt_ = 0;
+
+private:
+	float dt_ = 0;
     bool closeRequested_ = false;
 
 	bool hasMouseFocus_ = false;

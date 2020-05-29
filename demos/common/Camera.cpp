@@ -26,7 +26,7 @@ auto Camera::setOrthographic(float width, float height, float nearClip, float fa
     return *this;
 }
 
-auto Camera::projMatrix() const -> const glm::mat4
+auto Camera::projMatrix() const -> glm::mat4
 {
     return ortho_
         ? glm::ortho(orthoWidth_, orthoHeight_, nearClip_, farClip_)

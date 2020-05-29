@@ -3,7 +3,7 @@
     MIT license
 */
 
-#include "common/AppBase.h"
+#include "common/GLAppBase.h"
 #include "common/Camera.h"
 #include "common/Spectator.h"
 #include "common/Mesh.h"
@@ -15,10 +15,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-class App final: public AppBase
+class App final: public GLAppBase
 {
 public:
-	App(): AppBase(1366, 768, false)
+	App(): GLAppBase(1366, 768, false)
 	{
 	}
 
@@ -104,7 +104,7 @@ private:
 
 	void render() override
 	{
-		applySpectator(camera_.transform(), device());
+		applySpectator(camera_.transform(), *device());
 
 		glViewport(0, 0, canvasWidth(), canvasHeight());
 		glClear(GL_DEPTH_BUFFER_BIT); // no need to clear color since we're rendering fullscreen quad anyway

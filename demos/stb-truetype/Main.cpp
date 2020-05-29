@@ -3,8 +3,7 @@
     MIT license
 */
 
-#include "common/AppBase.h"
-#include "common/Device.h"
+#include "common/GLAppBase.h"
 #include "common/Common.h"
 #include "common/Mesh.h"
 #include "common/ShaderProgram.h"
@@ -25,10 +24,10 @@ struct GlyphInfo
 	float offsetY = 0;
 };
 
-class App final : public AppBase
+class App final : public GLAppBase
 {
 public:
-	App(): AppBase(1366, 768, false)
+	App(): GLAppBase(1366, 768, false)
 	{
 	}
 
@@ -121,7 +120,7 @@ private:
 		
 		shader_->setTextureUniform("mainTex", 0);
 
-		const auto dt = device().timeDelta();
+		const auto dt = device()->timeDelta();
 		renderRotatingLabel(dt);
 		renderAtlasQuad(dt);
 	}

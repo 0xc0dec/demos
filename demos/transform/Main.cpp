@@ -3,8 +3,7 @@
     MIT license
 */
 
-#include "common/AppBase.h"
-#include "common/Device.h"
+#include "common/GLAppBase.h"
 #include "common/Camera.h"
 #include "common/Spectator.h"
 #include "common/Mesh.h"
@@ -15,10 +14,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-class App final : public AppBase
+class App final : public GLAppBase
 {
 public:
-	App(): AppBase(1366, 768, false)
+	App(): GLAppBase(1366, 768, false)
 	{
 	}
 
@@ -51,9 +50,9 @@ private:
 
 	void render() override
 	{
-		applySpectator(camera_.transform(), device());
+		applySpectator(camera_.transform(), *device());
 		
-		const auto dt = device().timeDelta();
+		const auto dt = device()->timeDelta();
 		const auto deltaAngle = glm::radians(100 * dt);
 		root_.rotate({0, 1, 0}, deltaAngle, TransformSpace::World);
 		t1_.rotate({0, 0, 1}, deltaAngle, TransformSpace::Self);

@@ -56,3 +56,4 @@ add_app(Skybox "${CMAKE_SOURCE_DIR}/demos/skybox/*.cpp;${CMAKE_SOURCE_DIR}/demos
 add_app(
     ImGui "${CMAKE_SOURCE_DIR}/demos/imgui/*.cpp;${CMAKE_SOURCE_DIR}/vendor/imgui/*.cpp;${CMAKE_SOURCE_DIR}/vendor/imgui/examples/imgui_impl_sdl.cpp;${CMAKE_SOURCE_DIR}/vendor/imgui/examples/imgui_impl_opengl3.cpp"
 )
+add_app(Vulkan "${CMAKE_SOURCE_DIR}/demos/vulkan/*.cpp;${CMAKE_SOURCE_DIR}/demos/vulkan/*.h")
