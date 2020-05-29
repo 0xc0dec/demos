@@ -31,7 +31,7 @@ Mesh::~Mesh()
         glDeleteBuffers(1, &buffer);
 }
 
-void Mesh::draw()
+void Mesh::draw() const
 {
     glBindVertexArray(vao_);
     glDrawArrays(GL_TRIANGLES, 0, verticesCount_);
