@@ -16,8 +16,7 @@ vk::Device::Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *titl
         flags |= SDL_WINDOW_FULLSCREEN;
 
     window_ = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, canvasWidth, canvasHeight, flags);
-	if (!window_)
-		PANIC("Unable to create device window");
+	panicIf(!window_, "Unable to create device window");
 
 	VkApplicationInfo appInfo {};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -55,7 +54,7 @@ vk::Device::Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *titl
     }
 
 	instance_ = vk::Resource<VkInstance>{vkDestroyInstance};
-    CHECK_VK_RESULT(vkCreateInstance(&instanceInfo, nullptr, instance_.cleanRef()));
+    ASSERT_VK_RESULT(vkCreateInstance(&instanceInfo, nullptr, instance_.cleanRef()));
 
 #ifdef WINDOWS_APP
     SDL_SysWMinfo wmInfo;
@@ -73,7 +72,7 @@ vk::Device::Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *titl
     surfaceInfo.hwnd = hwnd;
 
     surface_ = vk::Resource<VkSurfaceKHR>{instance_, vkDestroySurfaceKHR};
-    CHECK_VK_RESULT(vkCreateWin32SurfaceKHR(instance_, &surfaceInfo, nullptr, surface_.cleanRef()));
+    ASSERT_VK_RESULT(vkCreateWin32SurfaceKHR(instance_, &surfaceInfo, nullptr, surface_.cleanRef()));
 #endif
 }
 

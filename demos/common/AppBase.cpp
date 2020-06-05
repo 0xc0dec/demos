@@ -27,7 +27,7 @@ auto AppBase::readFile(const char *path) -> std::vector<uint8_t>
 {
     std::ifstream file(path, std::ios::binary | std::ios::ate);
     if (!file.is_open())
-        PANIC("Failed to open file " << path);
+        panic("Failed to open file ", path);
 
     const auto size = file.tellg();
     file.seekg(0, std::ios::beg);

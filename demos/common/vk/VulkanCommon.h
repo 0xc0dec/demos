@@ -12,4 +12,4 @@
 #endif
 #include <vulkan.h>
 
-#define CHECK_VK_RESULT(vkCall) if ((vkCall) != VK_SUCCESS) { PANIC("Vulkan API call failed"); }
+#define ASSERT_VK_RESULT(vkCall) panicIf((vkCall) != VK_SUCCESS, "Vulkan API call failed")

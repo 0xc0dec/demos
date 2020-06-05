@@ -11,7 +11,7 @@ Device::Device(uint32_t canvasWidth, uint32_t canvasHeight):
 	canvasHeight_(canvasHeight)
 {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) < 0)
-		PANIC("Failed to initialize SDL");
+		panic("Failed to initialize SDL");
 }
 
 Device::~Device()

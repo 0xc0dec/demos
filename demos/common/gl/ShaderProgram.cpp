@@ -4,7 +4,6 @@
 */
 
 #include "ShaderProgram.h"
-#include "../Formatter.h"
 #include "../Common.h"
 #include <vector>
 
@@ -31,7 +30,7 @@ static auto compileShader(GLuint type, const void *src, uint32_t length) -> GLin
         std::vector<GLchar> log(logLength);
         glGetShaderInfoLog(shader, logLength, nullptr, log.data());
         glDeleteShader(shader);
-        PANIC(FMT("Unable to compile ", typeNames[type], " shader:\n", log.data()));
+    	panic("Unable to compile ", typeNames[type], " shader:\n", log.data());
     }
 
     return shader;
@@ -53,7 +52,7 @@ static auto linkProgram(GLuint vs, GLuint fs) -> GLint
         std::vector<GLchar> log(logLength);
         glGetProgramInfoLog(program, logLength, nullptr, log.data());
         glDeleteProgram(program);
-        PANIC(FMT("Unable to link program:\n", log.data()));
+        panic("Unable to link program:\n", log.data());
     }
 
     return program;
@@ -100,7 +99,7 @@ auto gl::ShaderProgram::uniformInfo(const std::string &name) -> UniformInfo
 {
     if (uniforms_.count(name))
         return uniforms_.at(name);
-    PANIC(FMT("Uniform ", name, " not found"));
+    panic("Uniform ", name, " not found");
     return {};
 }
 
@@ -108,7 +107,7 @@ auto gl::ShaderProgram::attributeInfo(const std::string &name) -> AttributeInfo
 {
     if (attributes_.count(name))
         return attributes_.at(name);
-    PANIC(FMT("Attribute ", name, " not found"));
+    panic("Attribute ", name, " not found");
     return {};
 }
 
