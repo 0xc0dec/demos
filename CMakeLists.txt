@@ -4,11 +4,15 @@ project(Demos)
 set(CMAKE_SUPPRESS_REGENERATION true)
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Config types" FORCE)
 
-add_compile_options(--std=c++14)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 if (MSVC)
     add_compile_options("$<$<CONFIG:DEBUG>:/MTd>")
     add_compile_options("$<$<CONFIG:RELEASE>:/MT>")
+    add_compile_options(/std:c++14)
+    add_compile_options(/MP)
 endif()
 
 function(set_default_definitions TARGET)
@@ -32,6 +36,7 @@ function(set_default_includes TARGET)
         "${CMAKE_SOURCE_DIR}/vendor/glm/0.9.8.4"
         "${CMAKE_SOURCE_DIR}/vendor/imgui"
         "${CMAKE_SOURCE_DIR}/vendor/vulkan/include"
+        "${CMAKE_SOURCE_DIR}/vendor/vulkan/include/vulkan"
     )
 endfunction()
 
@@ -48,13 +53,11 @@ function(add_app TARGET SOURCES)
     endif()
 endfunction()
 
-add_subdirectory("demos/common")
 add_subdirectory("vendor")
+add_subdirectory("demos/common")
+add_subdirectory("demos/stb-truetype")
+add_subdirectory("demos/transform")
+add_subdirectory("demos/skybox")
+add_subdirectory("demos/imgui")
+add_subdirectory("demos/vulkan")
 
-add_app(StbTrueType "${CMAKE_SOURCE_DIR}/demos/stb-truetype/*.cpp;${CMAKE_SOURCE_DIR}/demos/stb-truetype/*.h")
-add_app(Transform "${CMAKE_SOURCE_DIR}/demos/transform/*.cpp;${CMAKE_SOURCE_DIR}/demos/transform/*.h")
-add_app(Skybox "${CMAKE_SOURCE_DIR}/demos/skybox/*.cpp;${CMAKE_SOURCE_DIR}/demos/skybox/*.h")
-add_app(
-    ImGui "${CMAKE_SOURCE_DIR}/demos/imgui/*.cpp;${CMAKE_SOURCE_DIR}/vendor/imgui/*.cpp;${CMAKE_SOURCE_DIR}/vendor/imgui/examples/imgui_impl_sdl.cpp;${CMAKE_SOURCE_DIR}/vendor/imgui/examples/imgui_impl_opengl3.cpp"
-)
-add_app(Vulkan "${CMAKE_SOURCE_DIR}/demos/vulkan/*.cpp;${CMAKE_SOURCE_DIR}/demos/vulkan/*.h")

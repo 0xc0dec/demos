@@ -40,5 +40,5 @@ auto AppBase::readFile(const char *path) -> std::vector<uint8_t>
 
 auto AppBase::assetPath(const char *path) -> std::string
 {
-    return std::string("../../assets/") + path;
+    return std::string("../../../assets/") + path;
 }

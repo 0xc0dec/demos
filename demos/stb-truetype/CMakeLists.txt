@@ -1,0 +1,1 @@
+add_app(StbTrueType "*.cpp;*.h")

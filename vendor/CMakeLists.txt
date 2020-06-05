@@ -2,6 +2,13 @@ file(GLOB DEMOS_VENDOR_GLEW_SRC
     "glew/1.13/src/glew.c"
 )
 
+file(GLOB DEMOS_VENDOR_IMGUI_SRC
+    "imgui/*.cpp"
+    "imgui/examples/imgui_impl_opengl3.cpp"
+    "imgui/examples/imgui_impl_vulkan.cpp"
+    "imgui/examples/imgui_impl_sdl.cpp"
+)
+
 if (WIN32)
     file(GLOB DEMOS_VENDOR_SDL_SRC
         "SDL/2.0.4/src/haptic/dummy/SDL_syshaptic.c"
@@ -167,10 +174,15 @@ elseif(APPLE)
     )
 endif()
 
-add_library(Vendor STATIC ${DEMOS_VENDOR_GLEW_SRC} ${DEMOS_VENDOR_SDL_SRC})
-
 source_group("glew" FILES ${DEMOS_VENDOR_GLEW_SRC})
 source_group("SDL" FILES ${DEMOS_VENDOR_SDL_SRC})
+source_group("imgui" FILES ${DEMOS_VENDOR_IMGUI_SRC})
+
+add_library(Vendor STATIC
+    ${DEMOS_VENDOR_GLEW_SRC}
+    ${DEMOS_VENDOR_SDL_SRC}
+    ${DEMOS_VENDOR_IMGUI_SRC}
+)
 
 target_include_directories(Vendor PRIVATE
     "."
@@ -178,6 +190,7 @@ target_include_directories(Vendor PRIVATE
     "SDL/2.0.4/include"
     "imgui"
     "vulkan/include"
+    "vulkan/include/vulkan"
 )
 
 if (WIN32)
