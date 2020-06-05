@@ -30,7 +30,7 @@ function(set_default_includes TARGET)
         "${CMAKE_SOURCE_DIR}/demos"
         "${CMAKE_SOURCE_DIR}/vendor" # TODO needed?
         "${CMAKE_SOURCE_DIR}/vendor/glew/1.13/include"
-        "${CMAKE_SOURCE_DIR}/vendor/SDL/2.0.4/include"
+        "${CMAKE_SOURCE_DIR}/vendor/SDL/2.0.12/include"
         "${CMAKE_SOURCE_DIR}/vendor/stb_truetype/1.11"
         "${CMAKE_SOURCE_DIR}/vendor/stb_image/2.15"
         "${CMAKE_SOURCE_DIR}/vendor/glm/0.9.8.4"
