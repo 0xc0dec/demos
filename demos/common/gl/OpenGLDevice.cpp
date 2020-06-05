@@ -10,9 +10,6 @@
 gl::Device::Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen):
 	::Device(canvasWidth, canvasHeight)
 {
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) < 0)
-		PANIC("Failed to initialize SDL");
-
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -36,8 +33,6 @@ gl::Device::~Device()
 {
 	if (context_)
 		SDL_GL_DeleteContext(context_);
-	if (window_)
-        SDL_DestroyWindow(window_);
 }
 
 void gl::Device::endUpdate()

@@ -4,11 +4,14 @@
 */
 
 #include "Device.h"
+#include "Common.h"
 
 Device::Device(uint32_t canvasWidth, uint32_t canvasHeight):
 	canvasWidth_(canvasWidth),
 	canvasHeight_(canvasHeight)
 {
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) < 0)
+		PANIC("Failed to initialize SDL");
 }
 
 Device::~Device()

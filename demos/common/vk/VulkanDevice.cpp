@@ -4,6 +4,7 @@
 */
 
 #include "VulkanDevice.h"
+#include "VulkanCommon.h"
 #include "../Common.h"
 #include <SDL_syswm.h>
 
@@ -74,13 +75,6 @@ vk::Device::Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *titl
     surface_ = vk::Resource<VkSurfaceKHR>{instance_, vkDestroySurfaceKHR};
     CHECK_VK_RESULT(vkCreateWin32SurfaceKHR(instance_, &surfaceInfo, nullptr, surface_.cleanRef()));
 #endif
-}
-
-vk::Device::~Device()
-{
-	if (window_)
-        SDL_DestroyWindow(window_);
-	SDL_Quit();
 }
 
 void vk::Device::endUpdate()
