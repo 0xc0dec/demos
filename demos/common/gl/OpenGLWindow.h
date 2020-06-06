@@ -5,15 +5,15 @@
 
 #pragma once
 
-#include "../Device.h"
+#include "../Window.h"
 
 namespace gl
 {
-	class Device final: public ::Device
+	class Window final: public ::Window
 	{
 	public:
-		Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen);
-		~Device();
+		Window(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen);
+		~Window();
 
 		auto sdlGLContext() const -> SDL_GLContext { return context_; }
 

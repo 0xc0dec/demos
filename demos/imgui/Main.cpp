@@ -27,10 +27,10 @@ private:
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-		ImGui_ImplSDL2_InitForOpenGL(device()->sdlWindow(), device()->sdlGLContext());
+		ImGui_ImplSDL2_InitForOpenGL(window()->sdlWindow(), window()->sdlGLContext());
 		ImGui_ImplOpenGL3_Init("#version 130"); // GL 3.0 + GLSL 130
 
-		device()->onProcessEvent([](auto &evt)
+		window()->onProcessEvent([](auto &evt)
 		{
 			ImGui_ImplSDL2_ProcessEvent(&evt);
 		});
@@ -41,7 +41,7 @@ private:
 		// "Logical" render of ImGUI
 		
 		ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplSDL2_NewFrame(device()->sdlWindow());
+        ImGui_ImplSDL2_NewFrame(window()->sdlWindow());
         ImGui::NewFrame();
 
 		auto open = true; // never close
@@ -51,7 +51,7 @@ private:
 
 		// The actual render via OpenGL
 		
-		glViewport(0, 0, device()->canvasWidth(), device()->canvasHeight());
+		glViewport(0, 0, window()->canvasWidth(), window()->canvasHeight());
 		glClearColor(0, 0.5f, 0.6f, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		

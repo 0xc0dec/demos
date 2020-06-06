@@ -43,23 +43,23 @@ private:
 		t3_.setLocalScale({0.5f, 0.5f, 0.5f});
 		t3_.setParent(&t2_);
 
-		camera_.setPerspective(45, 1.0f * device()->canvasWidth() / device()->canvasHeight(), 0.1f, 100.0f);
+		camera_.setPerspective(45, 1.0f * window()->canvasWidth() / window()->canvasHeight(), 0.1f, 100.0f);
 		camera_.transform().setLocalPosition({10, 10, 10});
 		camera_.transform().lookAt({0, 0, 0}, {0, 1, 0});
 	}
 
 	void render() override
 	{
-		applySpectator(camera_.transform(), *device());
+		applySpectator(camera_.transform(), *window());
 		
-		const auto dt = device()->timeDelta();
+		const auto dt = window()->timeDelta();
 		const auto deltaAngle = glm::radians(100 * dt);
 		root_.rotate({0, 1, 0}, deltaAngle, TransformSpace::World);
 		t1_.rotate({0, 0, 1}, deltaAngle, TransformSpace::Self);
 		t2_.rotate({0, 0, 1}, deltaAngle, TransformSpace::Self);
 		t3_.rotate({0, 1, 0}, deltaAngle, TransformSpace::Parent);
 
-		glViewport(0, 0, device()->canvasWidth(), device()->canvasHeight());
+		glViewport(0, 0, window()->canvasWidth(), window()->canvasHeight());
 		glClearColor(0, 0.5f, 0.6f, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

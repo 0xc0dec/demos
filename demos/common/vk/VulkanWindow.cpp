@@ -3,20 +3,20 @@
     MIT license
 */
 
-#include "VulkanDevice.h"
+#include "VulkanWindow.h"
 #include "VulkanCommon.h"
 #include "../Common.h"
 #include <SDL_syswm.h>
 
-vk::Device::Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen):
-	::Device(canvasWidth, canvasHeight)
+vk::Window::Window(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen):
+	::Window(canvasWidth, canvasHeight)
 {
 	uint32_t flags = SDL_WINDOW_ALLOW_HIGHDPI;
     if (fullScreen)
         flags |= SDL_WINDOW_FULLSCREEN;
 
     window_ = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, canvasWidth, canvasHeight, flags);
-	panicIf(!window_, "Unable to create device window");
+	panicIf(!window_, "Unable to create window");
 
 	VkApplicationInfo appInfo {};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -76,6 +76,6 @@ vk::Device::Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *titl
 #endif
 }
 
-void vk::Device::endUpdate()
+void vk::Window::endUpdate()
 {
 }

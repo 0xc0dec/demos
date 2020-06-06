@@ -5,21 +5,21 @@
 
 #include "Spectator.h"
 #include "Transform.h"
-#include "Device.h"
+#include "Window.h"
 #include <glm/gtx/vector_angle.hpp>
 
 // Moves the given transform as a "spectator", i.e. flying first-person camera.
-void applySpectator(Transform &transform, Device &device, float mouseSensitivity, float movementSpeed)
+void applySpectator(Transform &transform, Window &window, float mouseSensitivity, float movementSpeed)
 {
-	const auto mouseMotion = device.mouseMotion();
-	const auto dt = device.timeDelta();
+	const auto mouseMotion = window.mouseMotion();
+	const auto dt = window.timeDelta();
 
-    if (device.isMouseButtonDown(SDL_BUTTON_RIGHT, true))
-        device.setCursorCaptured(true);
-    if (device.isMouseButtonReleased(SDL_BUTTON_RIGHT))
-        device.setCursorCaptured(false);
+    if (window.isMouseButtonDown(SDL_BUTTON_RIGHT, true))
+        window.setCursorCaptured(true);
+    if (window.isMouseButtonReleased(SDL_BUTTON_RIGHT))
+        window.setCursorCaptured(false);
 
-    if (device.isMouseButtonDown(SDL_BUTTON_RIGHT, false))
+    if (window.isMouseButtonDown(SDL_BUTTON_RIGHT, false))
     {
         if (mouseMotion.x != 0)
             transform.rotate({0, 1, 0}, mouseSensitivity * -mouseMotion.x, TransformSpace::World);
@@ -44,17 +44,17 @@ void applySpectator(Transform &transform, Device &device, float mouseSensitivity
     }
 
     auto movement = glm::vec3(0);
-    if (device.isKeyPressed(SDLK_w, false))
+    if (window.isKeyPressed(SDLK_w, false))
         movement += transform.localForwardDir();
-    if (device.isKeyPressed(SDLK_s, false))
+    if (window.isKeyPressed(SDLK_s, false))
         movement += transform.localBackDir();
-    if (device.isKeyPressed(SDLK_a, false))
+    if (window.isKeyPressed(SDLK_a, false))
         movement += transform.localLeftDir();
-    if (device.isKeyPressed(SDLK_d, false))
+    if (window.isKeyPressed(SDLK_d, false))
         movement += transform.localRightDir();
-    if (device.isKeyPressed(SDLK_q, false))
+    if (window.isKeyPressed(SDLK_q, false))
         movement += transform.localDownDir();
-    if (device.isKeyPressed(SDLK_e, false))
+    if (window.isKeyPressed(SDLK_e, false))
         movement += transform.localUpDir();
     movement = dt * movementSpeed * glm::normalize(movement);
 

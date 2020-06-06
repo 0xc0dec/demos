@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "Device.h"
+#include "Window.h"
 #include <memory>
 #include <vector>
 
@@ -17,7 +17,7 @@ public:
 	void run();
 
 protected:
-	std::unique_ptr<Device> device_;
+	std::unique_ptr<Window> window_;
 	
 	virtual void init() = 0;
 	virtual void render() = 0;

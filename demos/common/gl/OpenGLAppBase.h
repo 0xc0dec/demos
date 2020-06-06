@@ -6,7 +6,7 @@
 #pragma once
 
 #include "../AppBase.h"
-#include "OpenGLDevice.h"
+#include "OpenGLWindow.h"
 
 namespace gl
 {
@@ -17,6 +17,6 @@ namespace gl
 
 	protected:
 		// TODO Better
-		auto device() const -> gl::Device* { return dynamic_cast<gl::Device*>(device_.get()); }
+		auto window() const -> gl::Window* { return dynamic_cast<gl::Window*>(window_.get()); }
 	};
 }

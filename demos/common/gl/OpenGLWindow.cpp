@@ -3,12 +3,12 @@
     MIT license
 */
 
-#include "OpenGLDevice.h"
+#include "OpenGLWindow.h"
 #include "../Common.h"
 #include <GL/glew.h>
 
-gl::Device::Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen):
-	::Device(canvasWidth, canvasHeight)
+gl::Window::Window(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen):
+	::Window(canvasWidth, canvasHeight)
 {
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
@@ -29,13 +29,13 @@ gl::Device::Device(uint32_t canvasWidth, uint32_t canvasHeight, const char *titl
 	SDL_GL_SetSwapInterval(1);
 }
 
-gl::Device::~Device()
+gl::Window::~Window()
 {
 	if (context_)
 		SDL_GL_DeleteContext(context_);
 }
 
-void gl::Device::endUpdate()
+void gl::Window::endUpdate()
 {
 	SDL_GL_SwapWindow(window_);
 }

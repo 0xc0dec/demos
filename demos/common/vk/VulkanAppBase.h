@@ -6,7 +6,7 @@
 #pragma once
 
 #include "../AppBase.h"
-#include "VulkanDevice.h"
+#include "VulkanWindow.h"
 
 namespace vk
 {
@@ -17,6 +17,6 @@ namespace vk
 
 	protected:
 		// TODO Better
-		auto device() const -> vk::Device* { return dynamic_cast<vk::Device*>(device_.get()); }
+		auto window() const -> vk::Window* { return dynamic_cast<vk::Window*>(window_.get()); }
 	};
 }

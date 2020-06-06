@@ -12,17 +12,17 @@
 #include <unordered_map>
 #include <unordered_set>
 
-class Device
+class Window
 {
 public:
-    Device(uint32_t canvasWidth, uint32_t canvasHeight);
-    Device(const Device &other) = delete;
-    Device(Device &&other) = delete;
+    Window(uint32_t canvasWidth, uint32_t canvasHeight);
+    Window(const Window &other) = delete;
+    Window(Window &&other) = delete;
 	
-    virtual ~Device();
+    virtual ~Window();
 
-    auto operator=(const Device &other) -> Device& = delete;
-    auto operator=(Device &&other) -> Device& = delete;
+    auto operator=(const Window &other) -> Window& = delete;
+    auto operator=(Window &&other) -> Window& = delete;
 
     virtual void beginUpdate();
     virtual void endUpdate() {}

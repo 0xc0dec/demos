@@ -3,10 +3,10 @@
     MIT license
 */
 
-#include "Device.h"
+#include "Window.h"
 #include "Common.h"
 
-Device::Device(uint32_t canvasWidth, uint32_t canvasHeight):
+Window::Window(uint32_t canvasWidth, uint32_t canvasHeight):
 	canvasWidth_(canvasWidth),
 	canvasHeight_(canvasHeight)
 {
@@ -14,14 +14,14 @@ Device::Device(uint32_t canvasWidth, uint32_t canvasHeight):
 		panic("Failed to initialize SDL");
 }
 
-Device::~Device()
+Window::~Window()
 {
 	if (window_)
         SDL_DestroyWindow(window_);
     SDL_Quit();
 }
 
-void Device::beginUpdate()
+void Window::beginUpdate()
 {
     readWindowState();
     prepareMouseState();
@@ -55,12 +55,12 @@ void Device::beginUpdate()
     }
 }
 
-void Device::setCursorCaptured(bool captured)
+void Window::setCursorCaptured(bool captured)
 {
     SDL_SetRelativeMouseMode(captured ? SDL_TRUE : SDL_FALSE);
 }
 
-void Device::prepareMouseState()
+void Window::prepareMouseState()
 {
     mouseDeltaX_ = mouseDeltaY_ = 0;
     releasedMouseButtons_.clear();
@@ -77,7 +77,7 @@ void Device::prepareMouseState()
     }
 }
 
-void Device::prepareKeyboardState()
+void Window::prepareKeyboardState()
 {
     releasedKeys_.clear();
     if (hasKeyboardFocus_)
@@ -93,14 +93,14 @@ void Device::prepareKeyboardState()
     }
 }
 
-void Device::readWindowState()
+void Window::readWindowState()
 {
     const auto flags = SDL_GetWindowFlags(window_);
     hasKeyboardFocus_ = (flags & SDL_WINDOW_INPUT_FOCUS) != 0;
     hasMouseFocus_ = (flags & SDL_WINDOW_MOUSE_FOCUS) != 0;
 }
 
-void Device::processKeyboardEvent(const SDL_Event &evt)
+void Window::processKeyboardEvent(const SDL_Event &evt)
 {
     if (!hasKeyboardFocus_)
         return;
@@ -128,7 +128,7 @@ void Device::processKeyboardEvent(const SDL_Event &evt)
     }
 }
 
-void Device::processMouseEvent(const SDL_Event &evt)
+void Window::processMouseEvent(const SDL_Event &evt)
 {
     if (!hasMouseFocus_)
         return;
@@ -161,29 +161,29 @@ void Device::processMouseEvent(const SDL_Event &evt)
     }
 }
 
-bool Device::isKeyPressed(SDL_Keycode code, bool firstTime) const
+bool Window::isKeyPressed(SDL_Keycode code, bool firstTime) const
 {
     const auto where = pressedKeys_.find(code);
     return where != pressedKeys_.end() && (!firstTime || where->second);
 }
 
-bool Device::isKeyReleased(SDL_Keycode code) const
+bool Window::isKeyReleased(SDL_Keycode code) const
 {
     return releasedKeys_.find(code) != releasedKeys_.end();
 }
 
-auto Device::mouseMotion() const -> glm::vec2
+auto Window::mouseMotion() const -> glm::vec2
 {
     return {mouseDeltaX_, mouseDeltaY_};
 }
 
-bool Device::isMouseButtonDown(uint8_t button, bool firstTime) const
+bool Window::isMouseButtonDown(uint8_t button, bool firstTime) const
 {
     const auto where = pressedMouseButtons_.find(button);
     return where != pressedMouseButtons_.end() && (!firstTime || where->second);
 }
 
-bool Device::isMouseButtonReleased(uint8_t button) const
+bool Window::isMouseButtonReleased(uint8_t button) const
 {
     return releasedMouseButtons_.find(button) != releasedMouseButtons_.end();
 }

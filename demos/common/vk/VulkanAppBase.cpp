@@ -4,9 +4,9 @@
 */
 
 #include "VulkanAppBase.h"
-#include "VulkanDevice.h"
+#include "VulkanWindow.h"
 
 vk::AppBase::AppBase(uint32_t canvasWidth, uint32_t canvasHeight, bool fullScreen)
 {
-	device_ = std::make_unique<vk::Device>(canvasWidth, canvasHeight, "Demo", fullScreen);
+	window_ = std::make_unique<vk::Window>(canvasWidth, canvasHeight, "Demo", fullScreen);
 }

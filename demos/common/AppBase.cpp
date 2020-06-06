@@ -5,7 +5,7 @@
 
 #include "AppBase.h"
 #include "Common.h"
-#include "Device.h"
+#include "Window.h"
 #include <fstream>
 #include <string>
 
@@ -13,11 +13,11 @@ void AppBase::run()
 {
     init();
 
-    while (!device_->closeRequested() && !device_->isKeyPressed(SDLK_ESCAPE, true))
+    while (!window_->closeRequested() && !window_->isKeyPressed(SDLK_ESCAPE, true))
     {
-        device_->beginUpdate();
+        window_->beginUpdate();
         render();
-        device_->endUpdate();
+        window_->endUpdate();
     }
 
     cleanup();
