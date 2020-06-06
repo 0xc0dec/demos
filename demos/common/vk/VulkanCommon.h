@@ -12,7 +12,10 @@
 #endif
 #include <vulkan.h>
 
-constexpr void assertVkResult(const VkResult &result)
+namespace vk
 {
-	panicIf(result != VK_SUCCESS, "Vulkan API call failed");
+	constexpr void assertResult(const VkResult &result)
+	{
+		panicIf(result != VK_SUCCESS, "Vulkan API call failed");
+	}
 }
