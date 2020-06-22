@@ -10,7 +10,7 @@
 
 namespace vk
 {
-    class VulkanMaterial;
+    class Material;
 
     class DescriptorSetConfig
     {

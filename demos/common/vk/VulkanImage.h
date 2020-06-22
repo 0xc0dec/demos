@@ -14,16 +14,17 @@ namespace vk
     class CubeTextureData;
     class Device;
 
-    class VulkanImage
+    class Image
     {
     public:
-        static auto empty(const Device &dev, uint32_t width, uint32_t height, VkFormat format, bool depth) -> VulkanImage;
-        static auto fromData(const Device &dev, Texture2DData *data, bool generateMipmaps) -> VulkanImage;
-        static auto swapchainDepthStencil(const Device &dev, uint32_t width, uint32_t height, VkFormat format) -> VulkanImage; // TODO more generic?
+        static auto empty(const Device &dev, uint32_t width, uint32_t height, VkFormat format, bool depth) -> Image;
+        static auto fromData(const Device &dev, uint32_t width, uint32_t height, uint32_t size, VkFormat format,
+            void *data, bool generateMipmaps) -> Image;
+        static auto swapchainDepthStencil(const Device &dev, uint32_t width, uint32_t height, VkFormat format) -> Image; // TODO more generic?
 
-        VulkanImage() = default;
-        VulkanImage(const VulkanImage &other) = delete;
-        VulkanImage(VulkanImage &&other) = default;
+        Image() = default;
+        Image(const Image &other) = delete;
+        Image(Image &&other) = default;
 
         auto format() const -> VkFormat { return format_;  }
         auto size() const -> glm::vec2 { return {static_cast<float>(width_), static_cast<float>(height_)}; }
@@ -34,8 +35,8 @@ namespace vk
         auto width() const -> uint32_t { return width_; }
         auto height() const -> uint32_t { return height_; }
 
-        auto operator=(const VulkanImage &other) -> VulkanImage& = delete;
-        auto operator=(VulkanImage &&other) -> VulkanImage& = default;
+        auto operator=(const Image &other) -> Image& = delete;
+        auto operator=(Image &&other) -> Image& = default;
         operator bool() const { return image_; }
 
     private:
@@ -49,7 +50,7 @@ namespace vk
         uint32_t height_ = 0;
         VkImageAspectFlags aspectMask_ = VK_IMAGE_ASPECT_COLOR_BIT;
 
-        VulkanImage(const Device &dev, uint32_t width, uint32_t height, uint32_t mipLevels, uint32_t layers, VkFormat format, VkImageLayout layout,
+        Image(const Device &dev, uint32_t width, uint32_t height, uint32_t mipLevels, uint32_t layers, VkFormat format, VkImageLayout layout,
             VkImageCreateFlags createFlags, VkImageUsageFlags usageFlags, VkImageViewType viewType, VkImageAspectFlags aspectMask);
     };
 }

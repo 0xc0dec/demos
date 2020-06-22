@@ -3,7 +3,7 @@
  * MIT license 
  */
 
-#include "DescriptorSet.h"
+#include "VulkanDescriptorSet.h"
 
 using namespace vk;
 

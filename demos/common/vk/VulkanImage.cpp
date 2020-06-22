@@ -10,22 +10,6 @@
 
 using namespace vk;
 
-static auto toVulkanFormat(TextureFormat format) -> VkFormat
-{
-    switch (format)
-    {
-        case TextureFormat::R8: return VK_FORMAT_R8_UNORM;
-        case TextureFormat::RGB8: // TODO real 24-bit? They crash my driver...
-        case TextureFormat::RGBA8: return VK_FORMAT_R8G8B8A8_UNORM;
-        case TextureFormat::RGBA16F: return VK_FORMAT_R16G16B16A16_SFLOAT;
-        case TextureFormat::Depth24: return VK_FORMAT_D32_SFLOAT; // TODO real 24-bit depth?
-    }
-
-    panic("Unsupported texture format");
-	
-    return VK_FORMAT_UNDEFINED;
-}
-
 static auto createImage(VkDevice device, VkFormat format, uint32_t width, uint32_t height, uint32_t mipLevels,
     uint32_t arrayLayers, VkImageCreateFlags createFlags, VkImageUsageFlags usageFlags) -> Resource<VkImage>
 {
@@ -67,7 +51,7 @@ static auto allocateImageMemory(VkDevice device, VkPhysicalDeviceMemoryPropertie
 }
 
 // TODO Refactor, reduce copy-paste
-auto VulkanImage::empty(const Device &dev, uint32_t width, uint32_t height, VkFormat format, bool depth) -> VulkanImage
+auto Image::empty(const Device &dev, uint32_t width, uint32_t height, VkFormat format, bool depth) -> Image
 {
     const auto layout = VK_IMAGE_LAYOUT_GENERAL; // TODO better
     const auto usage = VK_IMAGE_USAGE_SAMPLED_BIT |
@@ -83,7 +67,7 @@ auto VulkanImage::empty(const Device &dev, uint32_t width, uint32_t height, VkFo
         "Image format/features not supported"
     );
 
-    auto image = VulkanImage(dev, width, height, 1, 1, format, layout, 0, usage, VK_IMAGE_VIEW_TYPE_2D, aspect);
+    auto image = Image(dev, width, height, 1, 1, format, layout, 0, usage, VK_IMAGE_VIEW_TYPE_2D, aspect);
 
     VkImageSubresourceRange range{};
     range.aspectMask = image.aspectMask_;
@@ -110,11 +94,8 @@ auto VulkanImage::empty(const Device &dev, uint32_t width, uint32_t height, VkFo
 }
 
 // TODO Refactor, reduce copy-paste
-auto VulkanImage::fromData(const Device &dev, Texture2DData *data, bool generateMipmaps) -> VulkanImage
+auto Image::fromData(const Device &dev, uint32_t width, uint32_t height, uint32_t size, VkFormat format, void *data, bool generateMipmaps) -> Image
 {
-    const auto width = static_cast<uint32_t>(data->dimensions().x());
-    const auto height = static_cast<uint32_t>(data->dimensions().y());
-    const auto format = toVulkanFormat(data->textureFormat());
     const auto layout = VK_IMAGE_LAYOUT_GENERAL;
     auto usage =
         VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |
@@ -138,7 +119,7 @@ auto VulkanImage::fromData(const Device &dev, Texture2DData *data, bool generate
         usage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
     }
 
-    auto image = VulkanImage(dev, width, height, mipLevels, 1, format, layout, 0, usage,
+    auto image = Image(dev, width, height, mipLevels, 1, format, layout, 0, usage,
         VK_IMAGE_VIEW_TYPE_2D, VK_IMAGE_ASPECT_COLOR_BIT);
 
     VkImageSubresourceRange range{};
@@ -155,7 +136,7 @@ auto VulkanImage::fromData(const Device &dev, Texture2DData *data, bool generate
         range
     );
 
-    const auto srcBuf = Buffer::staging(dev, data->size(), data->data());
+    const auto srcBuf = Buffer::staging(dev, size, data);
 
     auto initCmdBuf = CmdBuffer(dev);
     initCmdBuf.begin(true);
@@ -275,9 +256,9 @@ auto VulkanImage::fromData(const Device &dev, Texture2DData *data, bool generate
     return image;
 }
 
-auto VulkanImage::swapchainDepthStencil(const Device &dev, uint32_t width, uint32_t height, VkFormat format) -> VulkanImage
+auto Image::swapchainDepthStencil(const Device &dev, uint32_t width, uint32_t height, VkFormat format) -> Image
 {
-    return VulkanImage(dev, width, height, 1, 1, format,
+    return Image(dev, width, height, 1, 1, format,
         VK_IMAGE_LAYOUT_UNDEFINED,
         0,
         VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
@@ -285,7 +266,7 @@ auto VulkanImage::swapchainDepthStencil(const Device &dev, uint32_t width, uint3
         VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT);
 }
 
-VulkanImage::VulkanImage(const Device &dev, uint32_t width, uint32_t height, uint32_t mipLevels, uint32_t layers, VkFormat format, VkImageLayout layout,
+Image::Image(const Device &dev, uint32_t width, uint32_t height, uint32_t mipLevels, uint32_t layers, VkFormat format, VkImageLayout layout,
     VkImageCreateFlags createFlags, VkImageUsageFlags usageFlags, VkImageViewType viewType, VkImageAspectFlags aspectMask):
     layout_(layout),
     format_(format),

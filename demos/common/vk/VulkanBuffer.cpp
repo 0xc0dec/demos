@@ -4,6 +4,7 @@
 */
 
 #include "VulkanBuffer.h"
+#include "VulkanCmdBuffer.h"
 #include "VulkanCommon.h"
 #include "VulkanDevice.h"
 
@@ -88,7 +89,7 @@ void vk::Buffer::updatePart(const void *newData, uint32_t offset, uint32_t size)
 
 void vk::Buffer::transferTo(const Buffer &dst) const
 {
-    VulkanCmdBuffer(*device_)
+    CmdBuffer(*device_)
         .begin(true)
         .copyBuffer(*this, dst)
         .endAndFlush();

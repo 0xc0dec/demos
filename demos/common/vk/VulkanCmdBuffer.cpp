@@ -6,6 +6,9 @@
 #include "VulkanCmdBuffer.h"
 #include "VulkanBuffer.h"
 #include "VulkanDevice.h"
+#include "VulkanImage.h"
+#include "VulkanRenderPass.h"
+#include "VulkanDescriptorSet.h"
 
 using namespace vk;
 
@@ -83,8 +86,7 @@ auto CmdBuffer::bindPipeline(VkPipeline pipeline) -> CmdBuffer&
     return *this;
 }
 
-auto CmdBuffer::bindDescriptorSet(VkPipelineLayout pipelineLayout, const DescriptorSet &set)
-    -> CmdBuffer&
+auto CmdBuffer::bindDescriptorSet(VkPipelineLayout pipelineLayout, const DescriptorSet &set) -> CmdBuffer&
 {
     vkCmdBindDescriptorSets(handle_, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, set, 0, nullptr);
     return *this;
@@ -92,14 +94,14 @@ auto CmdBuffer::bindDescriptorSet(VkPipelineLayout pipelineLayout, const Descrip
 
 auto CmdBuffer::setViewport(const glm::vec4 &dimentions, float minDepth, float maxDepth) -> CmdBuffer&
 {
-    VkViewport vp{dimentions.x(), dimentions.y(), dimentions.z(), dimentions.w(), minDepth, maxDepth};
+    VkViewport vp{dimentions.x, dimentions.y, dimentions.z, dimentions.w, minDepth, maxDepth};
     vkCmdSetViewport(handle_, 0, 1, &vp);
     return *this;
 }
 
 auto CmdBuffer::setScissor(const glm::vec4 &dimentions) -> CmdBuffer&
 {
-    VkRect2D scissor{{0, 0}, {static_cast<uint32_t>(dimentions.z()), static_cast<uint32_t>(dimentions.w())}};
+    VkRect2D scissor{{0, 0}, {static_cast<uint32_t>(dimentions.z), static_cast<uint32_t>(dimentions.w)}};
     // TODO proper values
     vkCmdSetScissor(handle_, 0, 1, &scissor);
     return *this;
@@ -131,7 +133,7 @@ auto CmdBuffer::copyBuffer(const Buffer &src, const Buffer &dst) -> CmdBuffer&
     return *this;
 }
 
-auto CmdBuffer::copyBuffer(const Buffer &src, const VulkanImage &dst) -> CmdBuffer&
+auto CmdBuffer::copyBuffer(const Buffer &src, const Image &dst) -> CmdBuffer&
 {
     VkBufferImageCopy bufferCopyRegion{};
     bufferCopyRegion.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -154,7 +156,7 @@ auto CmdBuffer::copyBuffer(const Buffer &src, const VulkanImage &dst) -> CmdBuff
     return *this;
 }
 
-auto CmdBuffer::copyBuffer(const Buffer &src, const VulkanImage &dst, const VkBufferImageCopy *regions,
+auto CmdBuffer::copyBuffer(const Buffer &src, const Image &dst, const VkBufferImageCopy *regions,
     uint32_t regionCount) -> CmdBuffer&
 {
     vkCmdCopyBufferToImage(

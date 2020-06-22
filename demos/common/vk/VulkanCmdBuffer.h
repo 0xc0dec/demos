@@ -14,6 +14,7 @@ namespace vk
     class DescriptorSet;
     class Buffer;
     class Device;
+    class Image;
 
     class CmdBuffer
     {
@@ -51,8 +52,8 @@ namespace vk
             -> CmdBuffer&;
 
         auto copyBuffer(const Buffer &src, const Buffer &dst) -> CmdBuffer&;
-        auto copyBuffer(const Buffer &src, const VulkanImage &dst) -> CmdBuffer&;
-        auto copyBuffer(const Buffer &src, const VulkanImage &dst, 
+        auto copyBuffer(const Buffer &src, const Image &dst) -> CmdBuffer&;
+        auto copyBuffer(const Buffer &src, const Image &dst, 
             const VkBufferImageCopy *regions, uint32_t regionCount) -> CmdBuffer&;
 
         auto blit(VkImage src, VkImage dst, VkImageLayout srcLayout, VkImageLayout dstLayout,
