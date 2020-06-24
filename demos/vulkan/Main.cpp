@@ -4,7 +4,6 @@
 */
 
 #include "common/vk/VulkanAppBase.h"
-#include "common/vk/VulkanDevice.h"
 
 class App: public vk::AppBase
 {

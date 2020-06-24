@@ -17,6 +17,9 @@ namespace vk
 
 		void endUpdate() override;
 
+        auto instance() const -> VkInstance { return instance_;  }
+        auto surface() const -> VkSurfaceKHR { return surface_;  }
+
 	private:
 		vk::Resource<VkInstance> instance_;
 		vk::Resource<VkSurfaceKHR> surface_;

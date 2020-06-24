@@ -7,6 +7,8 @@
 
 #include "../AppBase.h"
 #include "VulkanWindow.h"
+#include "VulkanDevice.h"
+#include "VulkanSwapchain.h"
 
 namespace vk
 {
@@ -16,7 +18,11 @@ namespace vk
 		AppBase(uint32_t canvasWidth, uint32_t canvasHeight, bool fullScreen);
 
 	protected:
-		// TODO Better
-		auto window() const -> vk::Window* { return dynamic_cast<vk::Window*>(window_.get()); }
+		// TODO avoid casting
+		auto window() const -> vk::Window* { return dynamic_cast<Window*>(window_.get()); }
+
+	private:
+        Device device_;
+        Swapchain swapchain_;
 	};
 }

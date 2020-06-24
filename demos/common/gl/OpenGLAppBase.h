@@ -16,7 +16,7 @@ namespace gl
 		AppBase(uint32_t canvasWidth, uint32_t canvasHeight, bool fullScreen);
 
 	protected:
-		// TODO Better
+		// TODO avoid casting
 		auto window() const -> gl::Window* { return dynamic_cast<gl::Window*>(window_.get()); }
 	};
 }

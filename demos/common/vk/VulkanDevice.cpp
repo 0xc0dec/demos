@@ -111,7 +111,8 @@ static auto createCommandPool(VkDevice device, uint32_t queueIndex) -> vk::Resou
     return commandPool;
 }
 
-vk::Device::Device(VkInstance instance, VkSurfaceKHR surface)
+vk::Device::Device(VkInstance instance, VkSurfaceKHR surface):
+    surface_(surface)
 {
 #ifdef DEMOS_DEBUG
     debugCallback_ = createDebugCallback(instance, debugCallbackFunc);

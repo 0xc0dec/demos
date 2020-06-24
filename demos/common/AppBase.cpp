@@ -23,6 +23,11 @@ void AppBase::run()
     cleanup();
 }
 
+AppBase::AppBase(std::unique_ptr<Window> window):
+    window_(std::move(window))
+{
+}
+
 auto AppBase::readFile(const char *path) -> std::vector<uint8_t>
 {
     std::ifstream file(path, std::ios::binary | std::ios::ate);

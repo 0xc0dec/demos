@@ -18,7 +18,9 @@ public:
 
 protected:
 	std::unique_ptr<Window> window_;
-	
+
+    explicit AppBase(std::unique_ptr<Window> window);
+
 	virtual void init() = 0;
 	virtual void render() = 0;
 	virtual void cleanup() = 0;
