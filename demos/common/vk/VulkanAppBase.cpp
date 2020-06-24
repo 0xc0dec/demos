@@ -9,4 +9,5 @@
 vk::AppBase::AppBase(uint32_t canvasWidth, uint32_t canvasHeight, bool fullScreen)
 {
 	window_ = std::make_unique<vk::Window>(canvasWidth, canvasHeight, "Demo", fullScreen);
+
 }

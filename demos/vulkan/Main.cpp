@@ -4,6 +4,7 @@
 */
 
 #include "common/vk/VulkanAppBase.h"
+#include "common/vk/VulkanDevice.h"
 
 class App: public vk::AppBase
 {
@@ -15,7 +16,6 @@ public:
 protected:
 	void init() override
 	{
-		
 	}
 	
 	void render() override
