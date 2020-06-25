@@ -133,7 +133,6 @@ protected:
 
         semaphores_.wait = swapchain().moveNext();
         vk::queueSubmit(device().queue(), 1, &semaphores_.wait, 1, &semaphores_.complete, 1, cmdBuf_);
-        vk::assertResult(vkQueueWaitIdle(device().queue()));
         semaphores_.wait = semaphores_.complete;
 
         // Render UI
@@ -158,7 +157,6 @@ protected:
                 .end();
 
             vk::queueSubmit(device().queue(), 1, &semaphores_.wait, 1, &semaphores_.complete, 1, ui_.cmdBuf);
-            vk::assertResult(vkQueueWaitIdle(device().queue()));
             semaphores_.wait = semaphores_.complete;
         }
 
