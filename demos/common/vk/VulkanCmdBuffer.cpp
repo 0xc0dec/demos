@@ -1,7 +1,7 @@
-/* 
- * Copyright (c) Aleksey Fedotov 
- * MIT license 
- */
+/*
+    Copyright (c) Aleksey Fedotov
+    MIT license
+*/
 
 #include "VulkanCmdBuffer.h"
 #include "VulkanBuffer.h"

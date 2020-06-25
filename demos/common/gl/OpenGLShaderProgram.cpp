@@ -3,7 +3,7 @@
     MIT license
 */
 
-#include "ShaderProgram.h"
+#include "OpenGLShaderProgram.h"
 #include "../Common.h"
 #include <vector>
 

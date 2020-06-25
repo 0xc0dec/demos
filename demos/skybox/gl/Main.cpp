@@ -5,9 +5,9 @@
 
 #include "common/Camera.h"
 #include "common/Spectator.h"
-#include "common/Mesh.h"
+#include "common/gl/OpenGLMesh.h"
 #include "common/gl/OpenGLAppBase.h"
-#include "common/gl/ShaderProgram.h"
+#include "common/gl/OpenGLShaderProgram.h"
 #include "Shaders.h"
 #include <memory>
 #include <glm/glm.hpp>
@@ -23,8 +23,8 @@ public:
 	}
 
 private:
-	std::shared_ptr<Mesh> quadMesh_;
-	std::shared_ptr<Mesh> boxMesh_;
+	std::shared_ptr<gl::Mesh> quadMesh_;
+	std::shared_ptr<gl::Mesh> boxMesh_;
 
 	std::shared_ptr<gl::ShaderProgram> skyboxShader_;
 	std::shared_ptr<gl::ShaderProgram> meshShader_;
@@ -42,16 +42,16 @@ private:
 		initShaders();
 		initTextures();
 
-		quadMesh_ = Mesh::quad();
-		boxMesh_ = Mesh::box();
+		quadMesh_ = gl::Mesh::quad();
+		boxMesh_ = gl::Mesh::box();
 
 		camera_.setPerspective(45, 1.0f * window()->canvasWidth() / window()->canvasHeight(), 0.1f, 100.0f);
 		camera_.transform().setLocalPosition({10, 10, 10});
 		camera_.transform().lookAt({0, 0, 0}, {0, 1, 0});
 	}
 
-	void loadFaceData(const char *path, GLenum target)
-	{
+	void loadFaceData(const char *path, GLenum target) const
+    {
 		auto data = readFile(path);
 
     	stbi_set_flip_vertically_on_load(true); // for OpenGL

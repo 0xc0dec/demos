@@ -4,9 +4,9 @@
 */
 
 #include "common/Common.h"
-#include "common/Mesh.h"
+#include "common/gl/OpenGLMesh.h"
 #include "common/gl/OpenGLAppBase.h"
-#include "common/gl/ShaderProgram.h"
+#include "common/gl/OpenGLShaderProgram.h"
 #include "Shaders.h"
 #include <memory>
 #include <glm/glm.hpp>
@@ -48,7 +48,7 @@ private:
 
 	struct
 	{
-		std::shared_ptr<Mesh> mesh;
+		std::shared_ptr<gl::Mesh> mesh;
 		float time = 0;
 	} atlasQuad_;
 
@@ -71,7 +71,7 @@ private:
 		initRotatingLabel();
 		initShaders();
 
-		atlasQuad_.mesh = Mesh::quad();
+		atlasQuad_.mesh = gl::Mesh::quad();
 
 		const glm::mat4 viewMatrix{};
 		const auto projMatrix = glm::perspective(glm::radians(60.0f), 1.0f * window()->canvasWidth() / window()->canvasHeight(), 0.05f, 100.0f);

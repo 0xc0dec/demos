@@ -1,6 +1,11 @@
-#include "Mesh.h"
+/*
+    Copyright (c) Aleksey Fedotov
+    MIT license
+*/
 
-Mesh::Mesh(const std::vector<float> &positions, const std::vector<float> &uvs)
+#include "OpenGLMesh.h"
+
+gl::Mesh::Mesh(const std::vector<float> &positions, const std::vector<float> &uvs)
 {
     glGenVertexArrays(1, &vao_);
     glBindVertexArray(vao_);
@@ -24,20 +29,20 @@ Mesh::Mesh(const std::vector<float> &positions, const std::vector<float> &uvs)
     verticesCount_ = positions.size() / 3;
 }
 
-Mesh::~Mesh()
+gl::Mesh::~Mesh()
 {
     glDeleteVertexArrays(1, &vao_);
     for (const auto &buffer: buffers_)
         glDeleteBuffers(1, &buffer);
 }
 
-void Mesh::draw() const
+void gl::Mesh::draw() const
 {
     glBindVertexArray(vao_);
     glDrawArrays(GL_TRIANGLES, 0, verticesCount_);
 }
 
-auto Mesh::quad() -> std::shared_ptr<Mesh>
+auto gl::Mesh::quad() -> std::shared_ptr<Mesh>
 {
     static std::vector<float> positions = {
         -1, -1, 0,
@@ -60,7 +65,7 @@ auto Mesh::quad() -> std::shared_ptr<Mesh>
     return std::make_shared<Mesh>(positions, uvs);
 }
 
-auto Mesh::box() -> std::shared_ptr<Mesh>
+auto gl::Mesh::box() -> std::shared_ptr<Mesh>
 {
     static std::vector<float> positions = {
         // -x

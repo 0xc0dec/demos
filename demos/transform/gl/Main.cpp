@@ -5,9 +5,9 @@
 
 #include "common/Camera.h"
 #include "common/Spectator.h"
-#include "common/Mesh.h"
+#include "common/gl/OpenGLMesh.h"
 #include "common/gl/OpenGLAppBase.h"
-#include "common/gl/ShaderProgram.h"
+#include "common/gl/OpenGLShaderProgram.h"
 #include "Shaders.h"
 #include <memory>
 #include <glm/glm.hpp>
@@ -22,7 +22,7 @@ public:
 	}
 
 private:
-	std::shared_ptr<Mesh> mesh_;
+	std::shared_ptr<gl::Mesh> mesh_;
 	std::shared_ptr<gl::ShaderProgram> shader_;
 
 	Camera camera_;
@@ -33,7 +33,7 @@ private:
 	{
 		initShaders();
 
-		mesh_ = Mesh::box();
+		mesh_ = gl::Mesh::box();
 
 		t2_.setLocalPosition({3, 3, 3});
 		t2_.lookAt({0, 0, 0}, {0, 1, 0});
