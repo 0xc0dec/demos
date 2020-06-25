@@ -59,5 +59,3 @@ add_subdirectory("demos/stb-truetype")
 add_subdirectory("demos/transform")
 add_subdirectory("demos/skybox")
 add_subdirectory("demos/imgui")
-add_subdirectory("demos/vulkan")
-
