@@ -5,11 +5,12 @@
 
 #include "VulkanDevice.h"
 #include "VulkanCommon.h"
+#include <iostream>
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallbackFunc(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objType,
     uint64_t obj, size_t location, int code, const char *layerPrefix, const char *msg, void *userData)
 {
-	// TODO log
+    std::cout << msg << std::endl;
     return VK_FALSE;
 }
 
