@@ -1,0 +1,47 @@
+/*
+    Copyright (c) Aleksey Fedotov
+    MIT license
+*/
+
+#pragma once
+
+#include <unordered_map>
+#include <string>
+#include <GL/glew.h>
+
+namespace gl
+{
+	class ShaderProgram
+	{
+	public:
+		ShaderProgram(const std::string &vertex, const std::string &fragment);
+		~ShaderProgram();
+
+		void use() const;
+
+		void setMatrixUniform(const std::string &name, const float *data);
+		void setTextureUniform(const std::string &name, uint32_t slot);
+
+	private:
+		struct UniformInfo
+		{
+			uint32_t location;
+			uint32_t samplerIndex;
+		};
+
+		struct AttributeInfo
+		{
+			uint32_t location;
+		};
+
+		GLuint handle_ = 0;
+		std::unordered_map<std::string, UniformInfo> uniforms_;
+		std::unordered_map<std::string, AttributeInfo> attributes_;
+
+		void introspectUniforms();
+		void introspectAttributes();
+
+		auto uniformInfo(const std::string &name) -> UniformInfo;
+		auto attributeInfo(const std::string &name) -> AttributeInfo;
+	};
+}

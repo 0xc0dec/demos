@@ -5,36 +5,34 @@
 
 #include "AppBase.h"
 #include "Common.h"
-#include "Device.h"
+#include "Window.h"
 #include <fstream>
 #include <string>
-
-AppBase::AppBase(uint32_t canvasWidth, uint32_t canvasHeight, bool fullScreen) :
-    canvasWidth_(canvasWidth),
-    canvasHeight_(canvasHeight),
-    device_(canvasWidth, canvasHeight, "Demo", fullScreen)
-{
-}
 
 void AppBase::run()
 {
     init();
 
-    while (!device_.closeRequested() && !device_.isKeyPressed(SDLK_ESCAPE, true))
+    while (!window_->closeRequested() && !window_->isKeyPressed(SDLK_ESCAPE, true))
     {
-        device_.beginUpdate();
+        window_->beginUpdate();
         render();
-        device_.endUpdate();
+        window_->endUpdate();
     }
 
     cleanup();
+}
+
+AppBase::AppBase(std::unique_ptr<Window> window):
+    window_(std::move(window))
+{
 }
 
 auto AppBase::readFile(const char *path) -> std::vector<uint8_t>
 {
     std::ifstream file(path, std::ios::binary | std::ios::ate);
     if (!file.is_open())
-        PANIC("Failed to open file " << path);
+        panic("Failed to open file ", path);
 
     const auto size = file.tellg();
     file.seekg(0, std::ios::beg);
@@ -47,5 +45,5 @@ auto AppBase::readFile(const char *path) -> std::vector<uint8_t>
 
 auto AppBase::assetPath(const char *path) -> std::string
 {
-    return std::string("../../assets/") + path;
+    return std::string("../../../assets/") + path;
 }

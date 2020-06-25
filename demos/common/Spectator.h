@@ -5,7 +5,7 @@
 
 #pragma once
 
-class Device;
+class Window;
 class Transform;
 
-void applySpectator(Transform &transform, Device &device, float mouseSensitivity = 0.002f, float movementSpeed = 10);
+void applySpectator(Transform &transform, Window &window, float mouseSensitivity = 0.002f, float movementSpeed = 10);
