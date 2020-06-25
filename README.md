@@ -7,9 +7,9 @@ The goal is to keep things easy to understand while taking away as much boilerpl
 
 # Building and running
 * `cd build`.
-* `cmake -G "Visual Studio 16 2019" -A x64 ..` (or run a suitable build script from the folder, e.g. `gen-msvc-2017-x64.cmd`).
+* `cmake -G "Visual Studio 16 2019" -A x64 ..` (or run a build script from the folder, e.g. `gen-msvc-2017-x64.cmd`).
 * Build using the generated IDE files.
-* Run executables inside `build/<Debug|Release>/`.
+* Run executables from `build/bin/<Debug|Release>/`.
 
 # Controls
 Some demos use first person camera. Use `W-S-A-D-Q-E` keys to move and hold right mouse button to rotate.
