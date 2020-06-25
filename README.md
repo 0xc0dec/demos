@@ -15,25 +15,26 @@ The goal is to keep things easy to understand while taking away as much boilerpl
 Some demos use first person camera. Use `W-S-A-D-Q-E` keys to move and hold right mouse button to rotate.
 
 # Demos
-## Transform
-Object transform hierarchies and (first person) camera via reusable [`Transform`](demos/common/Transform.h) and [`Camera`](demos/common/Camera.h) classes and a helper [spectator function](demos/common/Spectator.h).
-
-![Image](/demos/transform/screenshot.png?raw=true)
-
-## Skybox [GL]
-Skybox rendering on a single quad mesh using a bit of shader magic.
-
-![Image](/demos/skybox/screenshot.png?raw=true)
-
-## TrueType [GL]
-TrueType font rendering using [stb_truetype](https://github.com/nothings/stb) library.
-
-![Image](/demos/stb-truetype/screenshot.png?raw=true)
 
 ## [Dear ImGui](/demos/imgui) [VK/GL]
 Basic [Dear ImGui](https://github.com/ocornut/imgui) integration example.
 
 ![Image](/demos/imgui/screenshot.png?raw=true)
+
+## [Transform](/demos/transform) [GL]
+Object transform hierarchies and (first person) camera via reusable [`Transform`](demos/common/Transform.h) and [`Camera`](demos/common/Camera.h) classes and a helper [spectator function](demos/common/Spectator.h).
+
+![Image](/demos/transform/screenshot.png?raw=true)
+
+## [Skybox](/demos/skybox) [GL]
+Skybox rendering on a single quad mesh using a bit of shader magic.
+
+![Image](/demos/skybox/screenshot.png?raw=true)
+
+## [TrueType](/demos/stb-truetype) [GL]
+TrueType font rendering using [stb_truetype](https://github.com/nothings/stb) library.
+
+![Image](/demos/stb-truetype/screenshot.png?raw=true)
 
 ## To be continued...
 
