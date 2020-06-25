@@ -3,12 +3,8 @@
     MIT license
 */
 
-// This demo includes *.cpp files from ImGui in order to compile, this is apparently the way recommended by ImGui.
-// ImGui include paths are configured in CMake.
-
 #include "common/gl/OpenGLAppBase.h"
 #include <imgui.h>
-// Include these two as we use SDL + OpenGL stack
 #include <examples/imgui_impl_opengl3.h>
 #include <examples/imgui_impl_sdl.h>
 #include <GL/glew.h>
@@ -38,8 +34,6 @@ private:
 
 	void render() override
 	{
-		// "Logical" render of ImGUI
-		
 		ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL2_NewFrame(window()->sdlWindow());
         ImGui::NewFrame();
@@ -49,8 +43,6 @@ private:
 
 		ImGui::Render();
 
-		// The actual render via OpenGL
-		
 		glViewport(0, 0, window()->canvasWidth(), window()->canvasHeight());
 		glClearColor(0, 0.5f, 0.6f, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

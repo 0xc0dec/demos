@@ -28,8 +28,6 @@ protected:
     struct
     {
         vk::Resource<VkDescriptorPool> descPool;
-        vk::RenderPass renderPass;
-        vk::CmdBuffer cmdBuf;
     } ui_;
 
 	void init() override
@@ -48,7 +46,6 @@ protected:
 
         ImGui_ImplSDL2_InitForVulkan(window()->sdlWindow());
 
-        // Init desc pool
         {
             std::vector<VkDescriptorPoolSize> poolSizes = {
                 { VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
@@ -75,16 +72,8 @@ protected:
             vk::assertResult(vkCreateDescriptorPool(device(), &poolInfo, nullptr, ui_.descPool.cleanRef()));
         }
 
-        // Render pass
         {
-            const auto cfg = vk::RenderPassConfig()
-                .addColorAttachment(device().colorFormat(), VK_IMAGE_LAYOUT_GENERAL); // TODO proper layout
-            ui_.renderPass = vk::RenderPass(device(), cfg);
-        }
-
-        // Init render pass
-        {
-            ImGui_ImplVulkan_InitInfo initInfo = {};
+            ImGui_ImplVulkan_InitInfo initInfo{};
             initInfo.Instance = window()->instance();
             initInfo.PhysicalDevice = device().physical();
             initInfo.Device = device();
@@ -97,7 +86,7 @@ protected:
             initInfo.ImageCount = swapchain().imageCount();
             initInfo.CheckVkResultFn = [](VkResult) {};
 
-            ImGui_ImplVulkan_Init(&initInfo, ui_.renderPass.handle());
+            ImGui_ImplVulkan_Init(&initInfo, swapchain().renderPass());
         }
 
         // Load fonts
@@ -108,8 +97,6 @@ protected:
             cmdBuf.endAndFlush();
             ImGui_ImplVulkan_DestroyFontUploadObjects();
         }
-
-        ui_.cmdBuf = vk::CmdBuffer(device());
 	}
 	
 	void render() override
@@ -120,47 +107,31 @@ protected:
         const auto canvasHeight = window()->canvasHeight();
 
         const VkClearRect clearRect{{{0, 0}, {static_cast<uint32_t>(canvasWidth), static_cast<uint32_t>(canvasHeight)}}, 0, 1};
-        const VkClearValue clearValue{{{1, 0, 0, 1}}};
+        const VkClearValue clearValue{{{0, 0.5f, 0.6f, 1}}};
         const glm::vec4 viewport{0, 0, canvasWidth, canvasHeight};
 
         cmdBuf_.begin(false)
             .beginRenderPass(renderPass, frameBuffer, canvasWidth, canvasHeight)
             .clearColorAttachment(0, clearValue, clearRect)
             .setViewport(viewport, 0, 1)
-            .setScissor(viewport)
-	        .endRenderPass()
+            .setScissor(viewport);
+
+        ImGui_ImplSDL2_NewFrame(window()->sdlWindow());
+        ImGui::NewFrame();
+
+        auto open = true; // never close
+        ImGui::ShowDemoWindow(&open);
+
+        ImGui::Render();
+        ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmdBuf_);
+
+	    cmdBuf_.endRenderPass()
 	        .end();
 
         semaphores_.wait = swapchain().moveNext();
         vk::queueSubmit(device().queue(), 1, &semaphores_.wait, 1, &semaphores_.complete, 1, cmdBuf_);
-        semaphores_.wait = semaphores_.complete;
 
-        // Render UI
-        {
-            ui_.cmdBuf
-                .begin(false)
-                .beginRenderPass(ui_.renderPass, frameBuffer, canvasWidth, canvasHeight)
-                .setViewport(viewport, 0, 1)
-                .setScissor(viewport);
-
-            ImGui_ImplSDL2_NewFrame(window()->sdlWindow());
-            ImGui::NewFrame();
-
-            auto open = true; // never close
-            ImGui::ShowDemoWindow(&open);
-
-            ImGui::Render();
-            ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), ui_.cmdBuf);
-
-            ui_.cmdBuf
-                .endRenderPass()
-                .end();
-
-            vk::queueSubmit(device().queue(), 1, &semaphores_.wait, 1, &semaphores_.complete, 1, ui_.cmdBuf);
-            semaphores_.wait = semaphores_.complete;
-        }
-
-        swapchain().present(device().queue(), 1, &semaphores_.wait);
+        swapchain().present(device().queue(), 1, &semaphores_.complete);
         vk::assertResult(vkQueueWaitIdle(device().queue()));
 	}
 	
