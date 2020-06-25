@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.4)
 project(Demos)
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 set(CMAKE_SUPPRESS_REGENERATION true)
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Config types" FORCE)
 

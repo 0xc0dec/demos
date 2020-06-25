@@ -26,6 +26,8 @@ target_include_directories(Vendor PRIVATE
     "vulkan/include/vulkan"
 )
 
+set_target_properties(Vendor PROPERTIES FOLDER vendor)
+
 if (WIN32)
     find_library(DEMOS_VULKAN_LIB
         NAMES vulkan-1
@@ -70,3 +72,6 @@ set_default_definitions(Vendor)
 option(FORCE_STATIC_VCRT on)
 
 add_subdirectory("SDL/2.0.12")
+set_target_properties(SDL2 PROPERTIES FOLDER vendor)
+set_target_properties(SDL2main PROPERTIES FOLDER vendor)
+set_target_properties(SDL2-static PROPERTIES FOLDER vendor)
