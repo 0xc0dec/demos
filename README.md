@@ -20,18 +20,18 @@ Object transform hierarchies and (first person) camera via reusable [`Transform`
 
 ![Image](/demos/transform/screenshot.png?raw=true)
 
-## Skybox
+## Skybox [GL]
 Skybox rendering on a single quad mesh using a bit of shader magic.
 
 ![Image](/demos/skybox/screenshot.png?raw=true)
 
-## TrueType
+## TrueType [GL]
 TrueType font rendering using [stb_truetype](https://github.com/nothings/stb) library.
 
 ![Image](/demos/stb-truetype/screenshot.png?raw=true)
 
-## ImGui
-Basic [ImGui](https://github.com/ocornut/imgui) integration example.
+## [Dear ImGui](/demos/imgui) [VK/GL]
+Basic [Dear ImGui](https://github.com/ocornut/imgui) integration example.
 
 ![Image](/demos/imgui/screenshot.png?raw=true)
 
@@ -43,4 +43,4 @@ Basic [ImGui](https://github.com/ocornut/imgui) integration example.
 * SDL
 * GLEW
 * glm
-* ImGui
+* Dear ImGui
