@@ -18,15 +18,24 @@ public:
 
 protected:
     vk::CmdBuffer cmdBuf_;
-    vk::Resource<VkSemaphore> completeSemaphore_;
-    vk::Resource<VkDescriptorPool> uiDescPool_;
-    vk::RenderPass uiRenderPass_;
-    VkSemaphore waitSemaphore_ = nullptr;
+
+    struct
+    {
+        vk::Resource<VkSemaphore> complete;
+        VkSemaphore wait = nullptr;
+    } semaphores_;
+
+    struct
+    {
+        vk::Resource<VkDescriptorPool> descPool;
+        vk::RenderPass renderPass;
+        vk::CmdBuffer cmdBuf;
+    } ui_;
 
 	void init() override
 	{
         cmdBuf_ = vk::CmdBuffer(device());
-        completeSemaphore_ = vk::createSemaphore(device());
+        semaphores_.complete = vk::createSemaphore(device());
 
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -62,15 +71,15 @@ protected:
             poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
             poolInfo.pPoolSizes = poolSizes.data();
 
-            uiDescPool_ = vk::Resource<VkDescriptorPool>{device(), vkDestroyDescriptorPool};
-            vk::assertResult(vkCreateDescriptorPool(device(), &poolInfo, nullptr, uiDescPool_.cleanRef()));
+            ui_.descPool = vk::Resource<VkDescriptorPool>{device(), vkDestroyDescriptorPool};
+            vk::assertResult(vkCreateDescriptorPool(device(), &poolInfo, nullptr, ui_.descPool.cleanRef()));
         }
 
         // Render pass
         {
             const auto cfg = vk::RenderPassConfig()
                 .addColorAttachment(device().colorFormat(), VK_IMAGE_LAYOUT_GENERAL); // TODO proper layout
-            uiRenderPass_ = vk::RenderPass(device(), cfg);
+            ui_.renderPass = vk::RenderPass(device(), cfg);
         }
 
         // Init render pass
@@ -82,13 +91,13 @@ protected:
             initInfo.QueueFamily = device().queueIndex();
             initInfo.Queue = device().queue();
             initInfo.PipelineCache = VK_NULL_HANDLE;
-            initInfo.DescriptorPool = uiDescPool_;
+            initInfo.DescriptorPool = ui_.descPool;
             initInfo.Allocator = nullptr;
             initInfo.MinImageCount = 2;
             initInfo.ImageCount = swapchain().imageCount();
             initInfo.CheckVkResultFn = [](VkResult) {};
 
-            ImGui_ImplVulkan_Init(&initInfo, uiRenderPass_.handle());
+            ImGui_ImplVulkan_Init(&initInfo, ui_.renderPass.handle());
         }
 
         // Load fonts
@@ -99,14 +108,14 @@ protected:
             cmdBuf.endAndFlush();
             ImGui_ImplVulkan_DestroyFontUploadObjects();
         }
+
+        ui_.cmdBuf = vk::CmdBuffer(device());
 	}
 	
 	void render() override
 	{
-        waitSemaphore_ = swapchain().moveNext();
-
-        const auto fb = swapchain().currentFrameBuffer();
-        auto &renderPass = swapchain().renderPass();
+        const auto frameBuffer = swapchain().currentFrameBuffer();
+        const auto &renderPass = swapchain().renderPass();
         const auto canvasWidth = window()->canvasWidth();
         const auto canvasHeight = window()->canvasHeight();
 
@@ -115,19 +124,45 @@ protected:
         const glm::vec4 viewport{0, 0, canvasWidth, canvasHeight};
 
         cmdBuf_.begin(false)
-            .beginRenderPass(renderPass, fb, canvasWidth, canvasHeight)
+            .beginRenderPass(renderPass, frameBuffer, canvasWidth, canvasHeight)
             .clearColorAttachment(0, clearValue, clearRect)
             .setViewport(viewport, 0, 1)
             .setScissor(viewport)
 	        .endRenderPass()
 	        .end();
 
-        vk::queueSubmit(device().queue(), 1, &waitSemaphore_, 1, &completeSemaphore_, 1, cmdBuf_);
+        semaphores_.wait = swapchain().moveNext();
+        vk::queueSubmit(device().queue(), 1, &semaphores_.wait, 1, &semaphores_.complete, 1, cmdBuf_);
         vk::assertResult(vkQueueWaitIdle(device().queue()));
+        semaphores_.wait = semaphores_.complete;
 
-        waitSemaphore_ = completeSemaphore_;
+        // Render UI
+        {
+            ui_.cmdBuf
+                .begin(false)
+                .beginRenderPass(ui_.renderPass, frameBuffer, canvasWidth, canvasHeight)
+                .setViewport(viewport, 0, 1)
+                .setScissor(viewport);
 
-        swapchain().present(device().queue(), 1, &waitSemaphore_);
+            ImGui_ImplSDL2_NewFrame(window()->sdlWindow());
+            ImGui::NewFrame();
+
+            auto open = true; // never close
+            ImGui::ShowDemoWindow(&open);
+
+            ImGui::Render();
+            ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), ui_.cmdBuf);
+
+            ui_.cmdBuf
+                .endRenderPass()
+                .end();
+
+            vk::queueSubmit(device().queue(), 1, &semaphores_.wait, 1, &semaphores_.complete, 1, ui_.cmdBuf);
+            vk::assertResult(vkQueueWaitIdle(device().queue()));
+            semaphores_.wait = semaphores_.complete;
+        }
+
+        swapchain().present(device().queue(), 1, &semaphores_.wait);
         vk::assertResult(vkQueueWaitIdle(device().queue()));
 	}
 	
