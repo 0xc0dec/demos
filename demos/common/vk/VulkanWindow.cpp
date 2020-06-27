@@ -54,7 +54,7 @@ vk::Window::Window(uint32_t canvasWidth, uint32_t canvasHeight, const char *titl
     }
 
 	instance_ = vk::Resource<VkInstance>{vkDestroyInstance};
-    assertResult(vkCreateInstance(&instanceInfo, nullptr, instance_.cleanRef()));
+    ensure(vkCreateInstance(&instanceInfo, nullptr, instance_.cleanRef()));
 
 #ifdef WINDOWS_APP
     SDL_SysWMinfo wmInfo;
@@ -72,7 +72,7 @@ vk::Window::Window(uint32_t canvasWidth, uint32_t canvasHeight, const char *titl
     surfaceInfo.hwnd = hwnd;
 
     surface_ = vk::Resource<VkSurfaceKHR>{instance_, vkDestroySurfaceKHR};
-    assertResult(vkCreateWin32SurfaceKHR(instance_, &surfaceInfo, nullptr, surface_.cleanRef()));
+    ensure(vkCreateWin32SurfaceKHR(instance_, &surfaceInfo, nullptr, surface_.cleanRef()));
 #endif
 }
 

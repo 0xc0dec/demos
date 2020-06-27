@@ -23,7 +23,7 @@ vk::CmdBuffer::CmdBuffer(const Device &dev):
     allocateInfo.commandBufferCount = 1;
 
     handle_ = Resource<VkCommandBuffer>{dev.handle(), dev.commandPool(), vkFreeCommandBuffers};
-    vk::assertResult(vkAllocateCommandBuffers(dev.handle(), &allocateInfo, &handle_));
+    vk::ensure(vkAllocateCommandBuffers(dev.handle(), &allocateInfo, &handle_));
 }
 
 auto CmdBuffer::beginRenderPass(const RenderPass &pass, VkFramebuffer framebuffer, uint32_t canvasWidth,
@@ -184,7 +184,7 @@ void CmdBuffer::endAndFlush()
 {
     end();
     vk::queueSubmit(device_->queue(), 0, nullptr, 0, nullptr, 1, &handle_);
-    vk::assertResult(vkQueueWaitIdle(device_->queue()));
+    vk::ensure(vkQueueWaitIdle(device_->queue()));
 }
 
 auto CmdBuffer::begin(bool transient) -> CmdBuffer&
@@ -192,11 +192,11 @@ auto CmdBuffer::begin(bool transient) -> CmdBuffer&
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     beginInfo.flags = transient ? VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT : 0;
-    vk::assertResult(vkBeginCommandBuffer(handle_, &beginInfo));
+    vk::ensure(vkBeginCommandBuffer(handle_, &beginInfo));
     return *this;
 }
 
 void CmdBuffer::end() const
 {
-    vk::assertResult(vkEndCommandBuffer(handle_));
+    vk::ensure(vkEndCommandBuffer(handle_));
 }

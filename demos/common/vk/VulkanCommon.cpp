@@ -16,7 +16,7 @@ auto vk::createSemaphore(VkDevice device) -> Resource<VkSemaphore>
     info.flags = 0;
 
     Resource<VkSemaphore> semaphore{device, vkDestroySemaphore};
-    assertResult(vkCreateSemaphore(device, &info, nullptr, semaphore.cleanRef()));
+    ensure(vkCreateSemaphore(device, &info, nullptr, semaphore.cleanRef()));
 
     return semaphore;
 }
@@ -36,7 +36,7 @@ void vk::queueSubmit(VkQueue queue, uint32_t waitSemaphoreCount, const VkSemapho
     info.pSignalSemaphores = signalSemaphores;
     info.commandBufferCount = commandBufferCount;
     info.pCommandBuffers = commandBuffers;
-    assertResult(vkQueueSubmit(queue, 1, &info, VK_NULL_HANDLE));
+    ensure(vkQueueSubmit(queue, 1, &info, VK_NULL_HANDLE));
 }
 
 auto vk::findMemoryType(VkPhysicalDeviceMemoryProperties physicalDeviceMemoryProperties, uint32_t typeBits,
@@ -68,7 +68,7 @@ auto vk::createFrameBuffer(VkDevice device, const std::vector<VkImageView> &atta
     info.layers = 1;
 
     Resource<VkFramebuffer> frameBuffer{device, vkDestroyFramebuffer};
-    assertResult(vkCreateFramebuffer(device, &info, nullptr, frameBuffer.cleanRef()));
+    ensure(vkCreateFramebuffer(device, &info, nullptr, frameBuffer.cleanRef()));
 
     return frameBuffer;
 }
@@ -90,7 +90,7 @@ auto vk::createImageView(VkDevice device, VkFormat format, VkImageViewType type,
     viewInfo.image = image;
 
     Resource<VkImageView> view{device, vkDestroyImageView};
-    assertResult(vkCreateImageView(device, &viewInfo, nullptr, view.cleanRef()));
+    ensure(vkCreateImageView(device, &viewInfo, nullptr, view.cleanRef()));
 
     return view;
 }

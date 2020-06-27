@@ -28,7 +28,7 @@ static auto createImage(VkDevice device, VkFormat format, uint32_t width, uint32
     imageCreateInfo.flags = createFlags;
 
     Resource<VkImage> image{device, vkDestroyImage};
-    vk::assertResult(vkCreateImage(device, &imageCreateInfo, nullptr, image.cleanRef()));
+    vk::ensure(vkCreateImage(device, &imageCreateInfo, nullptr, image.cleanRef()));
 
     return image;
 }
@@ -44,8 +44,8 @@ static auto allocateImageMemory(VkDevice device, VkPhysicalDeviceMemoryPropertie
     allocInfo.memoryTypeIndex = vk::findMemoryType(memProps, memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
     Resource<VkDeviceMemory> memory{device, vkFreeMemory};
-    vk::assertResult(vkAllocateMemory(device, &allocInfo, nullptr, memory.cleanRef()));
-    vk::assertResult(vkBindImageMemory(device, image, memory, 0));
+    vk::ensure(vkAllocateMemory(device, &allocInfo, nullptr, memory.cleanRef()));
+    vk::ensure(vkBindImageMemory(device, image, memory, 0));
 
     return memory;
 }

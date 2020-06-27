@@ -10,11 +10,11 @@
 static auto getSwapchainImages(VkDevice device, VkSwapchainKHR swapchain) -> std::vector<VkImage>
 {
     uint32_t imageCount = 0;
-    vk::assertResult(vkGetSwapchainImagesKHR(device, swapchain, &imageCount, nullptr));
+    vk::ensure(vkGetSwapchainImagesKHR(device, swapchain, &imageCount, nullptr));
     
     std::vector<VkImage> images;
     images.resize(imageCount);
-    vk::assertResult(vkGetSwapchainImagesKHR(device, swapchain, &imageCount, images.data()));
+    vk::ensure(vkGetSwapchainImagesKHR(device, swapchain, &imageCount, images.data()));
 
     return images;
 }
@@ -22,10 +22,10 @@ static auto getSwapchainImages(VkDevice device, VkSwapchainKHR swapchain) -> std
 static auto selectPresentMode(const vk::Device &dev, bool vsync) -> VkPresentModeKHR
 {
     uint32_t presentModeCount = 0;
-    vk::assertResult(vkGetPhysicalDeviceSurfacePresentModesKHR(dev.physical(), dev.surface(), &presentModeCount, nullptr));
+    vk::ensure(vkGetPhysicalDeviceSurfacePresentModesKHR(dev.physical(), dev.surface(), &presentModeCount, nullptr));
 
     std::vector<VkPresentModeKHR> presentModes(presentModeCount);
-    vk::assertResult(vkGetPhysicalDeviceSurfacePresentModesKHR(dev.physical(), dev.surface(), &presentModeCount, presentModes.data()));
+    vk::ensure(vkGetPhysicalDeviceSurfacePresentModesKHR(dev.physical(), dev.surface(), &presentModeCount, presentModes.data()));
 
     auto presentMode = VK_PRESENT_MODE_FIFO_KHR; // "vsync"
 
@@ -49,7 +49,7 @@ static auto selectPresentMode(const vk::Device &dev, bool vsync) -> VkPresentMod
 static auto createSwapchain(const vk::Device &dev, uint32_t width, uint32_t height, bool vsync) -> vk::Resource<VkSwapchainKHR>
 {
     VkSurfaceCapabilitiesKHR capabilities;
-    vk::assertResult(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(dev.physical(), dev.surface(), &capabilities));
+    vk::ensure(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(dev.physical(), dev.surface(), &capabilities));
 
     if (capabilities.currentExtent.width != (std::numeric_limits<uint32_t>::max)())
     {
@@ -89,7 +89,7 @@ static auto createSwapchain(const vk::Device &dev, uint32_t width, uint32_t heig
     swapchainInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
 
     vk::Resource<VkSwapchainKHR> swapchain{dev.handle(), vkDestroySwapchainKHR};
-    vk::assertResult(vkCreateSwapchainKHR(dev.handle(), &swapchainInfo, nullptr, swapchain.cleanRef()));
+    vk::ensure(vkCreateSwapchainKHR(dev.handle(), &swapchainInfo, nullptr, swapchain.cleanRef()));
 
     return swapchain;
 }
@@ -145,7 +145,7 @@ vk::Swapchain::Swapchain(const Device &dev, uint32_t width, uint32_t height, boo
 
 auto vk::Swapchain::moveNext() -> VkSemaphore
 {
-    vk::assertResult(vkAcquireNextImageKHR(device_, swapchain_, UINT64_MAX, presentCompleteSem_, VK_NULL_HANDLE, &currentStep_));
+    vk::ensure(vkAcquireNextImageKHR(device_, swapchain_, UINT64_MAX, presentCompleteSem_, VK_NULL_HANDLE, &currentStep_));
     return presentCompleteSem_;
 }
 
@@ -159,5 +159,5 @@ void vk::Swapchain::present(VkQueue queue, uint32_t waitSemaphoreCount, const Vk
     presentInfo.pImageIndices = &currentStep_;
     presentInfo.pWaitSemaphores = waitSemaphores;
     presentInfo.waitSemaphoreCount = waitSemaphoreCount;
-    vk::assertResult(vkQueuePresentKHR(queue, &presentInfo));
+    vk::ensure(vkQueuePresentKHR(queue, &presentInfo));
 }

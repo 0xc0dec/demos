@@ -56,7 +56,7 @@ vk::Buffer::Buffer(const Device &dev, VkDeviceSize size, VkBufferUsageFlags usag
     bufferInfo.pQueueFamilyIndices = nullptr;
 
     buffer_ = Resource<VkBuffer>{dev.handle(), vkDestroyBuffer};
-    vk::assertResult(vkCreateBuffer(dev.handle(), &bufferInfo, nullptr, buffer_.cleanRef()));
+    vk::ensure(vkCreateBuffer(dev.handle(), &bufferInfo, nullptr, buffer_.cleanRef()));
 
     VkMemoryRequirements memReqs;
     vkGetBufferMemoryRequirements(dev.handle(), buffer_, &memReqs);
@@ -67,14 +67,14 @@ vk::Buffer::Buffer(const Device &dev, VkDeviceSize size, VkBufferUsageFlags usag
     allocInfo.memoryTypeIndex = vk::findMemoryType(dev.physicalMemoryFeatures(), memReqs.memoryTypeBits, memPropertyFlags);
 
     memory_ = Resource<VkDeviceMemory>{dev.handle(), vkFreeMemory};
-    vk::assertResult(vkAllocateMemory(dev.handle(), &allocInfo, nullptr, memory_.cleanRef()));
-    vk::assertResult(vkBindBufferMemory(dev.handle(), buffer_, memory_, 0));
+    vk::ensure(vkAllocateMemory(dev.handle(), &allocInfo, nullptr, memory_.cleanRef()));
+    vk::ensure(vkBindBufferMemory(dev.handle(), buffer_, memory_, 0));
 }
 
 void vk::Buffer::updateAll(const void *newData) const
 {
     void *ptr = nullptr;
-    vk::assertResult(vkMapMemory(device_->handle(), memory_, 0, VK_WHOLE_SIZE, 0, &ptr));
+    vk::ensure(vkMapMemory(device_->handle(), memory_, 0, VK_WHOLE_SIZE, 0, &ptr));
     memcpy(ptr, newData, size_);
     vkUnmapMemory(device_->handle(), memory_);
 }
@@ -82,7 +82,7 @@ void vk::Buffer::updateAll(const void *newData) const
 void vk::Buffer::updatePart(const void *newData, uint32_t offset, uint32_t size) const
 {
     void *ptr = nullptr;
-    vk::assertResult(vkMapMemory(device_->handle(), memory_, offset, VK_WHOLE_SIZE, 0, &ptr));
+    vk::ensure(vkMapMemory(device_->handle(), memory_, offset, VK_WHOLE_SIZE, 0, &ptr));
     memcpy(ptr, newData, size);
     vkUnmapMemory(device_->handle(), memory_);
 }

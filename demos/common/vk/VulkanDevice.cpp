@@ -28,7 +28,7 @@ static auto createDebugCallback(VkInstance instance, PFN_vkDebugReportCallbackEX
     panicIf(!destroy, "Unable to load pointer to vkDestroyDebugReportCallbackEXT");
 
     vk::Resource<VkDebugReportCallbackEXT> result{instance, destroy};
-    vk::assertResult(create(instance, &createInfo, nullptr, result.cleanRef()));
+    vk::ensure(create(instance, &createInfo, nullptr, result.cleanRef()));
 
     return result;
 }
@@ -36,10 +36,10 @@ static auto createDebugCallback(VkInstance instance, PFN_vkDebugReportCallbackEX
 static auto selectSurfaceFormat(VkPhysicalDevice device, VkSurfaceKHR surface) -> std::tuple<VkFormat, VkColorSpaceKHR>
 {
     uint32_t count;
-    vk::assertResult(vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &count, nullptr));
+    vk::ensure(vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &count, nullptr));
 
     std::vector<VkSurfaceFormatKHR> formats(count);
-    vk::assertResult(vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &count, formats.data()));
+    vk::ensure(vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &count, formats.data()));
 
     if (count == 1 && formats[0].format == VK_FORMAT_UNDEFINED)
         return {VK_FORMAT_B8G8R8A8_UNORM, formats[0].colorSpace};
@@ -57,7 +57,7 @@ static auto selectQueueIndex(VkPhysicalDevice device, VkSurfaceKHR surface) -> u
 
     std::vector<VkBool32> presentSupported(count);
     for (uint32_t i = 0; i < count; i++)
-    vk::assertResult(vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupported[i]));
+    vk::ensure(vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupported[i]));
 
     // TODO support for separate rendering and presenting queues
     for (uint32_t i = 0; i < count; i++)
@@ -94,7 +94,7 @@ static auto createDevice(VkPhysicalDevice physicalDevice, uint32_t queueIndex) -
     deviceCreateInfo.ppEnabledExtensionNames = deviceExtensions.data();
 
     vk::Resource<VkDevice> result{vkDestroyDevice};
-    vk::assertResult(vkCreateDevice(physicalDevice, &deviceCreateInfo, nullptr, result.cleanRef()));
+    vk::ensure(vkCreateDevice(physicalDevice, &deviceCreateInfo, nullptr, result.cleanRef()));
 
     return result;
 }
@@ -107,7 +107,7 @@ static auto createCommandPool(VkDevice device, uint32_t queueIndex) -> vk::Resou
     poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
     vk::Resource<VkCommandPool> commandPool{device, vkDestroyCommandPool};
-    vk::assertResult(vkCreateCommandPool(device, &poolInfo, nullptr, commandPool.cleanRef()));
+    vk::ensure(vkCreateCommandPool(device, &poolInfo, nullptr, commandPool.cleanRef()));
 
     return commandPool;
 }
@@ -150,10 +150,10 @@ bool vk::Device::isFormatSupported(VkFormat format, VkFormatFeatureFlags feature
 void vk::Device::selectPhysicalDevice(VkInstance instance)
 {
 	uint32_t gpuCount = 0;
-	assertResult(vkEnumeratePhysicalDevices(instance, &gpuCount, nullptr));
+	ensure(vkEnumeratePhysicalDevices(instance, &gpuCount, nullptr));
 
 	std::vector<VkPhysicalDevice> devices(gpuCount);
-	assertResult(vkEnumeratePhysicalDevices(instance, &gpuCount, devices.data()));
+	ensure(vkEnumeratePhysicalDevices(instance, &gpuCount, devices.data()));
 
 	for (const auto &device: devices)
 	{

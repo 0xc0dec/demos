@@ -29,7 +29,7 @@ namespace vk
     auto makeImagePipelineBarrier(VkImage image, VkImageLayout oldImageLayout, VkImageLayout newImageLayout,
         VkImageSubresourceRange subresourceRange) -> VkImageMemoryBarrier;
 
-    constexpr void assertResult(const VkResult &result)
+    constexpr void ensure(const VkResult &result)
     {
         panicIf(result != VK_SUCCESS, "Vulkan API call failed");
     }

@@ -45,7 +45,7 @@ DescriptorSet::DescriptorSet(VkDevice device, const DescriptorSetConfig &cfg):
     layoutInfo.pBindings = cfg.bindings_.data();
 
     layout_ = Resource<VkDescriptorSetLayout>{device, vkDestroyDescriptorSetLayout};
-    vk::assertResult(vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, layout_.cleanRef()));
+    vk::ensure(vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, layout_.cleanRef()));
 
     std::vector<VkDescriptorPoolSize> sizes;
     for (const auto &s: cfg.sizes_)
@@ -63,7 +63,7 @@ DescriptorSet::DescriptorSet(VkDevice device, const DescriptorSetConfig &cfg):
     poolInfo.maxSets = 1;
 
     pool_ = Resource<VkDescriptorPool>{device, vkDestroyDescriptorPool};
-    vk::assertResult(vkCreateDescriptorPool(device, &poolInfo, nullptr, pool_.cleanRef()));
+    vk::ensure(vkCreateDescriptorPool(device, &poolInfo, nullptr, pool_.cleanRef()));
 
     // Set
     VkDescriptorSetAllocateInfo allocInfo{};
@@ -72,7 +72,7 @@ DescriptorSet::DescriptorSet(VkDevice device, const DescriptorSetConfig &cfg):
     allocInfo.descriptorSetCount = 1;
     allocInfo.pSetLayouts = &layout_;
 
-    vk::assertResult(vkAllocateDescriptorSets(device, &allocInfo, &set_));
+    vk::ensure(vkAllocateDescriptorSets(device, &allocInfo, &set_));
 }
 
 // TODO do updates in batch using single vkUpdateDescriptorSets call

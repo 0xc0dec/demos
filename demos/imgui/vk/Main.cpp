@@ -69,7 +69,7 @@ protected:
             poolInfo.pPoolSizes = poolSizes.data();
 
             ui_.descPool = vk::Resource<VkDescriptorPool>{device(), vkDestroyDescriptorPool};
-            vk::assertResult(vkCreateDescriptorPool(device(), &poolInfo, nullptr, ui_.descPool.cleanRef()));
+            vk::ensure(vkCreateDescriptorPool(device(), &poolInfo, nullptr, ui_.descPool.cleanRef()));
         }
 
         {
@@ -132,7 +132,7 @@ protected:
         vk::queueSubmit(device().queue(), 1, &semaphores_.wait, 1, &semaphores_.complete, 1, cmdBuf_);
 
         swapchain().present(device().queue(), 1, &semaphores_.complete);
-        vk::assertResult(vkQueueWaitIdle(device().queue()));
+        vk::ensure(vkQueueWaitIdle(device().queue()));
 	}
 	
 	void cleanup() override

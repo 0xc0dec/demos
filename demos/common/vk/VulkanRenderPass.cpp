@@ -53,7 +53,7 @@ vk::RenderPass::RenderPass(VkDevice device, const RenderPassConfig &config)
     renderPassInfo.pDependencies = dependencies.data();
 
     pass_ = Resource<VkRenderPass>{device, vkDestroyRenderPass};
-    vk::assertResult(vkCreateRenderPass(device, &renderPassInfo, nullptr, pass_.cleanRef()));
+    vk::ensure(vkCreateRenderPass(device, &renderPassInfo, nullptr, pass_.cleanRef()));
 }
 
 void RenderPass::begin(VkCommandBuffer cmdBuf, VkFramebuffer framebuffer, uint32_t canvasWidth, uint32_t canvasHeight)
