@@ -9,23 +9,23 @@
 
 namespace vk
 {
-    class VulkanPipelineConfig
+    class PipelineConfig
     {
     public:
-        VulkanPipelineConfig(VkShaderModule vertexShader, VkShaderModule fragmentShader);
-        ~VulkanPipelineConfig() = default;
+        PipelineConfig(VkShaderModule vertexShader, VkShaderModule fragmentShader);
+        ~PipelineConfig() = default;
 
-        auto withColorBlendAttachmentCount(uint32_t count) -> VulkanPipelineConfig&;
-        auto withVertexAttribute(uint32_t location, uint32_t binding, VkFormat format, uint32_t offset) -> VulkanPipelineConfig&;
-        auto withVertexBinding(uint32_t binding, uint32_t stride, VkVertexInputRate inputRate) -> VulkanPipelineConfig&;
-        auto withDescriptorSetLayout(VkDescriptorSetLayout layout) -> VulkanPipelineConfig&;
-        auto withFrontFace(VkFrontFace frontFace) -> VulkanPipelineConfig&;
-        auto withCullMode(VkCullModeFlags cullFlags) -> VulkanPipelineConfig&;
-        auto withDepthTest(bool write, bool test) -> VulkanPipelineConfig&;
+        auto withColorBlendAttachmentCount(uint32_t count) -> PipelineConfig&;
+        auto withVertexAttribute(uint32_t location, uint32_t binding, VkFormat format, uint32_t offset) -> PipelineConfig&;
+        auto withVertexBinding(uint32_t binding, uint32_t stride, VkVertexInputRate inputRate) -> PipelineConfig&;
+        auto withDescriptorSetLayout(VkDescriptorSetLayout layout) -> PipelineConfig&;
+        auto withFrontFace(VkFrontFace frontFace) -> PipelineConfig&;
+        auto withCullMode(VkCullModeFlags cullFlags) -> PipelineConfig&;
+        auto withDepthTest(bool write, bool test) -> PipelineConfig&;
         auto withBlend(bool enabled, VkBlendFactor srcColorFactor, VkBlendFactor dstColorFactor,
-            VkBlendFactor srcAlphaFactor, VkBlendFactor dstAlphaFactor) -> VulkanPipelineConfig&;
-        auto withTopology(VkPrimitiveTopology topology) -> VulkanPipelineConfig&;
-        auto withPolygonMode(VkPolygonMode mode) -> VulkanPipelineConfig&;
+            VkBlendFactor srcAlphaFactor, VkBlendFactor dstAlphaFactor) -> PipelineConfig&;
+        auto withTopology(VkPrimitiveTopology topology) -> PipelineConfig&;
+        auto withPolygonMode(VkPolygonMode mode) -> PipelineConfig&;
 
     private:
         friend class Pipeline;
@@ -47,7 +47,7 @@ namespace vk
     {
     public:
         Pipeline() = default;
-        Pipeline(VkDevice device, VkRenderPass renderPass, const VulkanPipelineConfig &config);
+        Pipeline(VkDevice device, VkRenderPass renderPass, const PipelineConfig &config);
         Pipeline(const Pipeline &other) = delete;
         Pipeline(Pipeline &&other) = default;
         ~Pipeline() = default;
@@ -65,31 +65,31 @@ namespace vk
         Resource<VkPipelineLayout> layout_;
     };
 
-    inline auto VulkanPipelineConfig::withTopology(VkPrimitiveTopology topology) -> VulkanPipelineConfig&
+    inline auto PipelineConfig::withTopology(VkPrimitiveTopology topology) -> PipelineConfig&
     {
         this->topology_ = topology;
         return *this;
     }
 
-    inline auto VulkanPipelineConfig::withPolygonMode(VkPolygonMode mode) -> VulkanPipelineConfig&
+    inline auto PipelineConfig::withPolygonMode(VkPolygonMode mode) -> PipelineConfig&
     {
         rasterStateInfo_.polygonMode = mode;
         return *this;
     }
 
-    inline auto VulkanPipelineConfig::withDescriptorSetLayout(VkDescriptorSetLayout layout) -> VulkanPipelineConfig&
+    inline auto PipelineConfig::withDescriptorSetLayout(VkDescriptorSetLayout layout) -> PipelineConfig&
     {
         descSetLayouts_.push_back(layout);
         return *this;
     }
 
-    inline auto VulkanPipelineConfig::withFrontFace(VkFrontFace frontFace) -> VulkanPipelineConfig&
+    inline auto PipelineConfig::withFrontFace(VkFrontFace frontFace) -> PipelineConfig&
     {
         rasterStateInfo_.frontFace = frontFace;
         return *this;
     }
 
-    inline auto VulkanPipelineConfig::withCullMode(VkCullModeFlags cullFlags) -> VulkanPipelineConfig&
+    inline auto PipelineConfig::withCullMode(VkCullModeFlags cullFlags) -> PipelineConfig&
     {
         rasterStateInfo_.cullMode = cullFlags;
         return *this;

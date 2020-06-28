@@ -18,7 +18,7 @@ static auto createShaderStageInfo(bool vertex, VkShaderModule shader, const char
     return info;
 }
 
-vk::Pipeline::Pipeline(VkDevice device, VkRenderPass renderPass, const VulkanPipelineConfig &config)
+vk::Pipeline::Pipeline(VkDevice device, VkRenderPass renderPass, const PipelineConfig &config)
 {
     VkPipelineLayoutCreateInfo layoutInfo{};
     layoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -119,7 +119,7 @@ vk::Pipeline::Pipeline(VkDevice device, VkRenderPass renderPass, const VulkanPip
     vk::ensure(vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, pipeline_.cleanRef()));
 }
 
-vk::VulkanPipelineConfig::VulkanPipelineConfig(VkShaderModule vertexShader, VkShaderModule fragmentShader):
+vk::PipelineConfig::PipelineConfig(VkShaderModule vertexShader, VkShaderModule fragmentShader):
     vs_(vertexShader),
     fs_(fragmentShader),
     rasterStateInfo_{},
@@ -148,7 +148,7 @@ vk::VulkanPipelineConfig::VulkanPipelineConfig(VkShaderModule vertexShader, VkSh
     depthStencilStateInfo_.front = depthStencilStateInfo_.back;
 }
 
-auto vk::VulkanPipelineConfig::withColorBlendAttachmentCount(uint32_t count) -> VulkanPipelineConfig &
+auto vk::PipelineConfig::withColorBlendAttachmentCount(uint32_t count) -> PipelineConfig &
 {
     // TODO More sophisticated once we start using blend state
 
@@ -167,7 +167,7 @@ auto vk::VulkanPipelineConfig::withColorBlendAttachmentCount(uint32_t count) -> 
     return *this;
 }
 
-auto vk::VulkanPipelineConfig::withVertexAttribute(uint32_t location, uint32_t binding, VkFormat format, uint32_t offset) -> VulkanPipelineConfig&
+auto vk::PipelineConfig::withVertexAttribute(uint32_t location, uint32_t binding, VkFormat format, uint32_t offset) -> PipelineConfig&
 {
     VkVertexInputAttributeDescription desc{};
     desc.location = location;
@@ -178,7 +178,7 @@ auto vk::VulkanPipelineConfig::withVertexAttribute(uint32_t location, uint32_t b
     return *this;
 }
 
-auto vk::VulkanPipelineConfig::withVertexBinding(uint32_t binding, uint32_t stride, VkVertexInputRate inputRate) -> VulkanPipelineConfig&
+auto vk::PipelineConfig::withVertexBinding(uint32_t binding, uint32_t stride, VkVertexInputRate inputRate) -> PipelineConfig&
 {
     VkVertexInputBindingDescription desc{};
     desc.binding = binding;
@@ -188,16 +188,16 @@ auto vk::VulkanPipelineConfig::withVertexBinding(uint32_t binding, uint32_t stri
     return *this;
 }
 
-auto vk::VulkanPipelineConfig::withDepthTest(bool write, bool test) -> VulkanPipelineConfig&
+auto vk::PipelineConfig::withDepthTest(bool write, bool test) -> PipelineConfig&
 {
     depthStencilStateInfo_.depthWriteEnable = write;
     depthStencilStateInfo_.depthTestEnable = test;
     return *this;
 }
 
-auto vk::VulkanPipelineConfig::withBlend(bool enabled,
+auto vk::PipelineConfig::withBlend(bool enabled,
     VkBlendFactor srcColorFactor, VkBlendFactor dstColorFactor,
-    VkBlendFactor srcAlphaFactor, VkBlendFactor dstAlphaFactor) -> VulkanPipelineConfig&
+    VkBlendFactor srcAlphaFactor, VkBlendFactor dstAlphaFactor) -> PipelineConfig&
 {
     // TODO Better
     for (auto &state: colorBlendAttachmentStates_)
