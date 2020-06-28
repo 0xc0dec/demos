@@ -101,8 +101,6 @@ protected:
 	
 	void render() override
 	{
-        const auto frameBuffer = swapchain().currentFrameBuffer();
-        const auto &renderPass = swapchain().renderPass();
         const auto canvasWidth = window()->canvasWidth();
         const auto canvasHeight = window()->canvasHeight();
 
@@ -111,7 +109,7 @@ protected:
         const glm::vec4 viewport{0, 0, canvasWidth, canvasHeight};
 
         cmdBuf_.begin(false)
-            .beginRenderPass(renderPass, frameBuffer, canvasWidth, canvasHeight)
+            .beginRenderPass(swapchain().renderPass(), swapchain().currentFrameBuffer(), canvasWidth, canvasHeight)
             .clearColorAttachment(0, clearValue, clearRect)
             .setViewport(viewport, 0, 1)
             .setScissor(viewport);
