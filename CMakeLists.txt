@@ -37,9 +37,15 @@ function(set_default_includes TARGET)
         "${CMAKE_SOURCE_DIR}/vendor/stb_image/2.15"
         "${CMAKE_SOURCE_DIR}/vendor/glm/0.9.8.4"
         "${CMAKE_SOURCE_DIR}/vendor/imgui"
-        "${CMAKE_SOURCE_DIR}/vendor/vulkan/include"
-        "${CMAKE_SOURCE_DIR}/vendor/vulkan/include/vulkan"
     )
+
+    if (WIN32)
+        find_package(Vulkan REQUIRED)
+        target_include_directories(${TARGET} PRIVATE
+            ${Vulkan_INCLUDE_DIRS}
+            "${Vulkan_INCLUDE_DIRS}/vulkan"
+        )
+    endif()
 endfunction()
 
 function(add_app TARGET SOURCES)

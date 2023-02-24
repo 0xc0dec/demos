@@ -22,20 +22,20 @@ target_include_directories(Vendor PRIVATE
     "glew/1.13/include"
     "SDL/2.0.12/include"
     "imgui"
-    "vulkan/include"
-    "vulkan/include/vulkan"
 )
 
 set_target_properties(Vendor PROPERTIES FOLDER vendor)
 
 if (WIN32)
-    find_library(DEMOS_VULKAN_LIB
-        NAMES vulkan-1
-        HINTS "vulkan/lib"
+    find_package(Vulkan REQUIRED)
+
+    target_include_directories(Vendor PRIVATE
+        ${Vulkan_INCLUDE_DIRS}
+        "${Vulkan_INCLUDE_DIRS}/vulkan"
     )
 
     set(DEMOS_VENDOR_PLATFORM_LIBS
-        ${DEMOS_VULKAN_LIB}
+        ${Vulkan_LIBRARIES}
         winmm.lib
         imm32.lib
         version.lib
