@@ -6,6 +6,7 @@ There are no complex abstractions aka "engine", but a small library of shared co
 The goal is to keep things easy to understand while taking away as much boilerplate stuff as possible.
 
 # Building and running
+* Install Vulkan SDK. Make sure the VULKAN_SDK environment variable is set.
 * `cd build`.
 * `cmake -G "Visual Studio 16 2019" -A x64 ..` (or run a build script from the folder, e.g. `gen-msvc-2019-x64.cmd`).
 * Build using the generated IDE files.
