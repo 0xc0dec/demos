@@ -33,7 +33,7 @@ vk::Window::Window(uint32_t canvasWidth, uint32_t canvasHeight, const char *titl
     };
 
     std::vector<const char*> enabledLayers {
-        "VK_LAYER_LUNARG_standard_validation",
+        "VK_LAYER_KHRONOS_validation",
     };
 
 	VkInstanceCreateInfo instanceInfo {};
