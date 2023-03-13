@@ -3,7 +3,7 @@ Graphics demos made for learning and playing around with. The code is (hopefully
 most dependencies are included for easier building.
 
 There are no complex abstractions aka "engine", but a small library of shared code is still used.
-The goal is to keep things easy to understand while taking away as much boilerplate stuff as possible.
+The goal is to keep things easy to understand while taking away as much boilerplate code as possible.
 
 All demos are intended to run on Windows and have not been tested on other systems.
 
