@@ -1,9 +1,9 @@
 # About
-Graphics demos made for learning and playing around with. The code is (hopefully) clean and self-documented,
+Graphics demos made for playing around and learning. The code is (hopefully) clean and self-documented,
 most dependencies are included for easier building.
 
-There are no complex abstractions aka "engine", but a small library of shared code is still used.
-The goal is to keep things easy to understand while taking away as much boilerplate code as possible.
+There are no complex abstractions aka "engine", however a small library of shared code is still used.
+The goal is to keep things easy to understand while taking away some of the boilerplate.
 
 All demos are intended to run on Windows and have not been tested on other systems.
 
