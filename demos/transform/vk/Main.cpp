@@ -14,9 +14,9 @@
 class App final : public vk::AppBase
 {
 public:
-	App(): vk::AppBase(1366, 768, false)
-	{
-	}
+    App(): vk::AppBase(1366, 768, false)
+    {
+    }
 
 private:
     vk::CmdBuffer cmdBuf_;
@@ -27,26 +27,26 @@ private:
         VkSemaphore wait = nullptr;
     } semaphores_;
 
-	Camera camera_;
-	Transform root_;
-	Transform t1_, t2_, t3_;
+    Camera camera_;
+    Transform root_;
+    Transform t1_, t2_, t3_;
 
-	void init() override
-	{
+    void init() override
+    {
         cmdBuf_ = vk::CmdBuffer(device());
         semaphores_.complete = vk::createSemaphore(device());
-	}
+    }
 
-	void render() override
-	{
-		applySpectator(camera_.transform(), *window());
-		
-		const auto dt = window()->timeDelta();
-		const auto deltaAngle = glm::radians(100 * dt);
-		root_.rotate({0, 1, 0}, deltaAngle, TransformSpace::World);
-		t1_.rotate({0, 0, 1}, deltaAngle, TransformSpace::Self);
-		t2_.rotate({0, 0, 1}, deltaAngle, TransformSpace::Self);
-		t3_.rotate({0, 1, 0}, deltaAngle, TransformSpace::Parent);
+    void render() override
+    {
+        applySpectator(camera_.transform(), *window());
+        
+        const auto dt = window()->timeDelta();
+        const auto deltaAngle = glm::radians(100 * dt);
+        root_.rotate({0, 1, 0}, deltaAngle, TransformSpace::World);
+        t1_.rotate({0, 0, 1}, deltaAngle, TransformSpace::Self);
+        t2_.rotate({0, 0, 1}, deltaAngle, TransformSpace::Self);
+        t3_.rotate({0, 1, 0}, deltaAngle, TransformSpace::Parent);
 
         const auto canvasWidth = window()->canvasWidth();
         const auto canvasHeight = window()->canvasHeight();
@@ -68,15 +68,15 @@ private:
 
         swapchain().present(device().queue(), 1, &semaphores_.complete);
         vk::ensure(vkQueueWaitIdle(device().queue()));
-	}
+    }
 
-	void cleanup() override
-	{
-	}
+    void cleanup() override
+    {
+    }
 };
 
 int main()
 {
-	App().run();
-	return 0;
+    App().run();
+    return 0;
 }
