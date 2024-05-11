@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #include "VulkanRenderPass.h"
 #include <array>
@@ -38,7 +38,7 @@ vk::RenderPass::RenderPass(VkDevice device, const RenderPassConfig &config)
     dependencies[0].srcAccessMask = 0;
     dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
     dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT |
-        VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+                                    VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
     dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
     VkRenderPassCreateInfo renderPassInfo{};
@@ -78,13 +78,12 @@ void RenderPass::end(VkCommandBuffer cmdBuf)
     vkCmdEndRenderPass(cmdBuf);
 }
 
-RenderPassConfig::RenderPassConfig():
-    depthAttachmentRef_{0, VK_IMAGE_LAYOUT_UNDEFINED}
+RenderPassConfig::RenderPassConfig() : depthAttachmentRef_{0, VK_IMAGE_LAYOUT_UNDEFINED}
 {
 }
 
 auto RenderPassConfig::addColorAttachment(VkFormat format, VkImageLayout finalLayout)
-    -> RenderPassConfig&
+    -> RenderPassConfig &
 {
     VkAttachmentDescription desc{};
     desc.format = format;
@@ -106,7 +105,7 @@ auto RenderPassConfig::addColorAttachment(VkFormat format, VkImageLayout finalLa
     return *this;
 }
 
-auto RenderPassConfig::setDepthAttachment(VkFormat format) -> RenderPassConfig&
+auto RenderPassConfig::setDepthAttachment(VkFormat format) -> RenderPassConfig &
 {
     VkAttachmentDescription desc{};
     desc.format = format;

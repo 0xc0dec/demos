@@ -1,14 +1,14 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #include "VulkanDevice.h"
 #include "VulkanCommon.h"
 #include <iostream>
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallbackFunc(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objType,
-    uint64_t obj, size_t location, int code, const char *layerPrefix, const char *msg, void *userData)
+                                                        uint64_t obj, size_t location, int code, const char *layerPrefix, const char *msg, void *userData)
 {
     std::cout << msg << std::endl;
     return VK_FALSE;
@@ -57,7 +57,7 @@ static auto selectQueueIndex(VkPhysicalDevice device, VkSurfaceKHR surface) -> u
 
     std::vector<VkBool32> presentSupported(count);
     for (uint32_t i = 0; i < count; i++)
-    vk::ensure(vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupported[i]));
+        vk::ensure(vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupported[i]));
 
     // TODO support for separate rendering and presenting queues
     for (uint32_t i = 0; i < count; i++)
@@ -67,7 +67,7 @@ static auto selectQueueIndex(VkPhysicalDevice device, VkSurfaceKHR surface) -> u
     }
 
     panic("Failed to find queue index");
-	
+
     return 0;
 }
 
@@ -80,7 +80,7 @@ static auto createDevice(VkPhysicalDevice physicalDevice, uint32_t queueIndex) -
     queueCreateInfo.queueCount = 1;
     queueCreateInfo.pQueuePriorities = queuePriorities.data();
 
-    std::vector<const char*> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+    std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
     VkPhysicalDeviceFeatures enabledFeatures{};
     enabledFeatures.samplerAnisotropy = true;
@@ -112,89 +112,87 @@ static auto createCommandPool(VkDevice device, uint32_t queueIndex) -> vk::Resou
     return commandPool;
 }
 
-vk::Device::Device(VkInstance instance, VkSurfaceKHR surface):
-    surface_(surface)
+vk::Device::Device(VkInstance instance, VkSurfaceKHR surface) : surface_(surface)
 {
 #ifdef DEMOS_DEBUG
     debugCallback_ = createDebugCallback(instance, debugCallbackFunc);
 #endif
 
-	selectPhysicalDevice(instance);
+    selectPhysicalDevice(instance);
 
-	detectFormatSupport(VK_FORMAT_R8_UNORM);
-	detectFormatSupport(VK_FORMAT_R8G8B8A8_UNORM);
-	detectFormatSupport(VK_FORMAT_R16G16B16A16_SFLOAT);
-	detectFormatSupport(VK_FORMAT_D32_SFLOAT);
-	detectFormatSupport(VK_FORMAT_D32_SFLOAT_S8_UINT);
-	detectFormatSupport(VK_FORMAT_D24_UNORM_S8_UINT);
-	detectFormatSupport(VK_FORMAT_D16_UNORM_S8_UINT);
-	detectFormatSupport(VK_FORMAT_D16_UNORM);
+    detectFormatSupport(VK_FORMAT_R8_UNORM);
+    detectFormatSupport(VK_FORMAT_R8G8B8A8_UNORM);
+    detectFormatSupport(VK_FORMAT_R16G16B16A16_SFLOAT);
+    detectFormatSupport(VK_FORMAT_D32_SFLOAT);
+    detectFormatSupport(VK_FORMAT_D32_SFLOAT_S8_UINT);
+    detectFormatSupport(VK_FORMAT_D24_UNORM_S8_UINT);
+    detectFormatSupport(VK_FORMAT_D16_UNORM_S8_UINT);
+    detectFormatSupport(VK_FORMAT_D16_UNORM);
 
-	auto surfaceFormats = ::selectSurfaceFormat(physical_, surface);
-	colorFormat_ = std::get<0>(surfaceFormats);
-	colorSpace_ = std::get<1>(surfaceFormats);
-	depthFormat_ = selectDepthFormat();
+    auto surfaceFormats = ::selectSurfaceFormat(physical_, surface);
+    colorFormat_ = std::get<0>(surfaceFormats);
+    colorSpace_ = std::get<1>(surfaceFormats);
+    depthFormat_ = selectDepthFormat();
 
-	queueIndex_ = selectQueueIndex(physical_, surface);
-	handle_ = createDevice(physical_, queueIndex_);
-	vkGetDeviceQueue(handle_, queueIndex_, 0, &queue_);
+    queueIndex_ = selectQueueIndex(physical_, surface);
+    handle_ = createDevice(physical_, queueIndex_);
+    vkGetDeviceQueue(handle_, queueIndex_, 0, &queue_);
 
-	commandPool_ = createCommandPool(handle_, queueIndex_);
+    commandPool_ = createCommandPool(handle_, queueIndex_);
 }
 
 bool vk::Device::isFormatSupported(VkFormat format, VkFormatFeatureFlags features) const
 {
-	return supportedFormats_.count(format) && (supportedFormats_.at(format) & features) == features;
+    return supportedFormats_.count(format) && (supportedFormats_.at(format) & features) == features;
 }
 
 void vk::Device::selectPhysicalDevice(VkInstance instance)
 {
-	uint32_t gpuCount = 0;
-	ensure(vkEnumeratePhysicalDevices(instance, &gpuCount, nullptr));
+    uint32_t gpuCount = 0;
+    ensure(vkEnumeratePhysicalDevices(instance, &gpuCount, nullptr));
 
-	std::vector<VkPhysicalDevice> devices(gpuCount);
-	ensure(vkEnumeratePhysicalDevices(instance, &gpuCount, devices.data()));
+    std::vector<VkPhysicalDevice> devices(gpuCount);
+    ensure(vkEnumeratePhysicalDevices(instance, &gpuCount, devices.data()));
 
-	for (const auto &device: devices)
-	{
-		vkGetPhysicalDeviceProperties(device, &physicalProperties_);
-		vkGetPhysicalDeviceFeatures(device, &physicalFeatures_);
-		vkGetPhysicalDeviceMemoryProperties(device, &physicalMemoryFeatures_);
+    for (const auto &device : devices)
+    {
+        vkGetPhysicalDeviceProperties(device, &physicalProperties_);
+        vkGetPhysicalDeviceFeatures(device, &physicalFeatures_);
+        vkGetPhysicalDeviceMemoryProperties(device, &physicalMemoryFeatures_);
 
-		physical_ = device;
+        physical_ = device;
 
-		// Select discrete GPU if present, otherwise any other
-		if (physicalProperties_.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
-			return;
-	}
+        // Select discrete GPU if present, otherwise any other
+        if (physicalProperties_.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
+            return;
+    }
 }
 
 void vk::Device::detectFormatSupport(VkFormat format)
 {
-	VkFormatProperties formatProps;
-	vkGetPhysicalDeviceFormatProperties(physical_, format, &formatProps);
-	if (formatProps.optimalTilingFeatures)
-		supportedFormats_[format] = formatProps.optimalTilingFeatures;
+    VkFormatProperties formatProps;
+    vkGetPhysicalDeviceFormatProperties(physical_, format, &formatProps);
+    if (formatProps.optimalTilingFeatures)
+        supportedFormats_[format] = formatProps.optimalTilingFeatures;
 }
 
 auto vk::Device::selectDepthFormat() const -> VkFormat
 {
-	std::vector<VkFormat> depthFormats =
-	{
-		VK_FORMAT_D32_SFLOAT_S8_UINT,
-		VK_FORMAT_D32_SFLOAT,
-		VK_FORMAT_D24_UNORM_S8_UINT,
-		VK_FORMAT_D16_UNORM_S8_UINT,
-		VK_FORMAT_D16_UNORM
-	};
+    std::vector<VkFormat> depthFormats =
+        {
+            VK_FORMAT_D32_SFLOAT_S8_UINT,
+            VK_FORMAT_D32_SFLOAT,
+            VK_FORMAT_D24_UNORM_S8_UINT,
+            VK_FORMAT_D16_UNORM_S8_UINT,
+            VK_FORMAT_D16_UNORM};
 
-	for (auto &format: depthFormats)
-	{
-		if (isFormatSupported(format, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT))
-			return format;
-	}
+    for (auto &format : depthFormats)
+    {
+        if (isFormatSupported(format, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT))
+            return format;
+    }
 
-	panic("Failed to pick depth format");
+    panic("Failed to pick depth format");
 
-	return VK_FORMAT_UNDEFINED;
+    return VK_FORMAT_UNDEFINED;
 }

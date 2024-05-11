@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #include "VulkanBuffer.h"
 #include "VulkanCmdBuffer.h"
@@ -11,8 +11,8 @@
 auto vk::Buffer::staging(const Device &dev, VkDeviceSize size, const void *initialData) -> Buffer
 {
     auto buffer = Buffer(dev, size,
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+                         VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+                         VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
     if (initialData)
         buffer.updateAll(initialData);
@@ -23,13 +23,13 @@ auto vk::Buffer::staging(const Device &dev, VkDeviceSize size, const void *initi
 auto vk::Buffer::uniformHostVisible(const Device &dev, VkDeviceSize size) -> Buffer
 {
     return Buffer(dev, size,
-        VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+                  VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+                  VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 }
 
 auto vk::Buffer::deviceLocal(const Device &dev, VkDeviceSize size, VkBufferUsageFlags usageFlags, const void *data) -> Buffer
 {
-	const auto stagingBuffer = staging(dev, size, data);
+    const auto stagingBuffer = staging(dev, size, data);
     auto buffer = Buffer(dev, size, VK_BUFFER_USAGE_TRANSFER_DST_BIT | usageFlags, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
     stagingBuffer.transferTo(buffer);
     return buffer;
@@ -42,11 +42,10 @@ auto vk::Buffer::hostVisible(const Device &dev, VkDeviceSize size, VkBufferUsage
     return buffer;
 }
 
-vk::Buffer::Buffer(const Device &dev, VkDeviceSize size, VkBufferUsageFlags usageFlags, VkMemoryPropertyFlags memPropertyFlags):
-    device_(&dev),
-    size_(size)
+vk::Buffer::Buffer(const Device &dev, VkDeviceSize size, VkBufferUsageFlags usageFlags, VkMemoryPropertyFlags memPropertyFlags) : device_(&dev),
+                                                                                                                                  size_(size)
 {
-    VkBufferCreateInfo bufferInfo {};
+    VkBufferCreateInfo bufferInfo{};
     bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
     bufferInfo.size = size;
     bufferInfo.usage = usageFlags;
@@ -61,7 +60,7 @@ vk::Buffer::Buffer(const Device &dev, VkDeviceSize size, VkBufferUsageFlags usag
     VkMemoryRequirements memReqs;
     vkGetBufferMemoryRequirements(dev.handle(), buffer_, &memReqs);
 
-    VkMemoryAllocateInfo allocInfo {};
+    VkMemoryAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
     allocInfo.allocationSize = memReqs.size;
     allocInfo.memoryTypeIndex = vk::findMemoryType(dev.physicalMemoryFeatures(), memReqs.memoryTypeBits, memPropertyFlags);

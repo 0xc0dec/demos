@@ -1,16 +1,16 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT license
+ */
 
 #pragma once
 
 struct Shaders
 {
-	struct
-	{
-		const char *font =
-			R"(
+    struct
+    {
+        const char *font =
+            R"(
                 #version 330 core
 
                 in vec4 position;
@@ -26,12 +26,12 @@ struct Shaders
                     uv0 = texCoord0;
                 }
             )";
-	} vertex;
+    } vertex;
 
-	struct
-	{
-		const char *font =
-			R"(
+    struct
+    {
+        const char *font =
+            R"(
                 #version 330 core
 
                 uniform sampler2D mainTex;
@@ -45,5 +45,5 @@ struct Shaders
                     fragColor = vec4(c.r, c.r, c.r, c.r);
                 }
             )";
-	} fragment;
+    } fragment;
 };

@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #pragma once
 
@@ -22,19 +22,19 @@ namespace vk
         Swapchain(Swapchain &&other) = default;
         ~Swapchain() = default;
 
-        auto operator=(const Swapchain &other) -> Swapchain& = delete;
-        auto operator=(Swapchain &&other) -> Swapchain& = default;
+        auto operator=(const Swapchain &other) -> Swapchain & = delete;
+        auto operator=(Swapchain &&other) -> Swapchain & = default;
 
         operator VkSwapchainKHR() { return swapchain_; }
         operator VkSwapchainKHR() const { return swapchain_; }
 
         auto currentFrameBuffer() -> VkFramebuffer { return steps_[currentStep_].framebuffer; }
-        auto renderPass() -> RenderPass& { return renderPass_; }
+        auto renderPass() -> RenderPass & { return renderPass_; }
 
         auto moveNext() -> VkSemaphore;
         void present(VkQueue queue, uint32_t waitSemaphoreCount, const VkSemaphore *waitSemaphores);
 
-    	auto imageCount() const -> uint32_t { return steps_.size(); }
+        auto imageCount() const -> uint32_t { return steps_.size(); }
 
     private:
         struct Step

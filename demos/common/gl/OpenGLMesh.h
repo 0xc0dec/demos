@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #pragma once
 
@@ -14,8 +14,8 @@ namespace gl
     class Mesh
     {
     public:
-        static auto quad()->std::shared_ptr<Mesh>;
-        static auto box()->std::shared_ptr<Mesh>;
+        static auto quad() -> std::shared_ptr<Mesh>;
+        static auto box() -> std::shared_ptr<Mesh>;
 
         // Build from vertex positions and texture coordinates
         Mesh(const std::vector<float> &positions, const std::vector<float> &uvs);

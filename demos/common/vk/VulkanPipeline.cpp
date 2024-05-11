@@ -1,11 +1,11 @@
-/* 
- * Copyright (c) Aleksey Fedotov 
- * MIT license 
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
  */
 
 #include "VulkanPipeline.h"
 
-static auto createShaderStageInfo(bool vertex, VkShaderModule shader, const char* entryPoint) -> VkPipelineShaderStageCreateInfo
+static auto createShaderStageInfo(bool vertex, VkShaderModule shader, const char *entryPoint) -> VkPipelineShaderStageCreateInfo
 {
     VkPipelineShaderStageCreateInfo info{};
     info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -86,7 +86,7 @@ vk::Pipeline::Pipeline(VkDevice device, VkRenderPass renderPass, const PipelineC
     viewportState.scissorCount = 1;
     viewportState.pScissors = nullptr;
 
-    std::vector<VkDynamicState> dynamicStates = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
+    std::vector<VkDynamicState> dynamicStates = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
     VkPipelineDynamicStateCreateInfo dynamicState{};
     dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
     dynamicState.pNext = nullptr;
@@ -119,11 +119,10 @@ vk::Pipeline::Pipeline(VkDevice device, VkRenderPass renderPass, const PipelineC
     vk::ensure(vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, pipeline_.cleanRef()));
 }
 
-vk::PipelineConfig::PipelineConfig(VkShaderModule vertexShader, VkShaderModule fragmentShader):
-    vs_(vertexShader),
-    fs_(fragmentShader),
-    rasterStateInfo_{},
-    depthStencilStateInfo_{}
+vk::PipelineConfig::PipelineConfig(VkShaderModule vertexShader, VkShaderModule fragmentShader) : vs_(vertexShader),
+                                                                                                 fs_(fragmentShader),
+                                                                                                 rasterStateInfo_{},
+                                                                                                 depthStencilStateInfo_{}
 {
     rasterStateInfo_.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
     rasterStateInfo_.pNext = nullptr;
@@ -167,7 +166,7 @@ auto vk::PipelineConfig::withColorBlendAttachmentCount(uint32_t count) -> Pipeli
     return *this;
 }
 
-auto vk::PipelineConfig::withVertexAttribute(uint32_t location, uint32_t binding, VkFormat format, uint32_t offset) -> PipelineConfig&
+auto vk::PipelineConfig::withVertexAttribute(uint32_t location, uint32_t binding, VkFormat format, uint32_t offset) -> PipelineConfig &
 {
     VkVertexInputAttributeDescription desc{};
     desc.location = location;
@@ -178,7 +177,7 @@ auto vk::PipelineConfig::withVertexAttribute(uint32_t location, uint32_t binding
     return *this;
 }
 
-auto vk::PipelineConfig::withVertexBinding(uint32_t binding, uint32_t stride, VkVertexInputRate inputRate) -> PipelineConfig&
+auto vk::PipelineConfig::withVertexBinding(uint32_t binding, uint32_t stride, VkVertexInputRate inputRate) -> PipelineConfig &
 {
     VkVertexInputBindingDescription desc{};
     desc.binding = binding;
@@ -188,7 +187,7 @@ auto vk::PipelineConfig::withVertexBinding(uint32_t binding, uint32_t stride, Vk
     return *this;
 }
 
-auto vk::PipelineConfig::withDepthTest(bool write, bool test) -> PipelineConfig&
+auto vk::PipelineConfig::withDepthTest(bool write, bool test) -> PipelineConfig &
 {
     depthStencilStateInfo_.depthWriteEnable = write;
     depthStencilStateInfo_.depthTestEnable = test;
@@ -196,11 +195,11 @@ auto vk::PipelineConfig::withDepthTest(bool write, bool test) -> PipelineConfig&
 }
 
 auto vk::PipelineConfig::withBlend(bool enabled,
-    VkBlendFactor srcColorFactor, VkBlendFactor dstColorFactor,
-    VkBlendFactor srcAlphaFactor, VkBlendFactor dstAlphaFactor) -> PipelineConfig&
+                                   VkBlendFactor srcColorFactor, VkBlendFactor dstColorFactor,
+                                   VkBlendFactor srcAlphaFactor, VkBlendFactor dstAlphaFactor) -> PipelineConfig &
 {
     // TODO Better
-    for (auto &state: colorBlendAttachmentStates_)
+    for (auto &state : colorBlendAttachmentStates_)
     {
         state.blendEnable = enabled ? VK_TRUE : VK_FALSE;
         state.srcColorBlendFactor = srcColorFactor;

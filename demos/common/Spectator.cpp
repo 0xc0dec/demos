@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #include "Spectator.h"
 #include "Transform.h"
@@ -11,8 +11,8 @@
 // Moves the given transform as a "spectator", i.e. flying first-person camera.
 void applySpectator(Transform &transform, Window &window, float mouseSensitivity, float movementSpeed)
 {
-	const auto mouseMotion = window.mouseMotion();
-	const auto dt = window.timeDelta();
+    const auto mouseMotion = window.mouseMotion();
+    const auto dt = window.timeDelta();
 
     if (window.isMouseButtonDown(SDL_BUTTON_RIGHT, true))
         window.setCursorCaptured(true);
@@ -26,7 +26,7 @@ void applySpectator(Transform &transform, Window &window, float mouseSensitivity
 
         if (mouseMotion.y != 0)
         {
-	        const auto angleToUp = glm::angle(glm::normalize(transform.localForwardDir()), glm::vec3(0, 1, 0));
+            const auto angleToUp = glm::angle(glm::normalize(transform.localForwardDir()), glm::vec3(0, 1, 0));
             auto delta = mouseSensitivity * -mouseMotion.y;
             if (delta > 0)
             {

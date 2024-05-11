@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #pragma once
 
@@ -12,10 +12,10 @@
 class Camera final
 {
 public:
-    auto transform() -> Transform& { return transform_; }
+    auto transform() -> Transform & { return transform_; }
 
-    auto setPerspective(float fov, float aspectRatio, float nearClip, float farClip) -> Camera&;
-    auto setOrthographic(float width, float height, float nearClip, float farClip) -> Camera&;
+    auto setPerspective(float fov, float aspectRatio, float nearClip, float farClip) -> Camera &;
+    auto setOrthographic(float width, float height, float nearClip, float farClip) -> Camera &;
 
     auto viewMatrix() const -> glm::mat4 { return glm::inverse(transform_.worldMatrix()); }
     auto invViewMatrix() const -> glm::mat4 { return glm::inverse(viewMatrix()); }
@@ -31,6 +31,6 @@ protected:
     float orthoHeight_ = 1;
     float nearClip_ = 1;
     float farClip_ = 100;
-    
+
     Transform transform_;
 };

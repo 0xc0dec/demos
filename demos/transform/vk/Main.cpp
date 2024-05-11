@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #include "common/Camera.h"
 #include "common/Spectator.h"
@@ -14,7 +14,7 @@
 class App final : public vk::AppBase
 {
 public:
-    App(): vk::AppBase(1366, 768, false)
+    App() : vk::AppBase(1366, 768, false)
     {
     }
 
@@ -40,7 +40,7 @@ private:
     void render() override
     {
         applySpectator(camera_.transform(), *window());
-        
+
         const auto dt = window()->timeDelta();
         const auto deltaAngle = glm::radians(100 * dt);
         root_.rotate({0, 1, 0}, deltaAngle, TransformSpace::World);

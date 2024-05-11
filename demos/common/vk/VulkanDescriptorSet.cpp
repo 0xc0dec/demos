@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #include "VulkanDescriptorSet.h"
 
@@ -35,11 +35,10 @@ void DescriptorSetConfig::addSampler(uint32_t binding)
     sizes_[VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER].descriptorCount++;
 }
 
-DescriptorSet::DescriptorSet(VkDevice device, const DescriptorSetConfig &cfg):
-    device_(device)
+DescriptorSet::DescriptorSet(VkDevice device, const DescriptorSetConfig &cfg) : device_(device)
 {
     // Layout
-    VkDescriptorSetLayoutCreateInfo layoutInfo {};
+    VkDescriptorSetLayoutCreateInfo layoutInfo{};
     layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
     layoutInfo.bindingCount = cfg.bindings_.size();
     layoutInfo.pBindings = cfg.bindings_.data();
@@ -48,7 +47,7 @@ DescriptorSet::DescriptorSet(VkDevice device, const DescriptorSetConfig &cfg):
     vk::ensure(vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, layout_.cleanRef()));
 
     std::vector<VkDescriptorPoolSize> sizes;
-    for (const auto &s: cfg.sizes_)
+    for (const auto &s : cfg.sizes_)
     {
         if (s.second.descriptorCount > 0)
             sizes.push_back(s.second);

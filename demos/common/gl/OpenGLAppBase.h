@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #pragma once
 
@@ -10,13 +10,13 @@
 
 namespace gl
 {
-	class AppBase: public ::AppBase
-	{
-	public:
-		AppBase(uint32_t canvasWidth, uint32_t canvasHeight, bool fullScreen);
+    class AppBase : public ::AppBase
+    {
+    public:
+        AppBase(uint32_t canvasWidth, uint32_t canvasHeight, bool fullScreen);
 
-	protected:
-		// TODO avoid casting
-		auto window() const -> gl::Window* { return dynamic_cast<gl::Window*>(window_.get()); }
-	};
+    protected:
+        // TODO avoid casting
+        auto window() const -> gl::Window * { return dynamic_cast<gl::Window *>(window_.get()); }
+    };
 }

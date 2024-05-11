@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #include "Transform.h"
 #include "Camera.h"
@@ -14,7 +14,7 @@ static const uint32_t WORLD_BIT = 1 << 1;
 static const uint32_t INV_TRANSPOSED_WORLD_BIT = 1 << 2;
 static const uint32_t ALL_BIT = LOCAL_BIT | WORLD_BIT | INV_TRANSPOSED_WORLD_BIT;
 
-auto Transform::setParent(Transform *parent) -> Transform&
+auto Transform::setParent(Transform *parent) -> Transform &
 {
     if (parent != this && parent != this->parent_)
     {
@@ -32,7 +32,7 @@ auto Transform::setParent(Transform *parent) -> Transform&
     return *this;
 }
 
-auto Transform::clearChildren() -> Transform&
+auto Transform::clearChildren() -> Transform &
 {
     while (!children_.empty())
     {
@@ -48,8 +48,8 @@ auto Transform::matrix() const -> glm::mat4
     if (dirtyFlags_ & LOCAL_BIT)
     {
         matrix_ = glm::translate(glm::mat4(1.0f), localPosition_) *
-                 glm::mat4_cast(localRotation_) *
-                 glm::scale(glm::mat4(1.0f), localScale_);
+                  glm::mat4_cast(localRotation_) *
+                  glm::scale(glm::mat4(1.0f), localScale_);
         dirtyFlags_ &= ~LOCAL_BIT;
     }
 
@@ -97,33 +97,33 @@ auto Transform::invTransposedWorldViewMatrix(const Camera &camera) const -> glm:
     return glm::transpose(glm::inverse(camera.viewMatrix() * worldMatrix()));
 }
 
-auto Transform::translateLocal(const glm::vec3 &translation) -> Transform&
+auto Transform::translateLocal(const glm::vec3 &translation) -> Transform &
 {
     localPosition_ += translation;
     setDirtyWithChildren(ALL_BIT);
     return *this;
 }
 
-auto Transform::rotate(const glm::quat &rotation, TransformSpace space) -> Transform&
+auto Transform::rotate(const glm::quat &rotation, TransformSpace space) -> Transform &
 {
     const auto normalizedRotation = glm::normalize(rotation);
 
     switch (space)
     {
-        case TransformSpace::Self:
-            localRotation_ = localRotation_ * normalizedRotation;
-            break;
-        case TransformSpace::Parent:
-            localRotation_ = normalizedRotation * localRotation_;
-            break;
-        case TransformSpace::World:
-        {
-            const auto invWorldRotation = glm::inverse(worldRotation());
-            localRotation_ = localRotation_ * invWorldRotation * normalizedRotation * worldRotation();
-            break;
-        }
-        default:
-            break;
+    case TransformSpace::Self:
+        localRotation_ = localRotation_ * normalizedRotation;
+        break;
+    case TransformSpace::Parent:
+        localRotation_ = normalizedRotation * localRotation_;
+        break;
+    case TransformSpace::World:
+    {
+        const auto invWorldRotation = glm::inverse(worldRotation());
+        localRotation_ = localRotation_ * invWorldRotation * normalizedRotation * worldRotation();
+        break;
+    }
+    default:
+        break;
     }
 
     setDirtyWithChildren(ALL_BIT);
@@ -131,14 +131,14 @@ auto Transform::rotate(const glm::quat &rotation, TransformSpace space) -> Trans
     return *this;
 }
 
-auto Transform::rotate(const glm::vec3 &axis, float angle, TransformSpace space) -> Transform&
+auto Transform::rotate(const glm::vec3 &axis, float angle, TransformSpace space) -> Transform &
 {
-	const auto rotation = glm::angleAxis(angle, axis);
+    const auto rotation = glm::angleAxis(angle, axis);
     rotate(rotation, space);
     return *this;
 }
 
-auto Transform::scaleLocal(const glm::vec3 &scale) -> Transform&
+auto Transform::scaleLocal(const glm::vec3 &scale) -> Transform &
 {
     localScale_.x *= scale.x;
     localScale_.y *= scale.y;
@@ -147,14 +147,14 @@ auto Transform::scaleLocal(const glm::vec3 &scale) -> Transform&
     return *this;
 }
 
-auto Transform::setLocalScale(const glm::vec3 &scale) -> Transform&
+auto Transform::setLocalScale(const glm::vec3 &scale) -> Transform &
 {
     localScale_ = scale;
     setDirtyWithChildren(ALL_BIT);
     return *this;
 }
 
-auto Transform::lookAt(const glm::vec3 &target, const glm::vec3 &up) -> Transform&
+auto Transform::lookAt(const glm::vec3 &target, const glm::vec3 &up) -> Transform &
 {
     auto localTarget = glm::vec4(target, 1);
     auto localUp = glm::vec4(up, 0);
@@ -166,7 +166,7 @@ auto Transform::lookAt(const glm::vec3 &target, const glm::vec3 &up) -> Transfor
         localUp = m * localUp;
     }
 
-	const auto lookAtMatrix = glm::inverse(glm::lookAt(localPosition_, glm::vec3(localTarget), glm::vec3(localUp)));
+    const auto lookAtMatrix = glm::inverse(glm::lookAt(localPosition_, glm::vec3(localTarget), glm::vec3(localUp)));
     setLocalRotation(glm::quat_cast(lookAtMatrix));
 
     return *this;
@@ -182,21 +182,21 @@ auto Transform::transformDirection(const glm::vec3 &direction) const -> glm::vec
     return matrix() * glm::vec4(direction, 0);
 }
 
-auto Transform::setLocalRotation(const glm::quat &rotation) -> Transform&
+auto Transform::setLocalRotation(const glm::quat &rotation) -> Transform &
 {
     localRotation_ = rotation;
     setDirtyWithChildren(ALL_BIT);
     return *this;
 }
 
-auto Transform::setLocalRotation(const glm::vec3 &axis, float angle) -> Transform&
+auto Transform::setLocalRotation(const glm::vec3 &axis, float angle) -> Transform &
 {
     localRotation_ = glm::angleAxis(angle, axis);
     setDirtyWithChildren(ALL_BIT);
     return *this;
 }
 
-auto Transform::setLocalPosition(const glm::vec3 &position) -> Transform&
+auto Transform::setLocalPosition(const glm::vec3 &position) -> Transform &
 {
     localPosition_ = position;
     setDirtyWithChildren(ALL_BIT);

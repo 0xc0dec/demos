@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #include "VulkanCmdBuffer.h"
 #include "VulkanBuffer.h"
@@ -12,8 +12,7 @@
 
 using namespace vk;
 
-vk::CmdBuffer::CmdBuffer(const Device &dev):
-    device_(&dev)
+vk::CmdBuffer::CmdBuffer(const Device &dev) : device_(&dev)
 {
     VkCommandBufferAllocateInfo allocateInfo{};
     allocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -27,7 +26,7 @@ vk::CmdBuffer::CmdBuffer(const Device &dev):
 }
 
 auto CmdBuffer::beginRenderPass(const RenderPass &pass, VkFramebuffer framebuffer, uint32_t canvasWidth,
-    uint32_t canvasHeight) -> CmdBuffer&
+                                uint32_t canvasHeight) -> CmdBuffer &
 {
     VkRenderPassBeginInfo info{};
     info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -46,20 +45,20 @@ auto CmdBuffer::beginRenderPass(const RenderPass &pass, VkFramebuffer framebuffe
     return *this;
 }
 
-auto CmdBuffer::endRenderPass() -> CmdBuffer&
+auto CmdBuffer::endRenderPass() -> CmdBuffer &
 {
     vkCmdEndRenderPass(handle_);
     return *this;
 }
 
 auto CmdBuffer::bindIndexBuffer(VkBuffer buffer, VkDeviceSize offset, VkIndexType indexType)
-    -> CmdBuffer&
+    -> CmdBuffer &
 {
     vkCmdBindIndexBuffer(handle_, buffer, offset, indexType);
     return *this;
 }
 
-auto CmdBuffer::bindVertexBuffer(uint32_t binding, VkBuffer buffer) -> CmdBuffer&
+auto CmdBuffer::bindVertexBuffer(uint32_t binding, VkBuffer buffer) -> CmdBuffer &
 {
     VkDeviceSize offset = 0;
     vkCmdBindVertexBuffers(handle_, binding, 1, &buffer, &offset);
@@ -67,39 +66,39 @@ auto CmdBuffer::bindVertexBuffer(uint32_t binding, VkBuffer buffer) -> CmdBuffer
 }
 
 auto CmdBuffer::drawIndexed(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex,
-    uint32_t vertexOffset, uint32_t firstInstance) -> CmdBuffer&
+                            uint32_t vertexOffset, uint32_t firstInstance) -> CmdBuffer &
 {
     vkCmdDrawIndexed(handle_, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
     return *this;
 }
 
 auto CmdBuffer::draw(uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)
-    -> CmdBuffer&
+    -> CmdBuffer &
 {
     vkCmdDraw(handle_, vertexCount, instanceCount, firstVertex, firstInstance);
     return *this;
 }
 
-auto CmdBuffer::bindPipeline(VkPipeline pipeline) -> CmdBuffer&
+auto CmdBuffer::bindPipeline(VkPipeline pipeline) -> CmdBuffer &
 {
     vkCmdBindPipeline(handle_, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
     return *this;
 }
 
-auto CmdBuffer::bindDescriptorSet(VkPipelineLayout pipelineLayout, const DescriptorSet &set) -> CmdBuffer&
+auto CmdBuffer::bindDescriptorSet(VkPipelineLayout pipelineLayout, const DescriptorSet &set) -> CmdBuffer &
 {
     vkCmdBindDescriptorSets(handle_, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, set, 0, nullptr);
     return *this;
 }
 
-auto CmdBuffer::setViewport(const glm::vec4 &dimentions, float minDepth, float maxDepth) -> CmdBuffer&
+auto CmdBuffer::setViewport(const glm::vec4 &dimentions, float minDepth, float maxDepth) -> CmdBuffer &
 {
     VkViewport vp{dimentions.x, dimentions.y, dimentions.z, dimentions.w, minDepth, maxDepth};
     vkCmdSetViewport(handle_, 0, 1, &vp);
     return *this;
 }
 
-auto CmdBuffer::setScissor(const glm::vec4 &dimentions) -> CmdBuffer&
+auto CmdBuffer::setScissor(const glm::vec4 &dimentions) -> CmdBuffer &
 {
     VkRect2D scissor{{0, 0}, {static_cast<uint32_t>(dimentions.z), static_cast<uint32_t>(dimentions.w)}};
     // TODO proper values
@@ -108,14 +107,14 @@ auto CmdBuffer::setScissor(const glm::vec4 &dimentions) -> CmdBuffer&
 }
 
 auto CmdBuffer::putImagePipelineBarrier(VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask,
-    const VkImageMemoryBarrier &barrier) -> CmdBuffer&
+                                        const VkImageMemoryBarrier &barrier) -> CmdBuffer &
 {
     vkCmdPipelineBarrier(handle_, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1, &barrier);
     return *this;
 }
 
 auto CmdBuffer::clearColorAttachment(uint32_t attachment, const VkClearValue &clearValue, const VkClearRect &clearRect)
-    -> CmdBuffer&
+    -> CmdBuffer &
 {
     VkClearAttachment clear;
     clear.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -125,7 +124,7 @@ auto CmdBuffer::clearColorAttachment(uint32_t attachment, const VkClearValue &cl
     return *this;
 }
 
-auto CmdBuffer::copyBuffer(const Buffer &src, const Buffer &dst) -> CmdBuffer&
+auto CmdBuffer::copyBuffer(const Buffer &src, const Buffer &dst) -> CmdBuffer &
 {
     VkBufferCopy copyRegion{};
     copyRegion.size = dst.size();
@@ -133,7 +132,7 @@ auto CmdBuffer::copyBuffer(const Buffer &src, const Buffer &dst) -> CmdBuffer&
     return *this;
 }
 
-auto CmdBuffer::copyBuffer(const Buffer &src, const Image &dst) -> CmdBuffer&
+auto CmdBuffer::copyBuffer(const Buffer &src, const Image &dst) -> CmdBuffer &
 {
     VkBufferImageCopy bufferCopyRegion{};
     bufferCopyRegion.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -157,7 +156,7 @@ auto CmdBuffer::copyBuffer(const Buffer &src, const Image &dst) -> CmdBuffer&
 }
 
 auto CmdBuffer::copyBuffer(const Buffer &src, const Image &dst, const VkBufferImageCopy *regions,
-    uint32_t regionCount) -> CmdBuffer&
+                           uint32_t regionCount) -> CmdBuffer &
 {
     vkCmdCopyBufferToImage(
         handle_,
@@ -170,13 +169,13 @@ auto CmdBuffer::copyBuffer(const Buffer &src, const Image &dst, const VkBufferIm
 }
 
 auto CmdBuffer::blit(VkImage src, VkImage dst, VkImageLayout srcLayout, VkImageLayout dstLayout,
-    const VkImageBlit &blit, VkFilter filter) -> CmdBuffer&
+                     const VkImageBlit &blit, VkFilter filter) -> CmdBuffer &
 {
     vkCmdBlitImage(handle_,
-        src, srcLayout,
-        dst, dstLayout,
-        1, &blit,
-        filter);
+                   src, srcLayout,
+                   dst, dstLayout,
+                   1, &blit,
+                   filter);
     return *this;
 }
 
@@ -187,7 +186,7 @@ void CmdBuffer::endAndFlush()
     vk::ensure(vkQueueWaitIdle(device_->queue()));
 }
 
-auto CmdBuffer::begin(bool transient) -> CmdBuffer&
+auto CmdBuffer::begin(bool transient) -> CmdBuffer &
 {
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;

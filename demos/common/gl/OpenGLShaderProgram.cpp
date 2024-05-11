@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #include "OpenGLShaderProgram.h"
 #include "../Common.h"
@@ -10,15 +10,14 @@
 static auto compileShader(GLuint type, const void *src, uint32_t length) -> GLint
 {
     static std::unordered_map<GLuint, std::string> typeNames =
-    {
-        {GL_VERTEX_SHADER, "vertex"},
-        {GL_FRAGMENT_SHADER, "fragment"}
-    };
+        {
+            {GL_VERTEX_SHADER, "vertex"},
+            {GL_FRAGMENT_SHADER, "fragment"}};
 
     const auto shader = glCreateShader(type);
 
     GLint len = length;
-    glShaderSource(shader, 1, reinterpret_cast<const GLchar* const*>(&src), &len);
+    glShaderSource(shader, 1, reinterpret_cast<const GLchar *const *>(&src), &len);
     glCompileShader(shader);
 
     GLint status;
@@ -30,7 +29,7 @@ static auto compileShader(GLuint type, const void *src, uint32_t length) -> GLin
         std::vector<GLchar> log(logLength);
         glGetShaderInfoLog(shader, logLength, nullptr, log.data());
         glDeleteShader(shader);
-    	panic("Unable to compile ", typeNames[type], " shader:\n", log.data());
+        panic("Unable to compile ", typeNames[type], " shader:\n", log.data());
     }
 
     return shader;

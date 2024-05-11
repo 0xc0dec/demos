@@ -1,22 +1,21 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #include "Window.h"
 #include "Common.h"
 
-Window::Window(uint32_t canvasWidth, uint32_t canvasHeight):
-	canvasWidth_(canvasWidth),
-	canvasHeight_(canvasHeight)
+Window::Window(uint32_t canvasWidth, uint32_t canvasHeight) : canvasWidth_(canvasWidth),
+                                                              canvasHeight_(canvasHeight)
 {
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) < 0)
-		panic("Failed to initialize SDL");
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) < 0)
+        panic("Failed to initialize SDL");
 }
 
 Window::~Window()
 {
-	if (window_)
+    if (window_)
         SDL_DestroyWindow(window_);
     SDL_Quit();
 }
@@ -31,23 +30,23 @@ void Window::beginUpdate()
     SDL_Event evt;
     while (SDL_PollEvent(&evt))
     {
-		if (!firstUpdate_)
-		{
-			processKeyboardEvent(evt);
-			processMouseEvent(evt);
-		}
+        if (!firstUpdate_)
+        {
+            processKeyboardEvent(evt);
+            processMouseEvent(evt);
+        }
 
-    	if (eventHandler_)
-			eventHandler_(evt);
+        if (eventHandler_)
+            eventHandler_(evt);
 
-		const auto closeWindowEvent = evt.type == SDL_WINDOWEVENT && evt.window.event == SDL_WINDOWEVENT_CLOSE;
+        const auto closeWindowEvent = evt.type == SDL_WINDOWEVENT && evt.window.event == SDL_WINDOWEVENT_CLOSE;
         if (evt.type == SDL_QUIT || closeWindowEvent)
             closeRequested_ = true;
     }
 
-	static auto lastTicks = SDL_GetTicks();
+    static auto lastTicks = SDL_GetTicks();
     const auto ticks = SDL_GetTicks();
-	const auto deltaTicks = ticks - lastTicks;
+    const auto deltaTicks = ticks - lastTicks;
     if (deltaTicks > 0)
     {
         dt_ = deltaTicks / 1000.0f;
@@ -107,24 +106,24 @@ void Window::processKeyboardEvent(const SDL_Event &evt)
 
     switch (evt.type)
     {
-        case SDL_KEYUP:
-        case SDL_KEYDOWN:
+    case SDL_KEYUP:
+    case SDL_KEYDOWN:
+    {
+        const auto code = evt.key.keysym.sym;
+        if (evt.type == SDL_KEYUP)
         {
-            const auto code = evt.key.keysym.sym;
-            if (evt.type == SDL_KEYUP)
-            {
-                releasedKeys_.insert(code);
-                pressedKeys_.erase(code);
-            }
-            else
-            {
-                pressedKeys_[code] = pressedKeys_.find(code) == pressedKeys_.end(); // first time?
-                releasedKeys_.erase(code);
-            }
-            break;
+            releasedKeys_.insert(code);
+            pressedKeys_.erase(code);
         }
-        default:
-            break;
+        else
+        {
+            pressedKeys_[code] = pressedKeys_.find(code) == pressedKeys_.end(); // first time?
+            releasedKeys_.erase(code);
+        }
+        break;
+    }
+    default:
+        break;
     }
 }
 
@@ -135,29 +134,29 @@ void Window::processMouseEvent(const SDL_Event &evt)
 
     switch (evt.type)
     {
-        case SDL_MOUSEMOTION:
-            mouseDeltaX_ += evt.motion.xrel;
-            mouseDeltaY_ += evt.motion.yrel;
-            break;
-        case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEMOTION:
+        mouseDeltaX_ += evt.motion.xrel;
+        mouseDeltaY_ += evt.motion.yrel;
+        break;
+    case SDL_MOUSEBUTTONDOWN:
+    {
+        const auto btn = evt.button.button;
+        pressedMouseButtons_[btn] = true; // pressed for the first time
+        releasedMouseButtons_.erase(btn);
+        break;
+    }
+    case SDL_MOUSEBUTTONUP:
+    {
+        const auto btn = evt.button.button;
+        if (pressedMouseButtons_.find(btn) != pressedMouseButtons_.end())
         {
-            const auto btn = evt.button.button;
-            pressedMouseButtons_[btn] = true; // pressed for the first time
-            releasedMouseButtons_.erase(btn);
-            break;
+            releasedMouseButtons_.insert(btn);
+            pressedMouseButtons_.erase(btn);
         }
-        case SDL_MOUSEBUTTONUP:
-        {
-            const auto btn = evt.button.button;
-            if (pressedMouseButtons_.find(btn) != pressedMouseButtons_.end())
-            {
-                releasedMouseButtons_.insert(btn);
-                pressedMouseButtons_.erase(btn);
-            }
-            break;
-        }
-        default:
-            break;
+        break;
+    }
+    default:
+        break;
     }
 }
 

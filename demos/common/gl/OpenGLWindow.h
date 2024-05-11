@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #pragma once
 
@@ -9,17 +9,17 @@
 
 namespace gl
 {
-	class Window final: public ::Window
-	{
-	public:
-		Window(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen);
-		~Window();
+    class Window final : public ::Window
+    {
+    public:
+        Window(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen);
+        ~Window();
 
-		auto sdlGLContext() const -> SDL_GLContext { return context_; }
+        auto sdlGLContext() const -> SDL_GLContext { return context_; }
 
-		void endUpdate() override;
+        void endUpdate() override;
 
-	private:
-		SDL_GLContext context_ = nullptr;
-	};
+    private:
+        SDL_GLContext context_ = nullptr;
+    };
 }

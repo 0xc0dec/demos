@@ -1,12 +1,12 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #include "Camera.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-auto Camera::setPerspective(float fov, float aspectRatio, float nearClip, float farClip) -> Camera&
+auto Camera::setPerspective(float fov, float aspectRatio, float nearClip, float farClip) -> Camera &
 {
     this->fov_ = fov;
     this->aspectRatio_ = aspectRatio;
@@ -16,7 +16,7 @@ auto Camera::setPerspective(float fov, float aspectRatio, float nearClip, float 
     return *this;
 }
 
-auto Camera::setOrthographic(float width, float height, float nearClip, float farClip) -> Camera&
+auto Camera::setOrthographic(float width, float height, float nearClip, float farClip) -> Camera &
 {
     this->nearClip_ = nearClip;
     this->farClip_ = farClip;
@@ -29,6 +29,6 @@ auto Camera::setOrthographic(float width, float height, float nearClip, float fa
 auto Camera::projMatrix() const -> glm::mat4
 {
     return ortho_
-        ? glm::ortho(orthoWidth_, orthoHeight_, nearClip_, farClip_)
-        : glm::perspective(fov_, aspectRatio_, nearClip_, farClip_);
+               ? glm::ortho(orthoWidth_, orthoHeight_, nearClip_, farClip_)
+               : glm::perspective(fov_, aspectRatio_, nearClip_, farClip_);
 }

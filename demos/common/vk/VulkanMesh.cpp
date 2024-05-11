@@ -1,27 +1,26 @@
-/* 
- * Copyright (c) Aleksey Fedotov 
- * MIT license 
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
  */
 
 #include <algorithm>
 #include "VulkanMesh.h"
 #include "VulkanDevice.h"
 
-vk::Mesh::Mesh(Device *device):
-    device_(device)
+vk::Mesh::Mesh(Device *device) : device_(device)
 {
 }
 
 void vk::Mesh::addVertexBuffer(const VertexBufferLayout &layout, const std::vector<float> &data, uint32_t vertexCount)
 {
-	vertexBuffers_.push_back(Buffer::deviceLocal(*device_, layout.size() * vertexCount, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, data.data()));
+    vertexBuffers_.push_back(Buffer::deviceLocal(*device_, layout.size() * vertexCount, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, data.data()));
     layouts_.push_back(layout);
     vertexCounts_.push_back(vertexCount);
 }
 
 void vk::Mesh::addDynamicVertexBuffer(const VertexBufferLayout &layout, const std::vector<float> &data, uint32_t vertexCount)
 {
-	vertexBuffers_.push_back(Buffer::hostVisible(*device_, layout.size() * vertexCount, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, data.data()));
+    vertexBuffers_.push_back(Buffer::hostVisible(*device_, layout.size() * vertexCount, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, data.data()));
     layouts_.push_back(layout);
     vertexCounts_.push_back(vertexCount);
 }

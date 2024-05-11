@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #pragma once
 
@@ -15,8 +15,8 @@ namespace vk
     public:
         RenderPassConfig();
 
-        auto addColorAttachment(VkFormat colorFormat, VkImageLayout finalLayout) -> RenderPassConfig&;
-        auto setDepthAttachment(VkFormat depthFormat) -> RenderPassConfig&;
+        auto addColorAttachment(VkFormat colorFormat, VkImageLayout finalLayout) -> RenderPassConfig &;
+        auto setDepthAttachment(VkFormat depthFormat) -> RenderPassConfig &;
 
     private:
         friend class RenderPass;
@@ -35,16 +35,16 @@ namespace vk
         RenderPass(RenderPass &&other) = default;
         ~RenderPass() = default;
 
-        auto clearValues() const -> const std::vector<VkClearValue>& { return clearValues_; }
+        auto clearValues() const -> const std::vector<VkClearValue> & { return clearValues_; }
         auto colorAttachmentCount() const -> uint32_t { return colorAttachmentCount_; }
 
         void begin(VkCommandBuffer cmdBuf, VkFramebuffer framebuffer, uint32_t canvasWidth, uint32_t canvasHeight);
         void end(VkCommandBuffer cmdBuf);
 
-        auto operator=(const RenderPass &other) -> RenderPass& = delete;
-        auto operator=(RenderPass &&other) -> RenderPass& = default;
+        auto operator=(const RenderPass &other) -> RenderPass & = delete;
+        auto operator=(RenderPass &&other) -> RenderPass & = default;
 
-    	auto handle() const -> VkRenderPass { return pass_; }
+        auto handle() const -> VkRenderPass { return pass_; }
 
         operator const VkRenderPass() const { return pass_; }
 

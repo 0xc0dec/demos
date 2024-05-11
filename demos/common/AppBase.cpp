@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #include "AppBase.h"
 #include "Common.h"
@@ -23,8 +23,7 @@ void AppBase::run()
     cleanup();
 }
 
-AppBase::AppBase(std::unique_ptr<Window> window):
-    window_(std::move(window))
+AppBase::AppBase(std::unique_ptr<Window> window) : window_(std::move(window))
 {
 }
 

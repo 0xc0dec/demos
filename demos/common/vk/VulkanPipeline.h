@@ -1,6 +1,6 @@
-/* 
- * Copyright (c) Aleksey Fedotov 
- * MIT license 
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
  */
 
 #pragma once
@@ -15,17 +15,17 @@ namespace vk
         PipelineConfig(VkShaderModule vertexShader, VkShaderModule fragmentShader);
         ~PipelineConfig() = default;
 
-        auto withColorBlendAttachmentCount(uint32_t count) -> PipelineConfig&;
-        auto withVertexAttribute(uint32_t location, uint32_t binding, VkFormat format, uint32_t offset) -> PipelineConfig&;
-        auto withVertexBinding(uint32_t binding, uint32_t stride, VkVertexInputRate inputRate) -> PipelineConfig&;
-        auto withDescriptorSetLayout(VkDescriptorSetLayout layout) -> PipelineConfig&;
-        auto withFrontFace(VkFrontFace frontFace) -> PipelineConfig&;
-        auto withCullMode(VkCullModeFlags cullFlags) -> PipelineConfig&;
-        auto withDepthTest(bool write, bool test) -> PipelineConfig&;
+        auto withColorBlendAttachmentCount(uint32_t count) -> PipelineConfig &;
+        auto withVertexAttribute(uint32_t location, uint32_t binding, VkFormat format, uint32_t offset) -> PipelineConfig &;
+        auto withVertexBinding(uint32_t binding, uint32_t stride, VkVertexInputRate inputRate) -> PipelineConfig &;
+        auto withDescriptorSetLayout(VkDescriptorSetLayout layout) -> PipelineConfig &;
+        auto withFrontFace(VkFrontFace frontFace) -> PipelineConfig &;
+        auto withCullMode(VkCullModeFlags cullFlags) -> PipelineConfig &;
+        auto withDepthTest(bool write, bool test) -> PipelineConfig &;
         auto withBlend(bool enabled, VkBlendFactor srcColorFactor, VkBlendFactor dstColorFactor,
-            VkBlendFactor srcAlphaFactor, VkBlendFactor dstAlphaFactor) -> PipelineConfig&;
-        auto withTopology(VkPrimitiveTopology topology) -> PipelineConfig&;
-        auto withPolygonMode(VkPolygonMode mode) -> PipelineConfig&;
+                       VkBlendFactor srcAlphaFactor, VkBlendFactor dstAlphaFactor) -> PipelineConfig &;
+        auto withTopology(VkPrimitiveTopology topology) -> PipelineConfig &;
+        auto withPolygonMode(VkPolygonMode mode) -> PipelineConfig &;
 
     private:
         friend class Pipeline;
@@ -52,8 +52,8 @@ namespace vk
         Pipeline(Pipeline &&other) = default;
         ~Pipeline() = default;
 
-        auto operator=(const Pipeline &other) -> Pipeline& = delete;
-        auto operator=(Pipeline &&other) -> Pipeline& = default;
+        auto operator=(const Pipeline &other) -> Pipeline & = delete;
+        auto operator=(Pipeline &&other) -> Pipeline & = default;
 
         operator VkPipeline() const { return pipeline_; }
 
@@ -65,31 +65,31 @@ namespace vk
         Resource<VkPipelineLayout> layout_;
     };
 
-    inline auto PipelineConfig::withTopology(VkPrimitiveTopology topology) -> PipelineConfig&
+    inline auto PipelineConfig::withTopology(VkPrimitiveTopology topology) -> PipelineConfig &
     {
         this->topology_ = topology;
         return *this;
     }
 
-    inline auto PipelineConfig::withPolygonMode(VkPolygonMode mode) -> PipelineConfig&
+    inline auto PipelineConfig::withPolygonMode(VkPolygonMode mode) -> PipelineConfig &
     {
         rasterStateInfo_.polygonMode = mode;
         return *this;
     }
 
-    inline auto PipelineConfig::withDescriptorSetLayout(VkDescriptorSetLayout layout) -> PipelineConfig&
+    inline auto PipelineConfig::withDescriptorSetLayout(VkDescriptorSetLayout layout) -> PipelineConfig &
     {
         descSetLayouts_.push_back(layout);
         return *this;
     }
 
-    inline auto PipelineConfig::withFrontFace(VkFrontFace frontFace) -> PipelineConfig&
+    inline auto PipelineConfig::withFrontFace(VkFrontFace frontFace) -> PipelineConfig &
     {
         rasterStateInfo_.frontFace = frontFace;
         return *this;
     }
 
-    inline auto PipelineConfig::withCullMode(VkCullModeFlags cullFlags) -> PipelineConfig&
+    inline auto PipelineConfig::withCullMode(VkCullModeFlags cullFlags) -> PipelineConfig &
     {
         rasterStateInfo_.cullMode = cullFlags;
         return *this;

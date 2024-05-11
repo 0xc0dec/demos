@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #include "common/vk/VulkanAppBase.h"
 #include "common/vk/VulkanCmdBuffer.h"
@@ -9,12 +9,12 @@
 #include <examples/imgui_impl_sdl.h>
 #include <examples/imgui_impl_vulkan.h>
 
-class App: public vk::AppBase
+class App : public vk::AppBase
 {
 public:
-	App(): vk::AppBase(1366, 768, false)
-	{
-	}
+    App() : vk::AppBase(1366, 768, false)
+    {
+    }
 
 protected:
     vk::CmdBuffer cmdBuf_;
@@ -30,36 +30,34 @@ protected:
         vk::Resource<VkDescriptorPool> descPool;
     } ui_;
 
-	void init() override
-	{
+    void init() override
+    {
         cmdBuf_ = vk::CmdBuffer(device());
         semaphores_.complete = vk::createSemaphore(device());
 
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO(); (void)io;
+        ImGuiIO &io = ImGui::GetIO();
+        (void)io;
 
         window()->onProcessEvent([](auto &evt)
-        {
-            ImGui_ImplSDL2_ProcessEvent(&evt);
-        });
+                                 { ImGui_ImplSDL2_ProcessEvent(&evt); });
 
         ImGui_ImplSDL2_InitForVulkan(window()->sdlWindow());
 
         {
             std::vector<VkDescriptorPoolSize> poolSizes = {
-                { VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
-                { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
-                { VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 },
-                { VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000 },
-                { VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000 },
-                { VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000 },
-                { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000 },
-                { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000 },
-                { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000 },
-                { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000 },
-                { VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 }
-            };
+                {VK_DESCRIPTOR_TYPE_SAMPLER, 1000},
+                {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000},
+                {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000},
+                {VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000},
+                {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000},
+                {VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000},
+                {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000},
+                {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000},
+                {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000},
+                {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000},
+                {VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000}};
 
             VkDescriptorPoolCreateInfo poolInfo = {};
             poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -97,10 +95,10 @@ protected:
             cmdBuf.endAndFlush();
             ImGui_ImplVulkan_DestroyFontUploadObjects();
         }
-	}
-	
-	void render() override
-	{
+    }
+
+    void render() override
+    {
         const auto canvasWidth = window()->canvasWidth();
         const auto canvasHeight = window()->canvasHeight();
 
@@ -123,25 +121,25 @@ protected:
         ImGui::Render();
         ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmdBuf_);
 
-	    cmdBuf_.endRenderPass()
-	        .end();
+        cmdBuf_.endRenderPass()
+            .end();
 
         semaphores_.wait = swapchain().moveNext();
         vk::queueSubmit(device().queue(), 1, &semaphores_.wait, 1, &semaphores_.complete, 1, cmdBuf_);
 
         swapchain().present(device().queue(), 1, &semaphores_.complete);
         vk::ensure(vkQueueWaitIdle(device().queue()));
-	}
-	
-	void cleanup() override
-	{
+    }
+
+    void cleanup() override
+    {
         ImGui_ImplVulkan_Shutdown();
         ImGui_ImplSDL2_Shutdown();
         ImGui::DestroyContext();
-	}
+    }
 };
 
 void main()
 {
-	App().run();
+    App().run();
 }

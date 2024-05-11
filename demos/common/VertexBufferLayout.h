@@ -1,6 +1,6 @@
-/* 
- * Copyright (c) Aleksey Fedotov 
- * MIT license 
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
  */
 
 #pragma once
@@ -37,14 +37,14 @@ namespace vk
 
         auto attributeCount() const -> uint32_t { return static_cast<uint32_t>(attributes_.size()); }
         auto attribute(uint32_t index) const -> VertexAttribute { return attributes_.at(index); }
-    	auto attributeIndex(VertexAttributeUsage usage) const -> int;
+        auto attributeIndex(VertexAttributeUsage usage) const -> int;
 
         auto size() const -> uint32_t { return size_; }
         auto elementCount() const -> uint32_t { return elementCount_; }
 
     private:
         std::vector<VertexAttribute> attributes_;
-        uint32_t size_ = 0; // in bytes
+        uint32_t size_ = 0;         // in bytes
         uint32_t elementCount_ = 0; // number of "elements" (floats)
 
         void addAttribute(uint32_t elementCount, const std::string &name, VertexAttributeUsage usage);

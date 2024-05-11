@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #include "VulkanSwapchain.h"
 #include "VulkanDevice.h"
@@ -11,7 +11,7 @@ static auto getSwapchainImages(VkDevice device, VkSwapchainKHR swapchain) -> std
 {
     uint32_t imageCount = 0;
     vk::ensure(vkGetSwapchainImagesKHR(device, swapchain, &imageCount, nullptr));
-    
+
     std::vector<VkImage> images;
     images.resize(imageCount);
     vk::ensure(vkGetSwapchainImagesKHR(device, swapchain, &imageCount, images.data()));
@@ -94,8 +94,7 @@ static auto createSwapchain(const vk::Device &dev, uint32_t width, uint32_t heig
     return swapchain;
 }
 
-vk::Swapchain::Swapchain(const Device &dev, uint32_t width, uint32_t height, bool vsync):
-    device_(dev.handle())
+vk::Swapchain::Swapchain(const Device &dev, uint32_t width, uint32_t height, bool vsync) : device_(dev.handle())
 {
     const auto colorFormat = dev.colorFormat();
     const auto depthFormat = dev.depthFormat();
@@ -103,9 +102,9 @@ vk::Swapchain::Swapchain(const Device &dev, uint32_t width, uint32_t height, boo
     swapchain_ = createSwapchain(dev, width, height, vsync);
 
     renderPass_ = RenderPass(this->device_, RenderPassConfig()
-        .addColorAttachment(colorFormat, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR)
-        .setDepthAttachment(depthFormat));
-    
+                                                .addColorAttachment(colorFormat, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR)
+                                                .setDepthAttachment(depthFormat));
+
     depthStencil_ = Image::swapchainDepthStencil(dev, width, height, depthFormat);
 
     auto cmdBuf = CmdBuffer(dev);
@@ -133,9 +132,7 @@ vk::Swapchain::Swapchain(const Device &dev, uint32_t width, uint32_t height, boo
                 images[i],
                 VK_IMAGE_LAYOUT_UNDEFINED,
                 VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
-                range
-            )
-        );
+                range));
     }
 
     cmdBuf.endAndFlush();

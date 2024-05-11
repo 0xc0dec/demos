@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #pragma once
 
@@ -9,9 +9,9 @@
 
 namespace vk
 {
-	class Device;
-	
-	class Buffer
+    class Device;
+
+    class Buffer
     {
     public:
         static auto staging(const Device &dev, VkDeviceSize size, const void *initialData = nullptr) -> Buffer;
@@ -25,8 +25,8 @@ namespace vk
         Buffer(const Buffer &other) = delete;
         ~Buffer() = default;
 
-        auto operator=(const Buffer &other) -> Buffer& = delete;
-        auto operator=(Buffer &&other) -> Buffer& = default;
+        auto operator=(const Buffer &other) -> Buffer & = delete;
+        auto operator=(Buffer &&other) -> Buffer & = default;
 
         operator VkBuffer() const { return buffer_; }
 
@@ -35,7 +35,7 @@ namespace vk
 
         void updateAll(const void *newData) const;
         void updatePart(const void *newData, uint32_t offset, uint32_t size) const;
-        void transferTo(const Buffer& dst) const;
+        void transferTo(const Buffer &dst) const;
 
     private:
         const Device *device_ = nullptr;

@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #include "common/Camera.h"
 #include "common/Spectator.h"
@@ -15,131 +15,131 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-class App final: public gl::AppBase
+class App final : public gl::AppBase
 {
 public:
-	App(): gl::AppBase(1366, 768, false)
-	{
-	}
+    App() : gl::AppBase(1366, 768, false)
+    {
+    }
 
 private:
-	std::shared_ptr<gl::Mesh> quadMesh_;
-	std::shared_ptr<gl::Mesh> boxMesh_;
+    std::shared_ptr<gl::Mesh> quadMesh_;
+    std::shared_ptr<gl::Mesh> boxMesh_;
 
-	std::shared_ptr<gl::ShaderProgram> skyboxShader_;
-	std::shared_ptr<gl::ShaderProgram> meshShader_;
+    std::shared_ptr<gl::ShaderProgram> skyboxShader_;
+    std::shared_ptr<gl::ShaderProgram> meshShader_;
 
-	struct
-	{
-		GLuint handle;
-	} texture_;
-
-	Camera camera_;
-	Transform meshTransform_;
-
-	void init() override
-	{
-		initShaders();
-		initTextures();
-
-		quadMesh_ = gl::Mesh::quad();
-		boxMesh_ = gl::Mesh::box();
-
-		camera_.setPerspective(45, 1.0f * window()->canvasWidth() / window()->canvasHeight(), 0.1f, 100.0f);
-		camera_.transform().setLocalPosition({10, 10, 10});
-		camera_.transform().lookAt({0, 0, 0}, {0, 1, 0});
-	}
-
-	void loadFaceData(const char *path, GLenum target) const
+    struct
     {
-		auto data = readFile(path);
+        GLuint handle;
+    } texture_;
 
-    	stbi_set_flip_vertically_on_load(true); // for OpenGL
+    Camera camera_;
+    Transform meshTransform_;
 
-		int width, height, channels;
-		const auto handle = stbi_load_from_memory(data.data(), data.size(), &width, &height, &channels, 4);
+    void init() override
+    {
+        initShaders();
+        initTextures();
 
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glTexImage2D(target, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, handle);
-		
-		stbi_image_free(handle);
-	}
+        quadMesh_ = gl::Mesh::quad();
+        boxMesh_ = gl::Mesh::box();
 
-	void initTextures()
-	{
-		glGenTextures(1, &texture_.handle);
+        camera_.setPerspective(45, 1.0f * window()->canvasWidth() / window()->canvasHeight(), 0.1f, 100.0f);
+        camera_.transform().setLocalPosition({10, 10, 10});
+        camera_.transform().lookAt({0, 0, 0}, {0, 1, 0});
+    }
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, texture_.handle);
+    void loadFaceData(const char *path, GLenum target) const
+    {
+        auto data = readFile(path);
 
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 0);
+        stbi_set_flip_vertically_on_load(true); // for OpenGL
 
-		loadFaceData(assetPath("textures/skyboxes/deep-space/+x.png").c_str(), GL_TEXTURE_CUBE_MAP_POSITIVE_X);
-		loadFaceData(assetPath("textures/skyboxes/deep-space/-x.png").c_str(), GL_TEXTURE_CUBE_MAP_NEGATIVE_X);
-		loadFaceData(assetPath("textures/skyboxes/deep-space/+y.png").c_str(), GL_TEXTURE_CUBE_MAP_POSITIVE_Y);
-		loadFaceData(assetPath("textures/skyboxes/deep-space/-y.png").c_str(), GL_TEXTURE_CUBE_MAP_NEGATIVE_Y);
-		loadFaceData(assetPath("textures/skyboxes/deep-space/+z.png").c_str(), GL_TEXTURE_CUBE_MAP_POSITIVE_Z);
-		loadFaceData(assetPath("textures/skyboxes/deep-space/-z.png").c_str(), GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
+        int width, height, channels;
+        const auto handle = stbi_load_from_memory(data.data(), data.size(), &width, &height, &channels, 4);
 
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-	}
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glTexImage2D(target, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, handle);
 
-	void initShaders()
-	{
-		static Shaders shaders;
+        stbi_image_free(handle);
+    }
 
-		skyboxShader_ = std::make_shared<gl::ShaderProgram>(shaders.vertex.skybox, shaders.fragment.skybox);
-		meshShader_ = std::make_shared<gl::ShaderProgram>(shaders.vertex.simple, shaders.fragment.simple);
-	}
+    void initTextures()
+    {
+        glGenTextures(1, &texture_.handle);
 
-	void cleanup() override
-	{
-		glDeleteTextures(1, &texture_.handle);
-	}
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, texture_.handle);
 
-	void render() override
-	{
-		applySpectator(camera_.transform(), *window());
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 0);
 
-		glViewport(0, 0, window()->canvasWidth(), window()->canvasHeight());
-		glClear(GL_DEPTH_BUFFER_BIT); // no need to clear color since we're rendering fullscreen quad anyway
+        loadFaceData(assetPath("textures/skyboxes/deep-space/+x.png").c_str(), GL_TEXTURE_CUBE_MAP_POSITIVE_X);
+        loadFaceData(assetPath("textures/skyboxes/deep-space/-x.png").c_str(), GL_TEXTURE_CUBE_MAP_NEGATIVE_X);
+        loadFaceData(assetPath("textures/skyboxes/deep-space/+y.png").c_str(), GL_TEXTURE_CUBE_MAP_POSITIVE_Y);
+        loadFaceData(assetPath("textures/skyboxes/deep-space/-y.png").c_str(), GL_TEXTURE_CUBE_MAP_NEGATIVE_Y);
+        loadFaceData(assetPath("textures/skyboxes/deep-space/+z.png").c_str(), GL_TEXTURE_CUBE_MAP_POSITIVE_Z);
+        loadFaceData(assetPath("textures/skyboxes/deep-space/-z.png").c_str(), GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
 
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LEQUAL);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    }
 
-		// Skybox
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, texture_.handle);
+    void initShaders()
+    {
+        static Shaders shaders;
 
-		// Don't write to the depth buffer (the quad is always closest to the camera and prevents other objects from showing)
-		glDepthMask(GL_FALSE);
+        skyboxShader_ = std::make_shared<gl::ShaderProgram>(shaders.vertex.skybox, shaders.fragment.skybox);
+        meshShader_ = std::make_shared<gl::ShaderProgram>(shaders.vertex.simple, shaders.fragment.simple);
+    }
 
-		skyboxShader_->use();
-		skyboxShader_->setMatrixUniform("projMatrix", glm::value_ptr(camera_.projMatrix()));
-		skyboxShader_->setMatrixUniform("viewMatrix", glm::value_ptr(camera_.viewMatrix()));
-		skyboxShader_->setTextureUniform("skyboxTex", 0);
+    void cleanup() override
+    {
+        glDeleteTextures(1, &texture_.handle);
+    }
 
-		quadMesh_->draw();
+    void render() override
+    {
+        applySpectator(camera_.transform(), *window());
 
-		// Mesh
+        glViewport(0, 0, window()->canvasWidth(), window()->canvasHeight());
+        glClear(GL_DEPTH_BUFFER_BIT); // no need to clear color since we're rendering fullscreen quad anyway
 
-		glDepthMask(GL_TRUE);
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
 
-		meshShader_->use();
-		meshShader_->setMatrixUniform("viewProjMatrix", glm::value_ptr(camera_.viewProjMatrix()));
-		meshShader_->setMatrixUniform("worldMatrix", glm::value_ptr(meshTransform_.worldMatrix()));
+        // Skybox
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, texture_.handle);
 
-		boxMesh_->draw();
-	}
+        // Don't write to the depth buffer (the quad is always closest to the camera and prevents other objects from showing)
+        glDepthMask(GL_FALSE);
+
+        skyboxShader_->use();
+        skyboxShader_->setMatrixUniform("projMatrix", glm::value_ptr(camera_.projMatrix()));
+        skyboxShader_->setMatrixUniform("viewMatrix", glm::value_ptr(camera_.viewMatrix()));
+        skyboxShader_->setTextureUniform("skyboxTex", 0);
+
+        quadMesh_->draw();
+
+        // Mesh
+
+        glDepthMask(GL_TRUE);
+
+        meshShader_->use();
+        meshShader_->setMatrixUniform("viewProjMatrix", glm::value_ptr(camera_.viewProjMatrix()));
+        meshShader_->setMatrixUniform("worldMatrix", glm::value_ptr(meshTransform_.worldMatrix()));
+
+        boxMesh_->draw();
+    }
 };
 
 int main()
 {
-	App().run();
-	return 0;
+    App().run();
+    return 0;
 }

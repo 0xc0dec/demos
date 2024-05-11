@@ -1,6 +1,6 @@
-/* 
- * Copyright (c) Aleksey Fedotov 
- * MIT license 
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
  */
 
 #pragma once
@@ -22,8 +22,8 @@ namespace vk
         void addVertexBuffer(const VertexBufferLayout &layout, const std::vector<float> &data, uint32_t vertexCount);
         void addDynamicVertexBuffer(const VertexBufferLayout &layout, const std::vector<float> &data, uint32_t vertexCount);
         void updateVertexBuffer(uint32_t index, uint32_t vertexOffset, const void *data, uint32_t vertexCount);
-		auto vertexBuffer(uint32_t index) const -> VkBuffer { return vertexBuffers_.at(index).handle(); }
-    	
+        auto vertexBuffer(uint32_t index) const -> VkBuffer { return vertexBuffers_.at(index).handle(); }
+
         void addIndexBuffer(const std::vector<uint32_t> &data, uint32_t elementCount);
         auto indexBuffer(uint32_t index) const -> VkBuffer { return indexBuffers_.at(index).handle(); }
 

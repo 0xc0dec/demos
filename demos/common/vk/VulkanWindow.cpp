@@ -1,47 +1,45 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #include "VulkanWindow.h"
 #include "VulkanCommon.h"
 #include "../Common.h"
 #include <SDL_syswm.h>
 
-vk::Window::Window(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen):
-	::Window(canvasWidth, canvasHeight)
+vk::Window::Window(uint32_t canvasWidth, uint32_t canvasHeight, const char *title, bool fullScreen) : ::Window(canvasWidth, canvasHeight)
 {
-	uint32_t flags = SDL_WINDOW_ALLOW_HIGHDPI;
+    uint32_t flags = SDL_WINDOW_ALLOW_HIGHDPI;
     if (fullScreen)
         flags |= SDL_WINDOW_FULLSCREEN;
 
     window_ = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, canvasWidth, canvasHeight, flags);
-	panicIf(!window_, "Unable to create window");
+    panicIf(!window_, "Unable to create window");
 
-	VkApplicationInfo appInfo {};
+    VkApplicationInfo appInfo{};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     appInfo.pApplicationName = "";
     appInfo.pEngineName = "";
     appInfo.apiVersion = VK_API_VERSION_1_0;
 
-	std::vector<const char*> enabledExtensions {
+    std::vector<const char *> enabledExtensions{
         VK_KHR_SURFACE_EXTENSION_NAME,
 #ifdef WINDOWS_APP
         VK_KHR_WIN32_SURFACE_EXTENSION_NAME,
 #endif
-        VK_EXT_DEBUG_REPORT_EXTENSION_NAME
-    };
+        VK_EXT_DEBUG_REPORT_EXTENSION_NAME};
 
-    std::vector<const char*> enabledLayers {
+    std::vector<const char *> enabledLayers{
         "VK_LAYER_KHRONOS_validation",
     };
 
-	VkInstanceCreateInfo instanceInfo {};
+    VkInstanceCreateInfo instanceInfo{};
     instanceInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     instanceInfo.pNext = nullptr;
     instanceInfo.pApplicationInfo = &appInfo;
 
-	if (!enabledLayers.empty())
+    if (!enabledLayers.empty())
     {
         instanceInfo.enabledLayerCount = enabledLayers.size();
         instanceInfo.ppEnabledLayerNames = enabledLayers.data();
@@ -53,7 +51,7 @@ vk::Window::Window(uint32_t canvasWidth, uint32_t canvasHeight, const char *titl
         instanceInfo.ppEnabledExtensionNames = enabledExtensions.data();
     }
 
-	instance_ = vk::Resource<VkInstance>{vkDestroyInstance};
+    instance_ = vk::Resource<VkInstance>{vkDestroyInstance};
     ensure(vkCreateInstance(&instanceInfo, nullptr, instance_.cleanRef()));
 
 #ifdef WINDOWS_APP

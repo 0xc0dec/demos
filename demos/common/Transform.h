@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #pragma once
 
@@ -25,12 +25,12 @@ public:
     // Can be used by anyone interested if a transform has changed. Goes from 0 to MAX_UINT, then wraps back.
     auto version() const -> uint32_t { return version_; }
 
-    auto parent() const -> Transform* { return parent_; }
-    auto setParent(Transform *parent) -> Transform&;
+    auto parent() const -> Transform * { return parent_; }
+    auto setParent(Transform *parent) -> Transform &;
 
-    auto child(uint32_t index) const -> Transform* { return children_[index]; }
+    auto child(uint32_t index) const -> Transform * { return children_[index]; }
     auto childrenCount() const -> uint32_t { return children_.size(); }
-    auto clearChildren() -> Transform&;
+    auto clearChildren() -> Transform &;
 
     auto localScale() const -> glm::vec3 { return localScale_; }
 
@@ -58,19 +58,19 @@ public:
     auto worldBackDir() const -> glm::vec3;
     auto localBackDir() const -> glm::vec3;
 
-    auto translateLocal(const glm::vec3 &translation) -> Transform&;
-    auto scaleLocal(const glm::vec3 &scale) -> Transform&;
+    auto translateLocal(const glm::vec3 &translation) -> Transform &;
+    auto scaleLocal(const glm::vec3 &scale) -> Transform &;
 
-    auto setLocalPosition(const glm::vec3 &position) -> Transform&;
-    auto setLocalScale(const glm::vec3 &scale) -> Transform&;
+    auto setLocalPosition(const glm::vec3 &position) -> Transform &;
+    auto setLocalScale(const glm::vec3 &scale) -> Transform &;
 
-    auto rotate(const glm::quat &rotation, TransformSpace space = TransformSpace::Self) -> Transform&;
-    auto rotate(const glm::vec3 &axis, float angle, TransformSpace space = TransformSpace::Self) -> Transform&;
+    auto rotate(const glm::quat &rotation, TransformSpace space = TransformSpace::Self) -> Transform &;
+    auto rotate(const glm::vec3 &axis, float angle, TransformSpace space = TransformSpace::Self) -> Transform &;
 
-    auto setLocalRotation(const glm::quat &rotation) -> Transform&;
-    auto setLocalRotation(const glm::vec3 &axis, float angle) -> Transform&;
+    auto setLocalRotation(const glm::quat &rotation) -> Transform &;
+    auto setLocalRotation(const glm::vec3 &axis, float angle) -> Transform &;
 
-    auto lookAt(const glm::vec3 &target, const glm::vec3 &up) -> Transform&;
+    auto lookAt(const glm::vec3 &target, const glm::vec3 &up) -> Transform &;
 
     auto matrix() const -> glm::mat4;
     auto worldMatrix() const -> glm::mat4;
@@ -81,7 +81,7 @@ public:
 
     auto transformPoint(const glm::vec3 &point) const -> glm::vec3;
     auto transformDirection(const glm::vec3 &direction) const -> glm::vec3;
-    
+
 private:
     uint32_t version_ = 0;
     mutable uint32_t dirtyFlags_ = ~0;

@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #pragma once
 
@@ -19,14 +19,14 @@ namespace vk
     public:
         static auto empty(const Device &dev, uint32_t width, uint32_t height, VkFormat format, bool depth) -> Image;
         static auto fromData(const Device &dev, uint32_t width, uint32_t height, uint32_t size, VkFormat format,
-            void *data, bool generateMipmaps) -> Image;
+                             void *data, bool generateMipmaps) -> Image;
         static auto swapchainDepthStencil(const Device &dev, uint32_t width, uint32_t height, VkFormat format) -> Image; // TODO more generic?
 
         Image() = default;
         Image(const Image &other) = delete;
         Image(Image &&other) = default;
 
-        auto format() const -> VkFormat { return format_;  }
+        auto format() const -> VkFormat { return format_; }
         auto size() const -> glm::vec2 { return {static_cast<float>(width_), static_cast<float>(height_)}; }
         auto mipLevels() const -> uint32_t { return mipLevels_; }
         auto layout() const -> VkImageLayout { return layout_; }
@@ -35,8 +35,8 @@ namespace vk
         auto width() const -> uint32_t { return width_; }
         auto height() const -> uint32_t { return height_; }
 
-        auto operator=(const Image &other) -> Image& = delete;
-        auto operator=(Image &&other) -> Image& = default;
+        auto operator=(const Image &other) -> Image & = delete;
+        auto operator=(Image &&other) -> Image & = default;
         operator bool() const { return image_; }
 
     private:
@@ -51,6 +51,6 @@ namespace vk
         VkImageAspectFlags aspectMask_ = VK_IMAGE_ASPECT_COLOR_BIT;
 
         Image(const Device &dev, uint32_t width, uint32_t height, uint32_t mipLevels, uint32_t layers, VkFormat format, VkImageLayout layout,
-            VkImageCreateFlags createFlags, VkImageUsageFlags usageFlags, VkImageViewType viewType, VkImageAspectFlags aspectMask);
+              VkImageCreateFlags createFlags, VkImageUsageFlags usageFlags, VkImageViewType viewType, VkImageAspectFlags aspectMask);
     };
 }

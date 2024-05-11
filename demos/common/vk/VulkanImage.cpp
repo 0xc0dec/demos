@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #include "VulkanImage.h"
 #include "VulkanCmdBuffer.h"
@@ -11,7 +11,7 @@
 using namespace vk;
 
 static auto createImage(VkDevice device, VkFormat format, uint32_t width, uint32_t height, uint32_t mipLevels,
-    uint32_t arrayLayers, VkImageCreateFlags createFlags, VkImageUsageFlags usageFlags) -> Resource<VkImage>
+                        uint32_t arrayLayers, VkImageCreateFlags createFlags, VkImageUsageFlags usageFlags) -> Resource<VkImage>
 {
     VkImageCreateInfo imageCreateInfo{};
     imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -55,17 +55,15 @@ auto Image::empty(const Device &dev, uint32_t width, uint32_t height, VkFormat f
 {
     const auto layout = VK_IMAGE_LAYOUT_GENERAL; // TODO better
     const auto usage = VK_IMAGE_USAGE_SAMPLED_BIT |
-        (depth
-            ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
-            : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
-        );
+                       (depth
+                            ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+                            : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
     const auto aspect = depth ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
 
     // TODO Better check. Checking for color attachment and sampled bits seems not right or too general
     panicIf(!dev.isFormatSupported(format, VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT |
-        (depth ? VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT : VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT)),
-        "Image format/features not supported"
-    );
+                                               (depth ? VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT : VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT)),
+            "Image format/features not supported");
 
     auto image = Image(dev, width, height, 1, 1, format, layout, 0, usage, VK_IMAGE_VIEW_TYPE_2D, aspect);
 
@@ -79,8 +77,7 @@ auto Image::empty(const Device &dev, uint32_t width, uint32_t height, VkFormat f
         image.image_,
         VK_IMAGE_LAYOUT_UNDEFINED,
         layout,
-        range
-    );
+        range);
 
     CmdBuffer(dev)
         .begin(true)
@@ -103,24 +100,22 @@ auto Image::fromData(const Device &dev, uint32_t width, uint32_t height, uint32_
         VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
     panicIf(!dev.isFormatSupported(format,
-        VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT |
-        VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT |
-        VK_FORMAT_FEATURE_TRANSFER_DST_BIT_KHR),
-        "Image format/features not supported"
-    );
+                                   VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT |
+                                       VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT |
+                                       VK_FORMAT_FEATURE_TRANSFER_DST_BIT_KHR),
+            "Image format/features not supported");
 
     uint32_t mipLevels = 1;
     if (generateMipmaps)
     {
         panicIf(!dev.isFormatSupported(format, VK_FORMAT_FEATURE_BLIT_SRC_BIT | VK_FORMAT_FEATURE_BLIT_DST_BIT),
-            "Image format/features not supported"
-        );
+                "Image format/features not supported");
         mipLevels = static_cast<uint32_t>(std::floorf(std::log2f((std::fmax)(static_cast<float>(width), static_cast<float>(height))))) + 1;
         usage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
     }
 
     auto image = Image(dev, width, height, mipLevels, 1, format, layout, 0, usage,
-        VK_IMAGE_VIEW_TYPE_2D, VK_IMAGE_ASPECT_COLOR_BIT);
+                       VK_IMAGE_VIEW_TYPE_2D, VK_IMAGE_ASPECT_COLOR_BIT);
 
     VkImageSubresourceRange range{};
     range.aspectMask = image.aspectMask_;
@@ -133,8 +128,7 @@ auto Image::fromData(const Device &dev, uint32_t width, uint32_t height, uint32_
         image.image_,
         VK_IMAGE_LAYOUT_UNDEFINED,
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-        range
-    );
+        range);
 
     const auto srcBuf = Buffer::staging(dev, size, data);
 
@@ -143,8 +137,7 @@ auto Image::fromData(const Device &dev, uint32_t width, uint32_t height, uint32_
     initCmdBuf.putImagePipelineBarrier(
         VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
         VK_PIPELINE_STAGE_TRANSFER_BIT,
-        barrier
-    );
+        barrier);
 
     initCmdBuf.copyBuffer(srcBuf, image);
 
@@ -157,9 +150,7 @@ auto Image::fromData(const Device &dev, uint32_t width, uint32_t height, uint32_
                 image.image_,
                 VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                 VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                range
-            )
-        );
+                range));
         initCmdBuf.endAndFlush();
 
         auto blitCmdBuf = CmdBuffer(dev);
@@ -167,7 +158,7 @@ auto Image::fromData(const Device &dev, uint32_t width, uint32_t height, uint32_
 
         for (uint32_t i = 1; i < mipLevels; i++)
         {
-            VkImageBlit imageBlit{};                
+            VkImageBlit imageBlit{};
 
             // Source
             imageBlit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -198,9 +189,7 @@ auto Image::fromData(const Device &dev, uint32_t width, uint32_t height, uint32_
                     image.image_,
                     VK_IMAGE_LAYOUT_UNDEFINED,
                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                    mipSubRange
-                )
-            );
+                    mipSubRange));
 
             blitCmdBuf.blit(
                 image.image_,
@@ -208,8 +197,7 @@ auto Image::fromData(const Device &dev, uint32_t width, uint32_t height, uint32_
                 VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
                 VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                 imageBlit,
-                VK_FILTER_LINEAR
-            );
+                VK_FILTER_LINEAR);
 
             blitCmdBuf.putImagePipelineBarrier(
                 VK_PIPELINE_STAGE_TRANSFER_BIT,
@@ -218,9 +206,7 @@ auto Image::fromData(const Device &dev, uint32_t width, uint32_t height, uint32_
                     image.image_,
                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                     VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                    mipSubRange
-                )
-            );
+                    mipSubRange));
         }
 
         range.levelCount = static_cast<uint32_t>(mipLevels);
@@ -232,9 +218,7 @@ auto Image::fromData(const Device &dev, uint32_t width, uint32_t height, uint32_
                 image.image_,
                 VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
                 layout,
-                range
-            )
-        );
+                range));
 
         blitCmdBuf.endAndFlush();
     }
@@ -247,9 +231,7 @@ auto Image::fromData(const Device &dev, uint32_t width, uint32_t height, uint32_
                 image.image_,
                 VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                 layout,
-                range
-            )
-        );
+                range));
         initCmdBuf.endAndFlush();
     }
 
@@ -259,21 +241,20 @@ auto Image::fromData(const Device &dev, uint32_t width, uint32_t height, uint32_
 auto Image::swapchainDepthStencil(const Device &dev, uint32_t width, uint32_t height, VkFormat format) -> Image
 {
     return Image(dev, width, height, 1, 1, format,
-        VK_IMAGE_LAYOUT_UNDEFINED,
-        0,
-        VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
-        VK_IMAGE_VIEW_TYPE_2D,
-        VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT);
+                 VK_IMAGE_LAYOUT_UNDEFINED,
+                 0,
+                 VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
+                 VK_IMAGE_VIEW_TYPE_2D,
+                 VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT);
 }
 
 Image::Image(const Device &dev, uint32_t width, uint32_t height, uint32_t mipLevels, uint32_t layers, VkFormat format, VkImageLayout layout,
-    VkImageCreateFlags createFlags, VkImageUsageFlags usageFlags, VkImageViewType viewType, VkImageAspectFlags aspectMask):
-    layout_(layout),
-    format_(format),
-    mipLevels_(mipLevels),
-    width_(width),
-    height_(height),
-    aspectMask_(aspectMask)
+             VkImageCreateFlags createFlags, VkImageUsageFlags usageFlags, VkImageViewType viewType, VkImageAspectFlags aspectMask) : layout_(layout),
+                                                                                                                                      format_(format),
+                                                                                                                                      mipLevels_(mipLevels),
+                                                                                                                                      width_(width),
+                                                                                                                                      height_(height),
+                                                                                                                                      aspectMask_(aspectMask)
 {
     image_ = createImage(dev.handle(), format, width, height, mipLevels, layers, createFlags, usageFlags);
     memory_ = allocateImageMemory(dev.handle(), dev.physicalMemoryFeatures(), image_);

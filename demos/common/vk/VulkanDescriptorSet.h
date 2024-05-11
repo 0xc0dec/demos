@@ -1,7 +1,7 @@
-/*
-    Copyright (c) Aleksey Fedotov
-    MIT license
-*/
+/**
+ * Copyright (c) Aleksey Fedotov
+ * MIT licence
+ */
 
 #pragma once
 
@@ -39,11 +39,11 @@ namespace vk
         void updateUniformBuffer(uint32_t binding, VkBuffer buffer, VkDeviceSize offset, VkDeviceSize range) const;
         void updateSampler(uint32_t binding, VkImageView view, VkSampler sampler, VkImageLayout layout) const;
 
-        auto operator=(const DescriptorSet &other) -> DescriptorSet& = delete;
-        auto operator=(DescriptorSet &&other) -> DescriptorSet& = default;
+        auto operator=(const DescriptorSet &other) -> DescriptorSet & = delete;
+        auto operator=(DescriptorSet &&other) -> DescriptorSet & = default;
 
         operator bool() const { return set_ != VK_NULL_HANDLE; }
-        operator const VkDescriptorSet*() const { return &set_; }
+        operator const VkDescriptorSet *() const { return &set_; }
 
     private:
         VkDevice device_ = VK_NULL_HANDLE;
