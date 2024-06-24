@@ -7,6 +7,8 @@ The goal is to keep things easy to understand while taking away some of the boil
 
 All demos are intended to run on Windows and were not tested on other systems.
 
+Check also https://github.com/0xc0dec/demo-rs - an alternative experiment in Rust.
+
 # Building and running
 * Install Vulkan SDK. Make sure the VULKAN_SDK environment variable is set.
 * `cd build`.
