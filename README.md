@@ -1,21 +1,21 @@
 # About
-Graphics demos made for playing around and learning. The code is (hopefully) clean and self-documented,
+Graphics demos I made for playing around and learning. The code is (hopefully) clean and self-documented,
 most dependencies are included for easier building.
 
 There are no complex abstractions aka "engine", however a small library of shared code is still used.
 The goal is to keep things easy to understand while taking away some of the boilerplate.
 
-All demos are intended to run on Windows and have not been tested on other systems.
+All demos are intended to run on Windows and were not tested on other systems.
 
 # Building and running
 * Install Vulkan SDK. Make sure the VULKAN_SDK environment variable is set.
 * `cd build`.
-* `cmake -G "Visual Studio 16 2019" -A x64 ..` (or run a build script from the folder, e.g. `gen-msvc-2019-x64.cmd`).
+* `cmake -G "Visual Studio 16 2019" -A x64 ..` (or the alternative for the current MSVS at the time).
 * Build using the generated IDE files.
 * Run executables from `build/bin/<Debug|Release>/`.
 
 # Controls
-Some demos use first person camera. Use `W-S-A-D-Q-E` keys to move and hold right mouse button to rotate.
+Some demos use first person camera. Use `WASDQE` keys to move around and hold right mouse button to rotate.
 
 # Demos
 
@@ -39,7 +39,7 @@ TrueType font rendering using [stb_truetype](https://github.com/nothings/stb) li
 
 ![Image](/demos/stb-truetype/screenshot.png?raw=true)
 
-## To be continued...
+## To be continued?...
 
 # Dependencies
 * stb_truetype
